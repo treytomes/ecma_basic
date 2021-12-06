@@ -10,12 +10,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F714F94-4
 		..\docs\ECMA-116, 1st edition, June 1986.pdf = ..\docs\ECMA-116, 1st edition, June 1986.pdf
 		..\docs\ECMA-55_1st_edition_january_1978.pdf = ..\docs\ECMA-55_1st_edition_january_1978.pdf
 		..\LICENSE = ..\LICENSE
+		..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf
+		..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{0C020B93-2F51-4424-839F-07E08928184E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic55", "ECMABasic55\ECMABasic55.csproj", "{C4F46742-62BA-4989-83FC-60C3906C578D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic116", "ECMABasic116\ECMABasic116.csproj", "{C818CB4B-2972-46F2-801B-53A9E8730A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,10 @@ Global
 		{C4F46742-62BA-4989-83FC-60C3906C578D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4F46742-62BA-4989-83FC-60C3906C578D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4F46742-62BA-4989-83FC-60C3906C578D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
