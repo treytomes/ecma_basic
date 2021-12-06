@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F714F94-4
 	ProjectSection(SolutionItems) = preProject
 		..\docs\ECMA-116, 1st edition, June 1986.pdf = ..\docs\ECMA-116, 1st edition, June 1986.pdf
 		..\docs\ECMA-55_1st_edition_january_1978.pdf = ..\docs\ECMA-55_1st_edition_january_1978.pdf
+		..\docs\ECMA-6, 7-Bit Coded Character Set.pdf = ..\docs\ECMA-6, 7-Bit Coded Character Set.pdf
 		..\LICENSE = ..\LICENSE
 		..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf
 		..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf

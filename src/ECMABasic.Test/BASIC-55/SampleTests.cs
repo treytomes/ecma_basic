@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ECMABasic.Test.Basic55
 {
-    public class SampleProgramTests
+    public class SampleTests
     {
         [Fact]
         [Trait("BASIC-55", "Sample")]

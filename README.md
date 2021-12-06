@@ -25,3 +25,5 @@ Unit tests to verify the interpreters against the ECMA-55 and ECMA-116 standards
 * [NBS Minimal BASIC Test Programs v1 vol3, Control Statements, Data Structure, Program Input](https://www.govinfo.gov/content/pkg/GOVPUB-C13-362a101fac7df281372bcfc48b171007/pdf/GOVPUB-C13-362a101fac7df281372bcfc48b171007.pdf)
 * [NBS Minimal BASIC Test Programs v2 vol1, Documentation](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nbsspecialpublication500-70v1.pdf)
 * [NBS Minimal BASIC Test Programs v2 vol2, Source Listings and Sample Output](https://www.govinfo.gov/content/pkg/GOVPUB-C13-80893981584ab9bc20fb7cf7814c635a/pdf/GOVPUB-C13-80893981584ab9bc20fb7cf7814c635a.pdf)
+* [John's ECMA-55 Minimal BASIC Compiler](https://buraphakit.sourceforge.io/BASIC.shtml)
+* [ECMA-55 Minimal BASIC System - bas55](https://jorgicor.niobe.org/bas55/)
