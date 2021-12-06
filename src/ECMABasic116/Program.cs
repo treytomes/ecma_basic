@@ -6,7 +6,7 @@ namespace ECMABasic116
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("ECMA Basic 116 Runtime Environment");
         }
     }
 }

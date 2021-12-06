@@ -6,7 +6,7 @@ namespace ECMABasic55
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("ECMA Basic 55 Runtime Environment");
         }
     }
 }
