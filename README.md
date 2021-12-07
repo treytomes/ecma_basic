@@ -1,21 +1,25 @@
 # ecma_basic
 My implementation of the ECMA-55 and ECMA-116 BASIC standards.
 
-# ECMABasic55
+# Sub Projects
+
+## ECMABasic55
 
 The environment for playing with ECMA BASIC-55.
 
-# ECMABasic116
+## ECMABasic116
 
 The environment for playing with ECMA BASIC-116.
 
-# ECMABasic.Core
+## ECMABasic.Core
 
 Contains the tokenizer / interpreter bits.
 
-# ECMABasic.Test
+## ECMABasic.Test
 
 Unit tests to verify the interpreters against the ECMA-55 and ECMA-116 standards.
+
+The BASIC-55, Sample test category tests the interpreter against the NBS test programs.
 
 # References
 
