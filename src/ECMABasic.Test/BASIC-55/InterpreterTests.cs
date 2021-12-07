@@ -35,7 +35,7 @@ namespace ECMABasic.Test.BASIC_55
 			var env = new TestEnvironment();
 			program.Execute(env);
 
-			Assert.Equal("HELLO, WORLD!\r\n", env.Text);
+			Assert.Equal("HELLO, WORLD!" + Environment.NewLine, env.Text);
 		}
 	}
 }
