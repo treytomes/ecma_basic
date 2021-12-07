@@ -13,28 +13,33 @@ namespace ECMABasic.Test.Basic55
         [Trait("Category", "Simple_PRINTing_of_string_constants")]
         public void Null_print_and_printing_quoted_strings()
         {
-            var output = File.ReadAllText("./Resources/P001.OK");
-
-            var interpreter = Interpreter.FromFile("./Resources/P001.BAS");
-            var program = interpreter.Program;
-            var env = new TestEnvironment();
-            program.Execute(env);
-
-            Assert.Equal(output, env.Text);
+            RunSample("P001");
         }
 
         [Fact]
         [Trait("Feature Set", "BASIC-55")]
         [Trait("Category", "Simple_PRINTing_of_string_constants")]
         public void The_END_statement()
+        {
+            RunSample("P002");
+        }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        public void Error_Misplaced_END_statement()
+        {
+            RunSample("P003");
+        }
+
+        private void RunSample(string sampleName)
 		{
-            var output = File.ReadAllText("./Resources/P002.OK");
-
-            var interpreter = Interpreter.FromFile("./Resources/P002.BAS");
-            var program = interpreter.Program;
             var env = new TestEnvironment();
-            program.Execute(env);
 
+            var output = File.ReadAllText($"./Resources/{sampleName}.OK");
+            var interpreter = Interpreter.FromFile($"./Resources/{sampleName}.BAS", env);
+            var program = interpreter.Program;
+            program.Execute(env);
             Assert.Equal(output, env.Text);
         }
     }

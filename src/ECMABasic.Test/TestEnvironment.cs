@@ -37,5 +37,10 @@ namespace ECMABasic.Test
 		{
 			_sb.AppendLine(text);
 		}
+
+		public void ReportError(string message)
+		{
+			PrintLine(message);
+		}
 	}
 }

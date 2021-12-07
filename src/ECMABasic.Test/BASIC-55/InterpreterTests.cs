@@ -14,9 +14,11 @@ namespace ECMABasic.Test.BASIC_55
 		[Trait("Feature Set", "BASIC-55")]
 		public void Can_interpret_PRINT()
 		{
+			var env = new TestEnvironment();
+
 			var sourceText = @"10 PRINT ""HELLO, WORLD!""
 20 END";
-			var interpreter = Interpreter.FromText(sourceText);
+			var interpreter = Interpreter.FromText(sourceText, env);
 			var program = interpreter.Program;
 
 			Assert.Equal(2, program.Length);
@@ -32,7 +34,6 @@ namespace ECMABasic.Test.BASIC_55
 			Assert.Equal(20, line.LineNumber);
 			Assert.IsType<EndStatement>(line.Statement);
 
-			var env = new TestEnvironment();
 			program.Execute(env);
 
 			Assert.Equal("HELLO, WORLD!" + Environment.NewLine, env.Text);

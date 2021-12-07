@@ -14,11 +14,13 @@ namespace ECMABasic.Core
 	{
 		private readonly Dictionary<int, ProgramLine> _lines;
 		private readonly List<ProgramLine> _sortedLines;
+		private readonly Dictionary<int, int> _lineNumberToIndex;
 
 		public Program()
 		{
 			_lines = new Dictionary<int, ProgramLine>();
 			_sortedLines = new List<ProgramLine>();
+			_lineNumberToIndex = new Dictionary<int, int>();
 		}
 
 		public ProgramLine this[int lineNumber]
@@ -73,7 +75,7 @@ namespace ECMABasic.Core
 					{
 						// The statement modified the current line number, so we need to recalculate the line index.
 						var nextLine = _lines[env.CurrentLineNumber];
-						lineIndex = _sortedLines.IndexOf(nextLine);
+						lineIndex = _lineNumberToIndex[env.CurrentLineNumber];
 						// TODO: It would be worth creating an index of lineNumber-->lineIndex to speed things up a bit.
 					}
 
@@ -94,7 +96,13 @@ namespace ECMABasic.Core
 			_lines[line.LineNumber] = line;
 			_sortedLines.Clear();
 			_sortedLines.AddRange(_lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value));
-			// TODO: Build the lineNumber-->lineIndex mapping here.
+			_lineNumberToIndex[line.LineNumber] = _sortedLines.IndexOf(line);
+		}
+
+		public void Clear()
+		{
+			_lines.Clear();
+			_sortedLines.Clear();
 		}
 
 		public IEnumerator<ProgramLine> GetEnumerator()

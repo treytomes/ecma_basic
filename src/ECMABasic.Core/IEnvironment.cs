@@ -9,7 +9,7 @@ namespace ECMABasic.Core
 	/// <summary>
 	/// The environment that a program is run in.
 	/// </summary>
-	public interface IEnvironment
+	public interface IEnvironment : IErrorReporter
 	{
 		/// <summary>
 		/// The line number currently being executed.
