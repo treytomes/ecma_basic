@@ -22,5 +22,20 @@ namespace ECMABasic.Test.Basic55
 
             Assert.Equal(output, env.Text);
         }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        public void The_END_statement()
+		{
+            var output = File.ReadAllText("./Resources/P002.OK");
+
+            var interpreter = Interpreter.FromFile("./Resources/P002.BAS");
+            var program = interpreter.Program;
+            var env = new TestEnvironment();
+            program.Execute(env);
+
+            Assert.Equal(output, env.Text);
+        }
     }
 }
