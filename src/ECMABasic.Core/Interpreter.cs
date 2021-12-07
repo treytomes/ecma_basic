@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECMABasic.Core.Statements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -107,8 +108,10 @@ namespace ECMABasic.Core
 
 			var statement = ProcessStatement();
 
+			// Optional space.
 			ProcessSpace(false);
 
+			// Require an end-of-line.
 			ProcessEndOfLine();
 
 			return new ProgramLine(lineNumber, statement);
@@ -175,10 +178,14 @@ namespace ECMABasic.Core
 			{
 				return ProcessStatementType(StatementType.END);
 			}
-			if (token.Type == TokenType.Keyword_PRINT)
+			else if (token.Type == TokenType.Keyword_PRINT)
 			{
 				return ProcessStatementType(StatementType.PRINT);
 			}
+			else if (token.Type == TokenType.Keyword_STOP)
+			{
+				return ProcessStatementType(StatementType.STOP);
+			}	
 			else
 			{
 				throw new InvalidOperationException("I expected to find a statement here.");
@@ -220,6 +227,10 @@ namespace ECMABasic.Core
 				// The actual string is everything between the "".
 				var text = (stringToken == null) ? string.Empty : stringToken.Text.Substring(1, stringToken.Text.Length - 2);
 				return new PrintStatement(new StringExpression(text));
+			}
+			else if (type == StatementType.STOP)
+			{
+				return new StopStatement();
 			}
 			else
 			{

@@ -43,6 +43,11 @@
 		/// <summary>
 		/// The PRINT keyword.
 		/// </summary>
-		Keyword_PRINT
+		Keyword_PRINT,
+
+		/// <summary>
+		/// The STOP keyword.
+		/// </summary>
+		Keyword_STOP
 	}
 }

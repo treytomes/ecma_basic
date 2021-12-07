@@ -10,7 +10,7 @@ namespace ECMABasic.Test.Basic55
     {
         [Fact]
         [Trait("Feature Set", "BASIC-55")]
-        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        [Trait("Category", "Simple PRINTing of string constants")]
         public void Null_print_and_printing_quoted_strings()
         {
             RunSample("P001");
@@ -18,7 +18,7 @@ namespace ECMABasic.Test.Basic55
 
         [Fact]
         [Trait("Feature Set", "BASIC-55")]
-        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        [Trait("Category", "END and STOP")]
         public void The_END_statement()
         {
             RunSample("P002");
@@ -26,10 +26,26 @@ namespace ECMABasic.Test.Basic55
 
         [Fact]
         [Trait("Feature Set", "BASIC-55")]
-        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        [Trait("Category", "END and STOP")]
         public void Error_Misplaced_END_statement()
         {
             RunSample("P003");
+        }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "END and STOP")]
+        public void Error_Missing_END_statement()
+        {
+            RunSample("P004");
+        }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "END and STOP")]
+        public void The_STOP_statement()
+        {
+            RunSample("P005");
         }
 
         private void RunSample(string sampleName)

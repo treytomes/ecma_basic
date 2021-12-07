@@ -2,7 +2,7 @@
 
 namespace ECMABasic.Core
 {
-	class NoEndInstructionException : Exception
+	class NoEndInstructionException : SyntaxException
 	{
 		public NoEndInstructionException()
 			: base("? NO END INSTRUCTION")

@@ -164,6 +164,10 @@ namespace ECMABasic.Core
 				{
 					return new Token(TokenType.Keyword_PRINT, token);
 				}
+				else if (token.Text == "STOP")
+				{
+					return new Token(TokenType.Keyword_STOP, token);
+				}
 				else
 				{
 					return token;
