@@ -9,8 +9,9 @@ namespace ECMABasic.Test.Basic55
     public class SampleTests
     {
         [Fact]
-        [Trait("BASIC-55", "Sample")]
-        public void Simple_PRINTing_of_string_constants()
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "Simple_PRINTing_of_string_constants")]
+        public void Null_print_and_printing_quoted_strings()
         {
             var output = File.ReadAllText("./Resources/P001.OK");
 

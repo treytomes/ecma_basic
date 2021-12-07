@@ -11,7 +11,7 @@ namespace ECMABasic.Test.BASIC_55
 	public class InterpreterTests
 	{
 		[Fact]
-		[Trait("BASIC-55", "Interpreter")]
+		[Trait("Feature Set", "BASIC-55")]
 		public void Can_interpret_PRINT()
 		{
 			var sourceText = @"10 PRINT ""HELLO, WORLD!""

@@ -9,7 +9,7 @@ namespace ECMABasic.Test.BASIC_55
 	public class TokenizerTests
 	{
 		[Fact]
-		[Trait("BASIC-55", "Tokenizer")]
+		[Trait("Feature Set", "BASIC-55")]
 		public void Can_create_character_reader()
 		{
 			var sourceText = "Hello world!";
@@ -24,7 +24,7 @@ namespace ECMABasic.Test.BASIC_55
 		}
 
 		[Fact]
-		[Trait("BASIC-55", "Tokenizer")]
+		[Trait("Feature Set", "BASIC-55")]
 		public void Can_process_simple_tokens()
 		{
 			var inputText = "HELLO	 123 WORLD!?";
@@ -91,7 +91,7 @@ namespace ECMABasic.Test.BASIC_55
 		}
 
 		[Fact]
-		[Trait("BASIC-55", "Tokenizer")]
+		[Trait("Feature Set", "BASIC-55")]
 		public void Can_process_complex_tokens()
 		{
 			var input = @"10 PRINT ""HELLO WORLD!""
