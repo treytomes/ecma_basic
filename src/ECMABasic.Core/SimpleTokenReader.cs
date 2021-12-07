@@ -22,6 +22,8 @@ namespace ECMABasic.Core
             _reader = new CharacterReader(stream);
         }
 
+        public bool IsAtEnd => _reader.IsAtEnd;
+
         public static SimpleTokenReader FromFile(string filename)
         {
             return new SimpleTokenReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
@@ -38,7 +40,7 @@ namespace ECMABasic.Core
         /// <returns>The token that was read, or null at the end of the stream.</returns>
         public Token Next()
         {
-            if (_reader.IsAtEnd)
+            if (IsAtEnd)
             {
                 return null;
             }

@@ -57,9 +57,10 @@ namespace ECMABasic.Core
                 _source.Position = 0;
                 using (var reader = new StreamReader(_source, leaveOpen: true))
                 {
-                    return reader.ReadToEnd();
+                    var text = reader.ReadToEnd();
+                    _source.Position = position;
+                    return text;
                 }
-                _source.Position = position;
             }
         }
         public int LineNumber { get; private set; }
@@ -114,19 +115,6 @@ namespace ECMABasic.Core
         {
             var sb = new StringBuilder();
             sb.Append(RequireSymbol());
-            while (true)
-            {
-                var ch = Peek();
-                if (IsSymbol(ch))
-                {
-                    sb.Append(ch);
-                    Next();
-                }
-                else
-                {
-                    break;
-                }
-            }
             return sb.ToString();
         }
 
@@ -153,13 +141,16 @@ namespace ECMABasic.Core
         public string ReadEndOfLine()
 		{
             var sb = new StringBuilder();
-            sb.Append(RequireEndOfLine());
+
+            var eol = RequireEndOfLine();
+            sb.Append(eol);
 
             // The line-feed character is optional, but should still be recorded.
             var ch = Peek();
-            if (ch == LINE_FEED)
+            if (((eol == CARRIAGE_RETURN) && (ch == LINE_FEED)) || ((eol == LINE_FEED) && (ch == CARRIAGE_RETURN)))
             {
                 sb.Append(ch);
+                Next();
             }
 
             return sb.ToString();
@@ -240,7 +231,7 @@ namespace ECMABasic.Core
         public char RequireEndOfLine()
         {
             var ch = Peek();
-            if (ch != CARRIAGE_RETURN)
+            if ((ch != CARRIAGE_RETURN) && (ch != LINE_FEED))
             {
                 throw new UnexpectedCharacterException(LineNumber, ColumnNumber, "end-of-line", ch);
             }
@@ -270,7 +261,7 @@ namespace ECMABasic.Core
 
         public bool IsEndOfLine(char ch)
         {
-            return ch == CARRIAGE_RETURN;
+            return (ch == CARRIAGE_RETURN) || (ch == LINE_FEED);
         }
 
         public char Peek()

@@ -27,8 +27,8 @@ namespace ECMABasic.Test.BASIC_55
 		[Trait("BASIC-55", "Tokenizer")]
 		public void Can_process_simple_tokens()
 		{
-			var sourceText = "HELLO	 123 WORLD!?";
-			using (var reader = SimpleTokenReader.FromText(sourceText))
+			var inputText = "HELLO	 123 WORLD!?";
+			using (var reader = SimpleTokenReader.FromText(inputText))
 			{
 				var tokens = new List<Token>();
 				while (true)
@@ -41,7 +41,7 @@ namespace ECMABasic.Test.BASIC_55
 					}
 				}
 
-				Assert.Equal(7, tokens.Count);
+				Assert.Equal(8, tokens.Count);
 				
 				Assert.Equal("HELLO", tokens[0].Text);
 				Assert.Equal(TokenType.Word, tokens[0].Type);
@@ -73,14 +73,95 @@ namespace ECMABasic.Test.BASIC_55
 				Assert.Equal(1, tokens[4].Line);
 				Assert.Equal(12, tokens[4].Column);
 
-				Assert.Equal("!?", tokens[5].Text);
+				Assert.Equal("!", tokens[5].Text);
 				Assert.Equal(TokenType.Symbol, tokens[5].Type);
-				Assert.Equal(2, tokens[5].Length);
+				Assert.Equal(1, tokens[5].Length);
 				Assert.Equal(1, tokens[5].Line);
 				Assert.Equal(17, tokens[5].Column);
 
-				Assert.Null(tokens[6]);
+
+				Assert.Equal("?", tokens[6].Text);
+				Assert.Equal(TokenType.Symbol, tokens[6].Type);
+				Assert.Equal(1, tokens[6].Length);
+				Assert.Equal(1, tokens[6].Line);
+				Assert.Equal(18, tokens[6].Column);
+
+				Assert.Null(tokens[7]);
 			}
+		}
+
+		[Fact]
+		[Trait("BASIC-55", "Tokenizer")]
+		public void Can_process_complex_tokens()
+		{
+			var input = @"10 PRINT ""HELLO WORLD!""
+15 PRINT ""THIS IS A TEST...?""
+20 END";
+			var reader = ComplexTokenReader.FromText(input);
+
+			// Line 10
+
+			var token = reader.Next();
+			Assert.Equal(TokenType.Integer, token.Type);
+			Assert.Equal("10", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Space, token.Type);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Keyword_PRINT, token.Type);
+			Assert.Equal("PRINT", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Space, token.Type);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.String, token.Type);
+			Assert.Equal(1, token.Line);
+			Assert.Equal(10, token.Column);
+			Assert.Equal("\"HELLO WORLD!\"", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.EndOfLine, token.Type);
+
+			// Line 15
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Integer, token.Type);
+			Assert.Equal("15", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Space, token.Type);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Keyword_PRINT, token.Type);
+			Assert.Equal("PRINT", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Space, token.Type);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.String, token.Type);
+			Assert.Equal("\"THIS IS A TEST...?\"", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.EndOfLine, token.Type);
+
+			// Line 20
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Integer, token.Type);
+			Assert.Equal("20", token.Text);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Space, token.Type);
+
+			token = reader.Next();
+			Assert.Equal(TokenType.Keyword_END, token.Type);
+			Assert.Equal("END", token.Text);
+
+			token = reader.Next();
+			Assert.Null(token);
 		}
 	}
 }

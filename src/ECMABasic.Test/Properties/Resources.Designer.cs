@@ -59,34 +59,5 @@ namespace ECMABasic.Test.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 10 PRINT &quot;PROGRAM FILE 1: NULL PRINT AND PRINTING QUOTED STRINGS.&quot;
-        ///20 PRINT &quot;    ANSI STANDARD 3.2, 3.4, 5.2, 5.4, 12.2, 12.4&quot;
-        ///30 PRINT
-        ///40 PRINT &quot;*** NOTE: THIS PROGRAM MAKES USE OF THE END STATEMENT&quot;
-        ///50 PRINT &quot;    WHICH HAS NOT YET BEEN TESTED. IF SUBSEQUENT TESTS SHOW&quot;
-        ///60 PRINT &quot;    THIS FEATURE TO BE INCORRECTLY IMPLEMENTED, THEN THE &quot;
-        ///70 PRINT &quot;    VALIDITY OF THE RESULTS OF THIS TEST ROUTINE IS DOUBTFUL.&quot;
-        ///80 PRINT
-        ///90 PRINT
-        ///100 PRINT &quot;                  * * * * * * * * * * * * * * * * * *&quot;
-        ///110 PRINT &quot;    [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string P001_BAS {
-            get {
-                return ResourceManager.GetString("P001_BAS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] P001_OK {
-            get {
-                object obj = ResourceManager.GetObject("P001_OK", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

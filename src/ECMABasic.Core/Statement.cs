@@ -1,27 +1,30 @@
-﻿namespace ECMABasic.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ECMABasic.Core
 {
     /// <summary>
-    /// The full list of statements built in to BASIC-55.
+    /// Represents a single executable statement.
     /// </summary>
-    public enum StatementType
+    public abstract class Statement
     {
-        END,
-        DATA,
-        DEF,
-        DIMENSION,
-        GOSUB,
-        GOTO,
-        IF_THEN,
-        INPUT,
-        LET,
-        ON_GOTO,
-        OPTION,
-        PRINT,
-        RANDOMIZE,
-        READ,
-        REMARK,
-        RESTORE,
-        RETURN,
-        STOP
+        /// <summary>
+        /// Construct a statement instance.
+        /// </summary>
+        /// <param name="type">The type of this statement.</param>
+        public Statement(StatementType type)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// The type of this statement.
+        /// </summary>
+        public StatementType Type { get; }
+
+        public abstract void Execute(IEnvironment env);
     }
 }

@@ -28,6 +28,21 @@
 		/// <summary>
 		/// \x0A\x0D?
 		/// </summary>
-		EndOfLine
+		EndOfLine,
+
+		/// <summary>
+		/// Anything sitting between 2 double-quotes, inclusive.
+		/// </summary>
+		String,
+
+		/// <summary>
+		/// The END keyword.
+		/// </summary>
+		Keyword_END,
+
+		/// <summary>
+		/// The PRINT keyword.
+		/// </summary>
+		Keyword_PRINT
 	}
 }
