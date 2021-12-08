@@ -30,6 +30,8 @@
 		/// </summary>
 		EndOfLine,
 
+		// Complex tokens start here.
+
 		/// <summary>
 		/// Anything sitting between 2 double-quotes, inclusive.
 		/// </summary>
@@ -41,6 +43,11 @@
 		Keyword_END,
 
 		/// <summary>
+		/// The LET keyword.
+		/// </summary>
+		Keyword_LET,
+
+		/// <summary>
 		/// The PRINT keyword.
 		/// </summary>
 		Keyword_PRINT,
@@ -48,6 +55,41 @@
 		/// <summary>
 		/// The STOP keyword.
 		/// </summary>
-		Keyword_STOP
+		Keyword_STOP,
+
+		/// <summary>
+		/// Represents the TAB function in a print-list.
+		/// </summary>
+		Keyword_TAB,
+
+		/// <summary>
+		/// The comma in a print-list.
+		/// </summary>
+		Comma,
+
+		/// <summary>
+		/// The semicolon in a print-list.
+		/// </summary>
+		Semicolon,
+
+		/// <summary>
+		/// Opening parenthesis to a function argument list.
+		/// </summary>
+		OpenParenthesis,
+
+		/// <summary>
+		/// closing parenthesis to a function argument list.
+		/// </summary>
+		CloseParenthesis,
+
+		/// <summary>
+		/// The equals sign used in comparison and assignment.
+		/// </summary>
+		Equals,
+
+		/// <summary>
+		/// A string variable name: [A-Z]\$
+		/// </summary>
+		StringVariable
 	}
 }

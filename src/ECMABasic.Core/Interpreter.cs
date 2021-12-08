@@ -1,4 +1,5 @@
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core.Expressions;
+using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace ECMABasic.Core
 	/// </summary>
 	public class Interpreter
 	{
+		private const int MAX_TAB_VALUE = 80; 
+		
 		private readonly ComplexTokenReader _reader;
 
 		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter)
@@ -116,7 +119,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace();
 
-			var statement = ProcessStatement();
+			var statement = ProcessStatement(lineNumber);
 
 			// Optional space.
 			ProcessSpace(false);
@@ -161,9 +164,10 @@ namespace ECMABasic.Core
 		/// An exception will optionally occur if whitespace could not be found.
 		/// </summary>
 		/// <param name="throwOnError">Throw an exception if space is not found.  Default to true.</param>
-		private void ProcessSpace(bool throwOnError = true)
+		/// <returns>The space token.</returns>
+		private Token ProcessSpace(bool throwOnError = true)
 		{
-			_reader.Next(TokenType.Space, throwOnError);
+			return _reader.Next(TokenType.Space, throwOnError);
 		}
 
 		private void ValidateEndLine()
@@ -181,12 +185,16 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private Statement ProcessStatement()
+		private Statement ProcessStatement(int lineNumber)
 		{
 			var token = _reader.Next();
 			if (token.Type == TokenType.Keyword_END)
 			{
 				return ProcessStatementType(StatementType.END);
+			}
+			else if (token.Type == TokenType.Keyword_LET)
+			{
+				return ProcessStatementType(StatementType.LET);
 			}
 			else if (token.Type == TokenType.Keyword_PRINT)
 			{
@@ -198,7 +206,7 @@ namespace ECMABasic.Core
 			}	
 			else
 			{
-				throw new InvalidOperationException("I expected to find a statement here.");
+				throw new LineSyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
 			}
 
 			//        foreach (var statementType in Enum.GetValues<StatementType>())
@@ -224,19 +232,13 @@ namespace ECMABasic.Core
 			{
 				return new EndStatement();
 			}
+			else if (type == StatementType.LET)
+			{
+				return ProcessLetStatement();
+			}
 			else if (type == StatementType.PRINT)
 			{
-				var spaceToken = _reader.Next(TokenType.Space, false);
-				if (spaceToken == null)
-				{
-					return new PrintStatement(new StringExpression(string.Empty));
-					//throw new UnexpectedTokenException(TokenType.Space, spaceToken);
-				}
-
-				var stringToken = _reader.Next(TokenType.String, false);
-				// The actual string is everything between the "".
-				var text = (stringToken == null) ? string.Empty : stringToken.Text.Substring(1, stringToken.Text.Length - 2);
-				return new PrintStatement(new StringExpression(text));
+				return ProcessPrintStatement();
 			}
 			else if (type == StatementType.STOP)
 			{
@@ -246,6 +248,126 @@ namespace ECMABasic.Core
 			{
 				throw new NotImplementedException();
 			}
+		}
+
+		private Statement ProcessLetStatement()
+		{
+			ProcessSpace(true);
+
+			var stringVariableToken = _reader.Next(TokenType.StringVariable);
+			var targetExpr = new VariableExpression(stringVariableToken.Text);
+
+			_reader.Next(TokenType.Equals);
+			var valueToken = _reader.Next(TokenType.String, false);
+			IExpression valueExpr;
+			if (valueToken != null)
+			{
+				// The actual string is everything between the "".
+				var text = valueToken.Text.Substring(1, valueToken.Text.Length - 2);
+				valueExpr = new StringExpression(text);
+			}
+			else
+			{
+				valueToken = _reader.Next(TokenType.StringVariable);
+				valueExpr = new VariableExpression(valueToken.Text);
+			}
+
+			return new LetStatement(targetExpr, valueExpr);
+		}
+
+		private Statement ProcessPrintStatement()
+		{
+			var spaceToken = ProcessSpace(false);
+			if (spaceToken == null)
+			{
+				// It's just an empty print statement.
+				return new PrintStatement();
+			}
+
+			var printList = ProcessPrintList();
+			return new PrintStatement(printList);
+		}
+
+		private List<IExpression> ProcessPrintList()
+		{
+			var items = new List<IExpression>();
+
+			while (true)
+			{
+				var printItem = ProcessPrintItem();
+				if (printItem != null)
+				{
+					items.Add(printItem);
+				}
+
+				ProcessSpace(false);  // Optional space.
+
+				var printSeparator = ProcessPrintSeparator();
+
+				ProcessSpace(false);  // Optional space.
+
+				if (printSeparator == null)
+				{
+					// No separator, so this is the end of the list.
+					return items;
+				}
+				else
+				{
+					// If there's a separator, there might be another item.
+					items.Add(printSeparator);
+				}
+			}
+		}
+
+		private IExpression ProcessPrintItem()
+		{
+			var token = _reader.Next(TokenType.String, false);
+			if (token != null)
+			{
+				// The actual string is everything between the "".
+				var text = token.Text.Substring(1, token.Text.Length - 2);
+				return new StringExpression(text);
+			}
+
+			token = _reader.Next(TokenType.StringVariable, false);
+			if (token != null)
+			{
+				return new VariableExpression(token.Text);
+			}
+			
+			token = _reader.Next(TokenType.Keyword_TAB, false);
+			if (token != null)
+			{
+				_reader.Next(TokenType.OpenParenthesis);
+				var tabValue = _reader.NextInteger().Value;
+				_reader.Next(TokenType.CloseParenthesis);
+
+				if (tabValue > MAX_TAB_VALUE)
+				{
+					throw new InvalidOperationException($"{tabValue} is too large for TAB.  Expected a value <= {MAX_TAB_VALUE}");
+				}
+
+				return new TabExpression(tabValue);
+			}
+
+			return null;
+		}
+
+		private IExpression ProcessPrintSeparator()
+		{
+			var symbolToken = _reader.Next(TokenType.Comma, false);
+			if (symbolToken != null)
+			{
+				return new CommaExpression();
+			}
+
+			symbolToken = _reader.Next(TokenType.Semicolon, false);
+			if (symbolToken != null)
+			{
+				return new SemicolonExpression();
+			}
+
+			return null;
 		}
 
 		private ProgramLine ProcessForBlock()

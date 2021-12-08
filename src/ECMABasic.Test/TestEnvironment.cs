@@ -11,6 +11,7 @@ namespace ECMABasic.Test
 	class TestEnvironment : IEnvironment
 	{
 		private readonly StringBuilder _sb = new StringBuilder();
+		private readonly Dictionary<string, string> _stringVariables = new Dictionary<string, string>();
 
 		/// <summary>
 		/// The line number currently being executed.
@@ -33,14 +34,43 @@ namespace ECMABasic.Test
 			}
 		}
 
+		public int TerminalRow { get; private set; } = 0;
+
+		public int TerminalColumn { get; private set; } = 0;
+
 		public void PrintLine(string text)
 		{
-			_sb.AppendLine(text);
+			Print(text);
+			_sb.AppendLine();
+			TerminalRow++;
+			TerminalColumn = 0;
+		}
+
+		public void Print(string text)
+		{
+			_sb.Append(text);
+			TerminalColumn += text.Length;
 		}
 
 		public void ReportError(string message)
 		{
 			PrintLine(message);
+		}
+
+		public string GetStringVariableValue(string variableName)
+		{
+			if (!_stringVariables.ContainsKey(variableName))
+			{
+				var value = string.Empty;
+				SetStringVariableValue(variableName, value);
+				return value;
+			}
+			return _stringVariables[variableName];
+		}
+
+		public void SetStringVariableValue(string variableName, string value)
+		{
+			_stringVariables[variableName] = value;
 		}
 	}
 }

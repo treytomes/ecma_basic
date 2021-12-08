@@ -51,7 +51,7 @@ namespace ECMABasic.Test.Basic55
         [Fact]
         [Trait("Feature Set", "BASIC-55")]
         [Trait("Category", "String variables and TAB")]
-        public void PRINT_separators_and_TABs()
+        public void PRINT_separators_TABs_and_string_variables()
         {
             RunSample("P006");
         }
@@ -61,6 +61,7 @@ namespace ECMABasic.Test.Basic55
         [Trait("Category", "String variables and TAB")]
         public void Exception_String_overflow_using_the_LET_statement()
         {
+            // TODO: This shouldn't be passing yet...
             RunSample("P007");
         }
 

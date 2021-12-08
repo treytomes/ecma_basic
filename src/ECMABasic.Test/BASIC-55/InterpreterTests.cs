@@ -28,7 +28,7 @@ namespace ECMABasic.Test.BASIC_55
 			Assert.NotNull(line);
 			Assert.Equal(10, line.LineNumber);
 			Assert.IsType<PrintStatement>(line.Statement);
-			Assert.Equal("HELLO, WORLD!", (line.Statement as PrintStatement).Expression.ToString());
+			Assert.Equal("HELLO, WORLD!", (line.Statement as PrintStatement).Expressions.First().Evaluate(env));
 
 			line = program[20];
 			Assert.NotNull(line);

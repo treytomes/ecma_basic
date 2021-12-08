@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECMABasic.Core
+namespace ECMABasic.Core.Expressions
 {
 	class StringExpression : IExpression
 	{
@@ -16,7 +16,7 @@ namespace ECMABasic.Core
 
 		public string Text { get; }
 
-		public override string ToString()
+		public string Evaluate(IEnvironment env)
 		{
 			return Text;
 		}

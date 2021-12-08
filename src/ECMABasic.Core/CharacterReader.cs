@@ -277,7 +277,8 @@ namespace ECMABasic.Core
             var ch = (char)_reader.Read();
             ColumnNumber++;
 
-            if (ch == CARRIAGE_RETURN)
+            if (((ch == LINE_FEED) && (Peek() != CARRIAGE_RETURN)) ||
+                ((ch == CARRIAGE_RETURN) && (Peek() != LINE_FEED)))
 			{
                 LineNumber++;
                 ColumnNumber = 1;

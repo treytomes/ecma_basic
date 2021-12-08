@@ -8,5 +8,9 @@ namespace ECMABasic.Core
 {
 	class ProgramEndException : RuntimeException
 	{
+		public ProgramEndException()
+			: base("You have reached the END.")
+		{
+		}
 	}
 }

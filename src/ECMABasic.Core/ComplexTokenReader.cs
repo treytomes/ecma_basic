@@ -149,6 +149,26 @@ namespace ECMABasic.Core
 				{
 					return ReadRestOfString(token);
 				}
+				else if (token.Text == ",")
+				{
+					return new Token(TokenType.Comma, token);
+				}
+				else if (token.Text == ";")
+				{
+					return new Token(TokenType.Semicolon, token);
+				}
+				else if (token.Text == "(")
+				{
+					return new Token(TokenType.OpenParenthesis, token);
+				}
+				else if (token.Text == ")")
+				{
+					return new Token(TokenType.CloseParenthesis, token);
+				}
+				else if (token.Text == "=")
+				{
+					return new Token(TokenType.Equals, token);
+				}
 				else
 				{
 					return token;
@@ -160,6 +180,10 @@ namespace ECMABasic.Core
 				{
 					return new Token(TokenType.Keyword_END, token);
 				}
+				else if (token.Text == "LET")
+				{
+					return new Token(TokenType.Keyword_LET, token);
+				}
 				else if (token.Text == "PRINT")
 				{
 					return new Token(TokenType.Keyword_PRINT, token);
@@ -167,6 +191,24 @@ namespace ECMABasic.Core
 				else if (token.Text == "STOP")
 				{
 					return new Token(TokenType.Keyword_STOP, token);
+				}
+				else if (token.Text == "TAB")
+				{
+					return new Token(TokenType.Keyword_TAB, token);
+				}
+				else if (token.Text.Length == 1)
+				{
+					var nextToken = Peek();
+					if ((nextToken.Type == TokenType.Symbol) && (nextToken.Text == "$"))
+					{
+						Read();  // Read off the $.
+						return new Token(TokenType.StringVariable, new[] { token, nextToken });
+					}
+					else
+					{
+						// TODO: Recognize other variable types.
+						return token;
+					}
 				}
 				else
 				{
