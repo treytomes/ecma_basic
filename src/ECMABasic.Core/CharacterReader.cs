@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ECMABasic.Core
@@ -20,6 +21,7 @@ namespace ECMABasic.Core
         private const string SPACES = " \t";
         private const char CARRIAGE_RETURN = (char)13;
         private const char LINE_FEED = (char)10;
+        private const int MAX_LINE_LENGTH = 72;
 
         #endregion
 
@@ -43,6 +45,7 @@ namespace ECMABasic.Core
             _reader = new StreamReader(_source, leaveOpen: true);
             LineNumber = 1;
             ColumnNumber = 1;
+            ValidateLineLengths();
         }
 
         #endregion
@@ -282,6 +285,28 @@ namespace ECMABasic.Core
 
             return ch;
         }
+
+        private void ValidateLineLengths()
+		{
+            // Minimal BASIC doesn't allow source lines longer than 72 characters.
+            var longLine = SourceText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(x => x.Length > MAX_LINE_LENGTH);
+
+            if (longLine == null)
+			{
+                // No long lines were found.
+                return;
+			}
+
+            // Try to grab the line number.
+            var lineNumberText = longLine.Split(' ').First();
+            var lineNumber = 0;
+            if (!int.TryParse(lineNumberText, out lineNumber))
+			{
+                throw new SyntaxException("Every line should start with a line number.");
+			}
+
+            throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - MAX_LINE_LENGTH} CHARACTERS", lineNumber);
+		}
 
         protected virtual void Dispose(bool disposing)
         {

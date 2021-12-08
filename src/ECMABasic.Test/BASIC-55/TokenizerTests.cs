@@ -1,4 +1,5 @@
 ﻿using ECMABasic.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -162,6 +163,27 @@ namespace ECMABasic.Test.BASIC_55
 
 			token = reader.Next();
 			Assert.Null(token);
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		public void Long_lines_are_rejected()
+		{
+			var input = @"10 PRINT ""HELLO WORLD!""
+20 PRINT ""0123456789012345678901234567890123456789012345678901234567890123456789""
+30 END";
+			using (var stream = new MemoryStream(Encoding.ASCII.GetBytes(input)))
+			{
+				try
+				{
+					var reader = new CharacterReader(stream);
+					throw new InvalidOperationException("This should have thrown an exception.");
+				}
+				catch (LineSyntaxException ex)
+				{
+					Assert.Equal("? LINE IS TOO LONG BY 9 CHARACTERS IN LINE 20", ex.Message);
+				}
+			}
 		}
 	}
 }

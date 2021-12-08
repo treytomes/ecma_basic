@@ -48,6 +48,30 @@ namespace ECMABasic.Test.Basic55
             RunSample("P005");
         }
 
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "String variables and TAB")]
+        public void PRINT_separators_and_TABs()
+        {
+            RunSample("P006");
+        }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "String variables and TAB")]
+        public void Exception_String_overflow_using_the_LET_statement()
+        {
+            RunSample("P007");
+        }
+
+        [Fact]
+        [Trait("Feature Set", "BASIC-55")]
+        [Trait("Category", "String variables and TAB")]
+        public void Exception_TAB_argument()
+        {
+            RunSample("P008");
+        }
+
         private void RunSample(string sampleName)
 		{
             var env = new TestEnvironment();

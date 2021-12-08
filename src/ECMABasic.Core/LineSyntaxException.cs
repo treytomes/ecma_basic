@@ -1,6 +1,6 @@
 ﻿namespace ECMABasic.Core
 {
-	class LineSyntaxException : SyntaxException
+	public class LineSyntaxException : SyntaxException
 	{
 		public LineSyntaxException(string message, int line)
 			: base($"? {message.ToUpper()} IN LINE {line}")

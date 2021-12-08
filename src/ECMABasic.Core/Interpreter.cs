@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
-
-
 	// TODO: The end-goal is to have a single interpreter that you can plug feature sets into, like adding BASIC-1 on top of Minimal BASIC.
 
 	/// <summary>
@@ -30,14 +28,26 @@ namespace ECMABasic.Core
 		/// </summary>
 		public Program Program { get; }
 
+		/// <summary>
+		/// Create an interpreter that will interpret the input text directly.
+		/// </summary>
+		/// <param name="text">The text to interpret.</param>
+		/// <param name="reporter">A receiver for error messages.</param>
+		/// <returns>The interpreter instance.</returns>
 		public static Interpreter FromText(string text, IErrorReporter reporter)
 		{
 			return new Interpreter(ComplexTokenReader.FromText(text), reporter);
 		}
 
-		public static Interpreter FromFile(string file, IErrorReporter reporter)
+		/// <summary>
+		/// Create an interpreter that will interpret the source text contained at the file path.
+		/// </summary>
+		/// <param name="path">The path to the file to interpret.</param>
+		/// <param name="reporter">A receiver for error messages.</param>
+		/// <returns>The interpreter instance.</returns>
+		public static Interpreter FromFile(string path, IErrorReporter reporter)
 		{
-			return new Interpreter(ComplexTokenReader.FromFile(file), reporter);
+			return new Interpreter(ComplexTokenReader.FromFile(path), reporter);
 		}
 
 		private void ProcessProgram(IErrorReporter reporter)
