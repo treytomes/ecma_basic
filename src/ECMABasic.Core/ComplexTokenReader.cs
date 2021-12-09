@@ -243,6 +243,7 @@ namespace ECMABasic.Core
 						nextToken = Peek();
 						if ((nextToken.Type == TokenType.Digit) && (nextToken.Text.Length == 1))
 						{
+							Read();  // Read off the digit.
 							// It's a numeric variable with a letter followed by a digit.
 							return new Token(TokenType.NumericVariable, new[] { token, nextToken });
 						}
