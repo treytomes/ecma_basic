@@ -168,6 +168,30 @@ namespace ECMABasic.Test.BASIC_55
 
 		[Fact]
 		[Trait("Feature Set", "BASIC-55")]
+		public void Can_recognize_numeric_variables()
+		{
+			var input = @"15 A=5
+16 B2=10
+20 END";
+			var reader = ComplexTokenReader.FromText(input);
+
+			Assert.Equal(15, reader.NextInteger());
+			Assert.Equal(TokenType.Space, reader.Next().Type);
+			Assert.Equal(TokenType.NumericVariable, reader.Next().Type);
+			Assert.Equal(TokenType.Equals, reader.Next().Type);
+			Assert.Equal(5, reader.NextNumber());
+			Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
+
+			Assert.Equal(16, reader.NextInteger());
+			Assert.Equal(TokenType.Space, reader.Next().Type);
+			Assert.Equal(TokenType.NumericVariable, reader.Next().Type);
+			Assert.Equal(TokenType.Equals, reader.Next().Type);
+			Assert.Equal(10, reader.NextNumber());
+			Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
 		public void Long_lines_are_rejected()
 		{
 			var input = @"10 PRINT ""HELLO WORLD!""
