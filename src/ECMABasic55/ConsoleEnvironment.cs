@@ -6,44 +6,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECMABasic.Test
+namespace ECMABasic55
 {
-	class TestEnvironment : EnvironmentBase
+	class ConsoleEnvironment : EnvironmentBase
 	{
-		private readonly StringBuilder _sb = new StringBuilder();
 
-		public override int TerminalRow { get; set; } = 0;
-
-		public override int TerminalColumn { get; set; } = 0;
-
-		public string Text
+		public override int TerminalRow
 		{
 			get
 			{
-				return _sb.ToString();
+				return Console.CursorTop;
+			}
+			set
+			{
+				Console.CursorTop = value;
 			}
 		}
 
-		public string[] Lines
+		public override int TerminalColumn
 		{
 			get
 			{
-				return Text.Split('\n');
+				return Console.CursorLeft;
+			}
+			set
+			{
+				Console.CursorLeft = value;
 			}
 		}
 
 		public override void PrintLine(string text)
 		{
 			Print(text);
-			_sb.AppendLine();
-			TerminalRow++;
-			TerminalColumn = 0;
+			Console.WriteLine();
+			//TerminalRow++;
+			//TerminalColumn = 0;
 		}
 
 		public override void Print(string text)
 		{
-			_sb.Append(text);
-			TerminalColumn += text.Length;
+			Console.Write(text);
+			//TerminalColumn += text.Length;
 		}
 
 		public override void ReportError(string message)

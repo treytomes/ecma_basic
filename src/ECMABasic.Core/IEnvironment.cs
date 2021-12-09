@@ -19,12 +19,12 @@ namespace ECMABasic.Core
 		/// <summary>
 		/// The terminal row to write to next.
 		/// </summary>
-		int TerminalRow { get; }
+		int TerminalRow { get; set; }
 
 		/// <summary>
 		/// The terminal column to write to next.
 		/// </summary>
-		int TerminalColumn { get; }
+		int TerminalColumn { get; set; }
 
 		/// <summary>
 		/// Print a string to the output stream, followed by a new-line.

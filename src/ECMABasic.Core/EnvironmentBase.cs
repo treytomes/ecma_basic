@@ -19,9 +19,9 @@ namespace ECMABasic.Core
 		/// </summary>
 		public int CurrentLineNumber { get; set; }
 
-		public int TerminalRow { get; protected set; } = 0;
+		public abstract int TerminalRow { get; set; }
 
-		public int TerminalColumn { get; protected set; } = 0;
+		public abstract int TerminalColumn { get; set; }
 
 		public abstract void Print(string text);
 

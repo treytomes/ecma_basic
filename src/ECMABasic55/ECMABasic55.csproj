@@ -9,4 +9,10 @@
     <ProjectReference Include="..\ECMABasic.Core\ECMABasic.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="sample.bas">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
