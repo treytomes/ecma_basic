@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECMABasic.Core.Exceptions;
+using System;
 using System.IO;
 using System.Text;
 

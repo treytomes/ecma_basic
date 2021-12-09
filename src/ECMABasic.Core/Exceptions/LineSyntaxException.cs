@@ -1,4 +1,4 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core.Exceptions
 {
 	public class LineSyntaxException : SyntaxException
 	{

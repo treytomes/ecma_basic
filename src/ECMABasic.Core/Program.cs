@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECMABasic.Core.Exceptions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,11 @@ namespace ECMABasic.Core
 				}
 				catch (ProgramEndException)
 				{
+					break;
+				}
+				catch (RuntimeException ex)
+				{
+					env.ReportError(ex.Message);
 					break;
 				}
 			}

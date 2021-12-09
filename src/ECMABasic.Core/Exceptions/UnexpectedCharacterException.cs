@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ECMABasic.Core
+namespace ECMABasic.Core.Exceptions
 {
     public class UnexpectedCharacterException : Exception
     {

@@ -1,4 +1,6 @@
-﻿namespace ECMABasic.Core.Statements
+﻿using ECMABasic.Core.Exceptions;
+
+namespace ECMABasic.Core.Statements
 {
 	public class StopStatement : Statement
 	{

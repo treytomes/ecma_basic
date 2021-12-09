@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECMABasic.Core
+namespace ECMABasic.Core.Exceptions
 {
 	class ProgramEndException : RuntimeException
 	{
