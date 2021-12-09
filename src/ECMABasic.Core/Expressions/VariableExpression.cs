@@ -15,9 +15,33 @@ namespace ECMABasic.Core.Expressions
 
 		public string Name { get; }
 
-		public string Evaluate(IEnvironment env)
+		public bool IsString
 		{
-			return env.GetStringVariableValue(Name);
+			get
+			{
+				return Name.EndsWith('$');
+			}
+		}
+
+		public bool IsNumeric
+		{
+			get
+			{
+				return !IsString;
+			}
+		}
+
+		public object Evaluate(IEnvironment env)
+		{
+			if (IsString)
+			{
+				return env.GetStringVariableValue(Name);
+			}
+			else if (IsNumeric)
+			{
+				return env.GetNumericVariableValue(Name);
+			}
+			throw new InvalidOperationException("This shouldn't have happened.");
 		}
 	}
 }

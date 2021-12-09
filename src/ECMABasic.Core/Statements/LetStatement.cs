@@ -22,7 +22,14 @@ namespace ECMABasic.Core.Statements
 		public override void Execute(IEnvironment env)
 		{
 			var value = Value.Evaluate(env);
-			env.SetStringVariableValue(Target.Name, value);
+			if (Target.IsString)
+			{
+				env.SetStringVariableValue(Target.Name, Convert.ToString(value));
+			}
+			else
+			{
+				env.SetNumericVariableValue(Target.Name, Convert.ToDouble(value));
+			}
 		}
 	}
 }

@@ -51,5 +51,19 @@ namespace ECMABasic.Core
 		/// <param name="variableName">The name of the value.</param>
 		/// <param name="value">The value to assign.</param>
 		void SetStringVariableValue(string variableName, string value);
+
+		/// <summary>
+		/// Get the value of a variable.
+		/// </summary>
+		/// <param name="variableName">The variable to retrieve.</param>
+		/// <returns>The value of the variable.</returns>
+		double GetNumericVariableValue(string variableName);
+
+		/// <summary>
+		/// Set the value of a variable.
+		/// </summary>
+		/// <param name="variableName">The name of the value.</param>
+		/// <param name="value">The value to assign.</param>
+		void SetNumericVariableValue(string variableName, double value);
 	}
 }

@@ -16,7 +16,7 @@ namespace ECMABasic.Core.Expressions
 
 		public string Text { get; }
 
-		public string Evaluate(IEnvironment env)
+		public object Evaluate(IEnvironment env)
 		{
 			return Text;
 		}

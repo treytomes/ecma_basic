@@ -30,7 +30,7 @@ namespace ECMABasic.Core.Statements
 
 			foreach (var expr in Expressions)
 			{
-				var text = expr.Evaluate(env);
+				var text = Convert.ToString(expr.Evaluate(env));
 				env.Print(text);
 			}
 

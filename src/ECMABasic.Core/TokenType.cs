@@ -8,7 +8,7 @@
 		/// <summary>
 		/// [0-9]+.
 		/// </summary>
-		Integer,
+		Digit,
 
 		/// <summary>
 		/// [A-Z]+
@@ -90,6 +90,26 @@
 		/// <summary>
 		/// A string variable name: [A-Z]\$
 		/// </summary>
-		StringVariable
+		StringVariable,
+
+		/// <summary>
+		/// A numeric variable name: [A-Z][0-9]?
+		/// </summary>
+		NumericVariable,
+
+		/// <summary>
+		/// The minus sign, either binary or unary.
+		/// </summary>
+		Negation,
+
+		/// <summary>
+		/// A real number: [0-9]*\.[0-9]+
+		/// </summary>
+		Number,
+
+		/// <summary>
+		/// Breaks up a number.
+		/// </summary>
+		DecimalPoint
 	}
 }

@@ -15,10 +15,15 @@ namespace ECMABasic.Core.Expressions
 		private const int NUM_COLUMNS = 5;
 		private const int COLUMN_WIDTH = TERMINAL_WIDTH / NUM_COLUMNS;
 
-		public string Evaluate(IEnvironment env)
+		public object Evaluate(IEnvironment env)
 		{
 			var column = env.TerminalColumn / COLUMN_WIDTH;
-			var nextColumnStart = (column + 1) * COLUMN_WIDTH;
+			var nextColumn = column + 1;
+			if (nextColumn >= NUM_COLUMNS)
+			{
+				return "\n";
+			}
+			var nextColumnStart = nextColumn * COLUMN_WIDTH;
 			var numRemainingSpaces = nextColumnStart - env.TerminalColumn;
 			var text = new string(' ', numRemainingSpaces);
 			return text;

@@ -44,6 +44,10 @@ namespace ECMABasic.Test
 
 		public override void ReportError(string message)
 		{
+			if (TerminalColumn != 0)
+			{
+				PrintLine(string.Empty);
+			}
 			PrintLine(message);
 		}
 	}

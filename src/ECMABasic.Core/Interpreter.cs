@@ -16,8 +16,6 @@ namespace ECMABasic.Core
 	/// </summary>
 	public class Interpreter
 	{
-		private const int MAX_TAB_VALUE = 80; 
-		
 		private readonly ComplexTokenReader _reader;
 
 		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter)
@@ -255,22 +253,55 @@ namespace ECMABasic.Core
 		{
 			ProcessSpace(true);
 
-			var stringVariableToken = _reader.Next(TokenType.StringVariable);
-			var targetExpr = new VariableExpression(stringVariableToken.Text);
-
-			_reader.Next(TokenType.Equals);
-			var valueToken = _reader.Next(TokenType.String, false);
-			IExpression valueExpr;
-			if (valueToken != null)
+			VariableExpression targetExpr;
+			var variableNameToken = _reader.Next(TokenType.StringVariable, false);
+			if (variableNameToken != null)
 			{
-				// The actual string is everything between the "".
-				var text = valueToken.Text.Substring(1, valueToken.Text.Length - 2);
-				valueExpr = new StringExpression(text);
+				targetExpr = new VariableExpression(variableNameToken.Text);
 			}
 			else
 			{
-				valueToken = _reader.Next(TokenType.StringVariable);
-				valueExpr = new VariableExpression(valueToken.Text);
+				variableNameToken = _reader.Next(TokenType.NumericVariable);
+				targetExpr = new VariableExpression(variableNameToken.Text);
+			}
+
+			_reader.Next(TokenType.Equals);
+
+			Token valueToken;
+			IExpression valueExpr;
+			if (targetExpr.IsString)
+			{
+				valueToken = _reader.Next(TokenType.String, false);
+				if (valueToken != null)
+				{
+					// The actual string is everything between the "".
+					var text = valueToken.Text.Substring(1, valueToken.Text.Length - 2);
+					valueExpr = new StringExpression(text);
+				}
+				else
+				{
+					valueToken = _reader.Next(TokenType.StringVariable);
+					valueExpr = new VariableExpression(valueToken.Text);
+				}
+			}
+			else
+			{
+				var isNegative = _reader.Next(TokenType.Negation, false) != null;
+
+				var number = _reader.NextNumber(false);
+				if (number != null)
+				{
+					if (isNegative)
+					{
+						number = -number.Value;
+					}
+					valueExpr = new NumberExpression(number.Value);
+				}
+				else
+				{
+					valueToken = _reader.Next(TokenType.NumericVariable);
+					valueExpr = new VariableExpression(valueToken.Text);
+				}
 			}
 
 			return new LetStatement(targetExpr, valueExpr);
@@ -340,15 +371,20 @@ namespace ECMABasic.Core
 			if (token != null)
 			{
 				_reader.Next(TokenType.OpenParenthesis);
-				var tabValue = _reader.NextInteger().Value;
+				IExpression valueExpr;
+				var valueToken = _reader.Next(TokenType.NumericVariable, false);
+				if (valueToken != null)
+				{
+					valueExpr = new VariableExpression(valueToken.Text);
+				}
+				else
+				{
+					var tabValue = _reader.NextNumber().Value;
+					valueExpr = new NumberExpression(tabValue);
+				}
 				_reader.Next(TokenType.CloseParenthesis);
 
-				if (tabValue > MAX_TAB_VALUE)
-				{
-					throw new InvalidOperationException($"{tabValue} is too large for TAB.  Expected a value <= {MAX_TAB_VALUE}");
-				}
-
-				return new TabExpression(tabValue);
+				return new TabExpression(valueExpr);
 			}
 
 			return null;

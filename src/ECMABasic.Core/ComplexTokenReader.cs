@@ -55,7 +55,7 @@ namespace ECMABasic.Core
 		{
 			var value = 0;
 			
-			var token = Next(TokenType.Integer, throwOnError);
+			var token = Next(TokenType.Digit, throwOnError);
 			if (token == null)
 			{
 				return null;
@@ -67,7 +67,7 @@ namespace ECMABasic.Core
 				// Read off maxDigits - 1 more digits, if they are available.
 				for (var n = 1; n < maxDigits; n++)
 				{
-					token = Next(TokenType.Integer, false);
+					token = Next(TokenType.Digit, false);
 					if (token != null)
 					{
 						value = value * 10 + int.Parse(token.Text);
@@ -83,7 +83,7 @@ namespace ECMABasic.Core
 				// Keep reading off digits as long as you can.
 				while (true)
 				{
-					token = Next(TokenType.Integer, false);
+					token = Next(TokenType.Digit, false);
 					if (token != null)
 					{
 						value = value * 10 + int.Parse(token.Text);
@@ -93,6 +93,31 @@ namespace ECMABasic.Core
 						break;
 					}
 				}
+			}
+
+			return value;
+		}
+
+		/// <summary>
+		/// Read a number off of the token stream.  The number can have a decimal point.
+		/// </summary>
+		/// <param name="throwOnError">If true, an exception will be thrown if an integer coule not be read.</param>
+		/// <returns>The integer that was read.</returns>
+		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
+		public double? NextNumber(bool throwOnError = true)
+		{
+			var value = 0.0;
+
+			var integerToken = Next(TokenType.Digit, false);
+			var decimalToken = Next(TokenType.DecimalPoint, false);
+			if (decimalToken == null)
+			{
+				value = int.Parse(integerToken.Text);
+			}
+			else
+			{
+				var fractionToken = Next(TokenType.Digit, true);
+				value = double.Parse(string.Concat(integerToken?.Text ?? string.Empty, ".", fractionToken.Text));
 			}
 
 			return value;
@@ -170,6 +195,14 @@ namespace ECMABasic.Core
 				{
 					return new Token(TokenType.Equals, token);
 				}
+				else if (token.Text == "-")
+				{
+					return new Token(TokenType.Negation, token);
+				}
+				else if (token.Text == ".")
+				{
+					return new Token(TokenType.DecimalPoint, token);
+				}
 				else
 				{
 					return token;
@@ -207,8 +240,17 @@ namespace ECMABasic.Core
 					}
 					else
 					{
-						// TODO: Recognize other variable types.
-						return token;
+						nextToken = Peek();
+						if ((nextToken.Type == TokenType.Digit) && (nextToken.Text.Length == 1))
+						{
+							// It's a numeric variable with a letter followed by a digit.
+							return new Token(TokenType.NumericVariable, new[] { token, nextToken });
+						}
+						else
+						{
+							// It's a numeric variable with just a single letter.
+							return new Token(TokenType.NumericVariable, new[] { token });
+						}
 					}
 				}
 				else

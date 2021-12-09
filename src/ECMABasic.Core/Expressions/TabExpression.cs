@@ -9,23 +9,43 @@ namespace ECMABasic.Core.Expressions
 {
 	public class TabExpression : IExpression
 	{
-		public TabExpression(int value)
+		private const int MAX_TAB_VALUE = 80;
+
+		public TabExpression(IExpression value)
 		{
 			Value = value;
 		}
 
-		public int Value { get; }
+		public IExpression Value { get; }
 
-		public string Evaluate(IEnvironment env)
+		public object Evaluate(IEnvironment env)
 		{
-			var numSpaceNeeded = Value - env.TerminalColumn - 1;
-			if (numSpaceNeeded < 0)
+			var value = (int)Math.Round(Convert.ToDouble(Value.Evaluate(env)));
+			if (value < 1)
 			{
-				throw new RuntimeException("Cannot TAB backwards.");
+				value = 1;
+
+				// Report a non-fatal error, then continue execution.
+				env.ReportError(new LineRuntimeException("TAB OUT OF RANGE", env.CurrentLineNumber).Message);
 			}
 
-			var text = new string(' ', numSpaceNeeded);
-			return text;
+			if (value > MAX_TAB_VALUE)
+			{
+				value = value - MAX_TAB_VALUE * (int)((value - 1) / MAX_TAB_VALUE);
+			}
+
+			var sb = new StringBuilder();
+			if (value < env.TerminalColumn)
+			{
+				sb.AppendLine();
+				sb.Append(new string(' ', value));
+			}
+			else
+			{
+				var numSpaceNeeded = value - env.TerminalColumn - 1;
+				sb.Append(new string(' ', numSpaceNeeded));
+			}
+			return sb.ToString();
 		}
 	}
 }

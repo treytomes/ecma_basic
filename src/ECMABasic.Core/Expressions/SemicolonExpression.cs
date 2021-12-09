@@ -11,7 +11,7 @@ namespace ECMABasic.Core.Expressions
 	/// </summary>
 	public class SemicolonExpression : IExpression
 	{
-		public string Evaluate(IEnvironment env)
+		public object Evaluate(IEnvironment env)
 		{
 			// Nothing really to do here.  Printing will naturally move to the next column on it's own.
 			return string.Empty;

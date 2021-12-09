@@ -52,7 +52,7 @@ namespace ECMABasic.Core
             if (_reader.IsDigit(ch))
             {
                 var text = _reader.ReadInteger();
-                return new Token(TokenType.Integer, line, column, text);
+                return new Token(TokenType.Digit, line, column, text);
             }
             else if (_reader.IsLetter(ch))
             {
