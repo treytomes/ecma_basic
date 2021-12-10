@@ -9,6 +9,8 @@ There is a wiki with more project details [here](https://github.com/treytomes/ec
 
 The environment for playing with ECMA BASIC-55.
 
+Usage: ecmabasic55 <filename.bas>
+
 ## ECMABasic116
 
 The environment for playing with ECMA BASIC-116.
