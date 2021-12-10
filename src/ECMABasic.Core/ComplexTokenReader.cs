@@ -55,46 +55,18 @@ namespace ECMABasic.Core
 		{
 			var value = 0;
 			
-			var token = Next(TokenType.Digit, throwOnError);
+			var token = Next(TokenType.Integer, throwOnError);
 			if (token == null)
 			{
 				return null;
 			}
+
+			if ((maxDigits > 1) && (token.Text.Length > maxDigits))
+			{
+				throw new SyntaxException($"({token.Line}:{token.Column}) Integer is too long.");
+			}
+
 			value = int.Parse(token.Text);
-
-			if (maxDigits > 1)
-			{
-				// Read off maxDigits - 1 more digits, if they are available.
-				for (var n = 1; n < maxDigits; n++)
-				{
-					token = Next(TokenType.Digit, false);
-					if (token != null)
-					{
-						value = value * 10 + int.Parse(token.Text);
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-			else
-			{
-				// Keep reading off digits as long as you can.
-				while (true)
-				{
-					token = Next(TokenType.Digit, false);
-					if (token != null)
-					{
-						value = value * 10 + int.Parse(token.Text);
-					}
-					else
-					{
-						break;
-					}
-				}
-			}
-
 			return value;
 		}
 
@@ -102,13 +74,13 @@ namespace ECMABasic.Core
 		/// Read a number off of the token stream.  The number can have a decimal point.
 		/// </summary>
 		/// <param name="throwOnError">If true, an exception will be thrown if an integer coule not be read.</param>
-		/// <returns>The integer that was read.</returns>
+		/// <returns>The number that was read.</returns>
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public double? NextNumber(bool throwOnError = true)
 		{
 			var value = 0.0;
 
-			var integerToken = Next(TokenType.Digit, false);
+			var integerToken = Next(TokenType.Integer, false);
 			var decimalToken = Next(TokenType.DecimalPoint, false);
 			if (decimalToken == null)
 			{
@@ -116,7 +88,12 @@ namespace ECMABasic.Core
 			}
 			else
 			{
-				var fractionToken = Next(TokenType.Digit, true);
+				var fractionToken = Next(TokenType.Integer, throwOnError);
+				if (fractionToken == null)
+				{
+					return null;
+				}
+
 				value = double.Parse(string.Concat(integerToken?.Text ?? string.Empty, ".", fractionToken.Text));
 			}
 
@@ -241,7 +218,7 @@ namespace ECMABasic.Core
 					else
 					{
 						nextToken = Peek();
-						if ((nextToken.Type == TokenType.Digit) && (nextToken.Text.Length == 1))
+						if ((nextToken.Type == TokenType.Integer) && (nextToken.Text.Length == 1))
 						{
 							Read();  // Read off the digit.
 							// It's a numeric variable with a letter followed by a digit.

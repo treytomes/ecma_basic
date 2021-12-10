@@ -6,9 +6,9 @@
 	public enum TokenType
 	{
 		/// <summary>
-		/// [0-9]+.
+		/// [0-9]+
 		/// </summary>
-		Digit,
+		Integer,
 
 		/// <summary>
 		/// [A-Z]+

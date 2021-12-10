@@ -58,7 +58,7 @@ namespace ECMABasic.Test.BASIC_55
 				Assert.Equal(6, tokens[1].Column);
 
 				Assert.Equal("123", tokens[2].Text);
-				Assert.Equal(TokenType.Digit, tokens[2].Type);
+				Assert.Equal(TokenType.Integer, tokens[2].Type);
 				Assert.Equal(3, tokens[2].Length);
 				Assert.Equal(1, tokens[2].Line);
 				Assert.Equal(8, tokens[2].Column);
@@ -104,7 +104,7 @@ namespace ECMABasic.Test.BASIC_55
 			// Line 10
 
 			var token = reader.Next();
-			Assert.Equal(TokenType.Digit, token.Type);
+			Assert.Equal(TokenType.Integer, token.Type);
 			Assert.Equal("10", token.Text);
 
 			token = reader.Next();
@@ -129,7 +129,7 @@ namespace ECMABasic.Test.BASIC_55
 			// Line 15
 
 			token = reader.Next();
-			Assert.Equal(TokenType.Digit, token.Type);
+			Assert.Equal(TokenType.Integer, token.Type);
 			Assert.Equal("15", token.Text);
 
 			token = reader.Next();
@@ -152,7 +152,7 @@ namespace ECMABasic.Test.BASIC_55
 			// Line 20
 
 			token = reader.Next();
-			Assert.Equal(TokenType.Digit, token.Type);
+			Assert.Equal(TokenType.Integer, token.Type);
 			Assert.Equal("20", token.Text);
 
 			token = reader.Next();
