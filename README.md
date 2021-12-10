@@ -1,5 +1,5 @@
 # ecma_basic
-My implementation of the ECMA-55 and ECMA-116 BASIC standards.
+A .Net implementation of the ECMA-55 and ECMA-116 BASIC standards.
 
 # Sub Projects
 
