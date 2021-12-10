@@ -1,11 +1,10 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core.Configuration;
+using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
 using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
@@ -17,9 +16,11 @@ namespace ECMABasic.Core
 	public class Interpreter
 	{
 		private readonly ComplexTokenReader _reader;
+		private IBasicConfiguration _config;
 
-		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter)
+		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter, IBasicConfiguration config = null)
 		{
+			_config = config ?? MinimalBasicConfiguration.Instance;
 			_reader = reader;
 			Program = new Program();
 			ProcessProgram(reporter);
@@ -136,8 +137,7 @@ namespace ECMABasic.Core
 		/// <returns>The line number.</returns>
 		private int ProcessLineNumber()
 		{
-			const int MAX_LINE_NUMBER_DIGITS = 4;
-			var lineNumber = _reader.NextInteger(MAX_LINE_NUMBER_DIGITS).Value;
+			var lineNumber = _reader.NextInteger(_config.MaxLineNumberDigits).Value;
 			return lineNumber;
 		}
 

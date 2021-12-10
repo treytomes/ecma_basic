@@ -1,19 +1,18 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core.Configuration;
+using ECMABasic.Core.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core.Expressions
 {
 	public class TabExpression : IExpression
 	{
-		private const int MAX_TAB_VALUE = 80;
+		private IBasicConfiguration _config;
 
-		public TabExpression(IExpression value)
+		public TabExpression(IExpression value, IBasicConfiguration config = null)
 		{
 			Value = value;
+			_config = config ?? MinimalBasicConfiguration.Instance;
 		}
 
 		public IExpression Value { get; }
@@ -29,9 +28,9 @@ namespace ECMABasic.Core.Expressions
 				env.ReportError(new LineRuntimeException("TAB OUT OF RANGE", env.CurrentLineNumber).Message);
 			}
 
-			if (value > MAX_TAB_VALUE)
+			if (value > _config.TerminalWidth)
 			{
-				value = value - MAX_TAB_VALUE * (int)((value - 1) / MAX_TAB_VALUE);
+				value = value - _config.TerminalWidth * (int)((value - 1) / _config.TerminalWidth);
 			}
 
 			var sb = new StringBuilder();

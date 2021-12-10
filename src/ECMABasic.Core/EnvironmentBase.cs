@@ -1,4 +1,5 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core.Configuration;
+using ECMABasic.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,15 @@ namespace ECMABasic.Core
 {
 	public abstract class EnvironmentBase : IEnvironment
 	{
-		private const int MAX_STRING_LENGTH = 18; 
-		
 		private readonly Dictionary<string, string> _stringVariables = new Dictionary<string, string>();
 		private readonly Dictionary<string, double> _numericVariables = new Dictionary<string, double>();
+
+		private IBasicConfiguration _config;
+
+		public EnvironmentBase(IBasicConfiguration config = null)
+		{
+			_config = config ?? MinimalBasicConfiguration.Instance;
+		}
 
 		/// <summary>
 		/// The line number currently being executed.
@@ -44,7 +50,7 @@ namespace ECMABasic.Core
 		public void SetStringVariableValue(string variableName, string value)
 		{
 			// TODO: Validate variable name?
-			if (value.Length > MAX_STRING_LENGTH)
+			if (value.Length > _config.MaxStringLength)
 			{
 				throw new LineRuntimeException("STRING OVERFLOW", CurrentLineNumber);
 			}

@@ -1,4 +1,5 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core.Configuration;
+using ECMABasic.Core.Exceptions;
 using System;
 using System.IO;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace ECMABasic.Core
         private const string SPACES = " \t";
         private const char CARRIAGE_RETURN = (char)13;
         private const char LINE_FEED = (char)10;
-        private const int MAX_LINE_LENGTH = 72;
 
         #endregion
 
         #region Fields
 
+        private IBasicConfiguration _config;
         private Stream _source;
         private TextReader _reader;
         private bool _disposedValue;
@@ -40,8 +41,9 @@ namespace ECMABasic.Core
         /// Create a new instance of <see cref="CharacterReader"/>.
         /// </summary>
         /// <param name="source">The source to pull the token text from.</param>
-        public CharacterReader(Stream source)
+        public CharacterReader(Stream source, IBasicConfiguration config = null)
         {
+            _config = config ?? MinimalBasicConfiguration.Instance;
             _source = source;
             _reader = new StreamReader(_source, leaveOpen: true);
             LineNumber = 1;
@@ -291,7 +293,7 @@ namespace ECMABasic.Core
         private void ValidateLineLengths()
 		{
             // Minimal BASIC doesn't allow source lines longer than 72 characters.
-            var longLine = SourceText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(x => x.Length > MAX_LINE_LENGTH);
+            var longLine = SourceText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(x => x.Length > _config.MaxLineLength);
 
             if (longLine == null)
 			{
@@ -307,7 +309,7 @@ namespace ECMABasic.Core
                 throw new SyntaxException("Every line should start with a line number.");
 			}
 
-            throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - MAX_LINE_LENGTH} CHARACTERS", lineNumber);
+            throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - _config.MaxLineLength} CHARACTERS", lineNumber);
 		}
 
         protected virtual void Dispose(bool disposing)
