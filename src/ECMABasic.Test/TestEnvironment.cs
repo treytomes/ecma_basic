@@ -10,7 +10,7 @@ namespace ECMABasic.Test
 {
 	class TestEnvironment : EnvironmentBase
 	{
-		private readonly StringBuilder _sb = new StringBuilder();
+		private readonly StringBuilder _sb = new();
 
 		public override int TerminalRow { get; set; } = 0;
 

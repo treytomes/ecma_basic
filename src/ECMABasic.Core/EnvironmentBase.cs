@@ -1,19 +1,15 @@
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
 	public abstract class EnvironmentBase : IEnvironment
 	{
-		private readonly Dictionary<string, string> _stringVariables = new Dictionary<string, string>();
-		private readonly Dictionary<string, double> _numericVariables = new Dictionary<string, double>();
+		private readonly Dictionary<string, string> _stringVariables = new();
+		private readonly Dictionary<string, double> _numericVariables = new();
 
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		public EnvironmentBase(IBasicConfiguration config = null)
 		{

@@ -38,31 +38,6 @@
 		String,
 
 		/// <summary>
-		/// The END keyword.
-		/// </summary>
-		Keyword_END,
-
-		/// <summary>
-		/// The LET keyword.
-		/// </summary>
-		Keyword_LET,
-
-		/// <summary>
-		/// The PRINT keyword.
-		/// </summary>
-		Keyword_PRINT,
-
-		/// <summary>
-		/// The STOP keyword.
-		/// </summary>
-		Keyword_STOP,
-
-		/// <summary>
-		/// Represents the TAB function in a print-list.
-		/// </summary>
-		Keyword_TAB,
-
-		/// <summary>
 		/// The comma in a print-list.
 		/// </summary>
 		Comma,

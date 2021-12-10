@@ -2,15 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core.Statements
 {
-	public class PrintStatement : Statement
+	public class PrintStatement : IStatement
 	{
 		public PrintStatement(IEnumerable<IExpression> expr = null)
-			: base(StatementType.PRINT)
 		{
 			Expressions = new List<IExpression>(expr ?? Enumerable.Empty<IExpression>());
 		}
@@ -20,7 +17,7 @@ namespace ECMABasic.Core.Statements
 		/// </summary>
 		public List<IExpression> Expressions { get; }
 
-		public override void Execute(IEnvironment env)
+		public void Execute(IEnvironment env)
 		{
 			if (Expressions.Count == 0)
 			{

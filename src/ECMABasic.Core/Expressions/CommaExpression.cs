@@ -7,7 +7,7 @@ namespace ECMABasic.Core.Expressions
 	/// </summary>
 	public class CommaExpression : IExpression
 	{
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		public CommaExpression(IBasicConfiguration config = null)
 		{

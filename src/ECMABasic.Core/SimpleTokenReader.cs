@@ -13,8 +13,8 @@ namespace ECMABasic.Core
     /// </remarks>
     public class SimpleTokenReader : IDisposable
     {
-        private Stream _stream;
-        private CharacterReader _reader;
+        private readonly Stream _stream;
+        private readonly CharacterReader _reader;
         private bool _disposedValue;
 
         private SimpleTokenReader(Stream stream)
@@ -49,27 +49,27 @@ namespace ECMABasic.Core
             var line = _reader.LineNumber;
             var column = _reader.ColumnNumber;
             var ch = _reader.Peek();
-            if (_reader.IsDigit(ch))
+            if (CharacterReader.IsDigit(ch))
             {
                 var text = _reader.ReadInteger();
                 return new Token(TokenType.Integer, line, column, text);
             }
-            else if (_reader.IsLetter(ch))
+            else if (CharacterReader.IsLetter(ch))
             {
                 var text = _reader.ReadWord();
                 return new Token(TokenType.Word, line, column, text);
             }
-            else if (_reader.IsSymbol(ch))
+            else if (CharacterReader.IsSymbol(ch))
             {
                 var text = _reader.ReadSymbol();
                 return new Token(TokenType.Symbol, line, column, text);
             }
-            else if (_reader.IsSpace(ch))
+            else if (CharacterReader.IsSpace(ch))
             {
                 var text = _reader.ReadSpace();
                 return new Token(TokenType.Space, line, column, text);
             }
-            else if (_reader.IsEndOfLine(ch))
+            else if (CharacterReader.IsEndOfLine(ch))
 			{
                 var text = _reader.ReadEndOfLine();
                 return new Token(TokenType.EndOfLine, line, column, text);

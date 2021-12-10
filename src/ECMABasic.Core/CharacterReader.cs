@@ -28,9 +28,9 @@ namespace ECMABasic.Core
 
         #region Fields
 
-        private IBasicConfiguration _config;
-        private Stream _source;
-        private TextReader _reader;
+        private readonly IBasicConfiguration _config;
+        private readonly Stream _source;
+        private readonly TextReader _reader;
         private bool _disposedValue;
 
         #endregion
@@ -61,13 +61,11 @@ namespace ECMABasic.Core
             {
                 var position = _source.Position;
                 _source.Position = 0;
-                using (var reader = new StreamReader(_source, leaveOpen: true))
-                {
-                    var text = reader.ReadToEnd();
-                    _source.Position = position;
-                    return text;
-                }
-            }
+				using var reader = new StreamReader(_source, leaveOpen: true);
+				var text = reader.ReadToEnd();
+				_source.Position = position;
+				return text;
+			}
         }
         public int LineNumber { get; private set; }
         public int ColumnNumber { get; private set; }
@@ -245,27 +243,27 @@ namespace ECMABasic.Core
             return ch;
         }
 
-        public bool IsLetter(char ch)
+        public static bool IsLetter(char ch)
         {
             return LETTERS.Contains(ch);
         }
 
-        public bool IsDigit(char ch)
+        public static bool IsDigit(char ch)
         {
             return DIGITS.Contains(ch);
         }
 
-        public bool IsSpace(char ch)
+        public static bool IsSpace(char ch)
         {
             return SPACES.Contains(ch);
         }
 
-        public bool IsSymbol(char ch)
+        public static bool IsSymbol(char ch)
         {
             return SYMBOLS.Contains(ch);
         }
 
-        public bool IsEndOfLine(char ch)
+        public static bool IsEndOfLine(char ch)
         {
             return (ch == CARRIAGE_RETURN) || (ch == LINE_FEED);
         }
@@ -303,13 +301,12 @@ namespace ECMABasic.Core
 
             // Try to grab the line number.
             var lineNumberText = longLine.Split(' ').First();
-            var lineNumber = 0;
-            if (!int.TryParse(lineNumberText, out lineNumber))
+			if (!int.TryParse(lineNumberText, out int lineNumber))
 			{
-                throw new SyntaxException("Every line should start with a line number.");
+				throw new SyntaxException("Every line should start with a line number.");
 			}
 
-            throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - _config.MaxLineLength} CHARACTERS", lineNumber);
+			throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - _config.MaxLineLength} CHARACTERS", lineNumber);
 		}
 
         protected virtual void Dispose(bool disposing)

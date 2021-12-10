@@ -2,14 +2,9 @@
 
 namespace ECMABasic.Core.Statements
 {
-	public class StopStatement : Statement
+	public class StopStatement : IStatement
 	{
-		public StopStatement()
-			: base(StatementType.STOP)
-		{
-		}
-
-		public override void Execute(IEnvironment env)
+		public void Execute(IEnvironment env)
 		{
 			throw new ProgramEndException();
 		}

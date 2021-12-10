@@ -19,7 +19,7 @@ namespace ECMABasic.Core
 		/// The index into _tokens.
 		/// </summary>
 		private int _tokenIndex;
-		private List<Token> _tokens;
+		private readonly List<Token> _tokens;
 
 		private ComplexTokenReader(SimpleTokenReader reader)
 		{
@@ -53,8 +53,6 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public int? NextInteger(int maxDigits = 0, bool throwOnError = true)
 		{
-			var value = 0;
-			
 			var token = Next(TokenType.Integer, throwOnError);
 			if (token == null)
 			{
@@ -66,7 +64,7 @@ namespace ECMABasic.Core
 				throw new SyntaxException($"({token.Line}:{token.Column}) Integer is too long.");
 			}
 
-			value = int.Parse(token.Text);
+			int value = int.Parse(token.Text);
 			return value;
 		}
 
@@ -78,10 +76,9 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public double? NextNumber(bool throwOnError = true)
 		{
-			var value = 0.0;
-
 			var integerToken = Next(TokenType.Integer, false);
 			var decimalToken = Next(TokenType.DecimalPoint, false);
+			double value;
 			if (decimalToken == null)
 			{
 				value = int.Parse(integerToken.Text);
@@ -109,11 +106,11 @@ namespace ECMABasic.Core
 		/// <param name="throwOnError">If true, an exception will be thrown if the type does not match.</param>
 		/// <returns>The token that was read.</returns>
 		/// <exception cref="UnexpectedTokenException">Throws an exception if the token type doesn't match what was expected.</exception>
-		public Token Next(TokenType type, bool throwOnError = true)
+		public Token Next(TokenType type, bool throwOnError = true, string text = null)
 		{
 			var startPosition = _tokenIndex;
 			var token = Next();
-			if ((token == null) || (token.Type != type))
+			if ((token == null) || (token.Type != type) || ((text != null) && (token.Text != text)))
 			{
 				if (throwOnError)
 				{
@@ -187,27 +184,7 @@ namespace ECMABasic.Core
 			}
 			else if (token.Type == TokenType.Word)
 			{
-				if (token.Text == "END")
-				{
-					return new Token(TokenType.Keyword_END, token);
-				}
-				else if (token.Text == "LET")
-				{
-					return new Token(TokenType.Keyword_LET, token);
-				}
-				else if (token.Text == "PRINT")
-				{
-					return new Token(TokenType.Keyword_PRINT, token);
-				}
-				else if (token.Text == "STOP")
-				{
-					return new Token(TokenType.Keyword_STOP, token);
-				}
-				else if (token.Text == "TAB")
-				{
-					return new Token(TokenType.Keyword_TAB, token);
-				}
-				else if (token.Text.Length == 1)
+				if (token.Text.Length == 1)
 				{
 					var nextToken = Peek();
 					if ((nextToken.Type == TokenType.Symbol) && (nextToken.Text == "$"))
@@ -246,8 +223,7 @@ namespace ECMABasic.Core
 
 		private Token ReadRestOfString(Token start)
 		{
-			List<Token> stringTokens = new List<Token>();
-			stringTokens.Add(start);
+			List<Token> stringTokens = new() { start };
 
 			while (true)
 			{

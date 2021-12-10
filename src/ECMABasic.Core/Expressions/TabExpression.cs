@@ -7,7 +7,7 @@ namespace ECMABasic.Core.Expressions
 {
 	public class TabExpression : IExpression
 	{
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		public TabExpression(IExpression value, IBasicConfiguration config = null)
 		{
@@ -30,7 +30,7 @@ namespace ECMABasic.Core.Expressions
 
 			if (value > _config.TerminalWidth)
 			{
-				value = value - _config.TerminalWidth * (int)((value - 1) / _config.TerminalWidth);
+				value -= _config.TerminalWidth * (int)((value - 1) / _config.TerminalWidth);
 			}
 
 			var sb = new StringBuilder();

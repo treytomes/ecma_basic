@@ -16,7 +16,7 @@ namespace ECMABasic.Core
         /// </summary>
         /// <param name="lineNumber">The line number.</param>
         /// <param name="statement">The statement to execute on this line.</param>
-        public ProgramLine(int lineNumber, Statement statement)
+        public ProgramLine(int lineNumber, IStatement statement)
         {
             LineNumber = lineNumber;
             Statement = statement;
@@ -30,6 +30,6 @@ namespace ECMABasic.Core
         /// <summary>
         /// The statement to execute on this line.
         /// </summary>
-        public Statement Statement { get; }
+        public IStatement Statement { get; }
     }
 }

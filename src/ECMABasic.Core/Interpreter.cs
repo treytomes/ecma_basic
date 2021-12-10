@@ -16,7 +16,7 @@ namespace ECMABasic.Core
 	public class Interpreter
 	{
 		private readonly ComplexTokenReader _reader;
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter, IBasicConfiguration config = null)
 		{
@@ -171,7 +171,7 @@ namespace ECMABasic.Core
 
 		private void ValidateEndLine()
 		{
-			var ENDs = Program.Where(x => x.Statement.Type == StatementType.END);
+			var ENDs = Program.Where(x => x.Statement is EndStatement);
 			if (!ENDs.Any())
 			{
 				throw new NoEndInstructionException();
@@ -184,73 +184,55 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private Statement ProcessStatement(int lineNumber)
+		private IStatement ProcessStatement(int lineNumber)
 		{
-			var token = _reader.Next();
-			if (token.Type == TokenType.Keyword_END)
+			IStatement stmt;
+
+			stmt = ProcessEndStatement();
+			if (stmt != null)
 			{
-				return ProcessStatementType(StatementType.END);
-			}
-			else if (token.Type == TokenType.Keyword_LET)
-			{
-				return ProcessStatementType(StatementType.LET);
-			}
-			else if (token.Type == TokenType.Keyword_PRINT)
-			{
-				return ProcessStatementType(StatementType.PRINT);
-			}
-			else if (token.Type == TokenType.Keyword_STOP)
-			{
-				return ProcessStatementType(StatementType.STOP);
-			}	
-			else
-			{
-				throw new LineSyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
+				return stmt;
 			}
 
-			//        foreach (var statementType in Enum.GetValues<StatementType>())
-			//        {
-			//            var statement = ProcessStatementType(statementType, false);
-			//            if (statement != null)
-			//{
-			//                return statement;
-			//}
-			//        }
-			//        throw new InvalidOperationException("I expected to find a statement here.");
+			stmt = ProcessLetStatement();
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
+			stmt = ProcessPrintStatement(lineNumber);
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
+			stmt = ProcessStopStatement();
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
+			throw new LineSyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
 		}
 
-		/// <summary>
-		/// Process a series of tokens into the expected statement.
-		/// </summary>
-		/// <param name="type">The type of statement to process.</param>
-		/// <param name="throwOnError">Should an exception be thrown if the statement type wasn't found?</param>
-		/// <returns>The completed Statement object.</returns>
-		private Statement ProcessStatementType(StatementType type, bool throwOnError = true)
+		private IStatement ProcessEndStatement()
 		{
-			if (type == StatementType.END)
+			var token = _reader.Next(TokenType.Word, false, "END");
+			if (token == null)
 			{
-				return new EndStatement();
+				return null;
 			}
-			else if (type == StatementType.LET)
-			{
-				return ProcessLetStatement();
-			}
-			else if (type == StatementType.PRINT)
-			{
-				return ProcessPrintStatement();
-			}
-			else if (type == StatementType.STOP)
-			{
-				return new StopStatement();
-			}
-			else
-			{
-				throw new NotImplementedException();
-			}
+			return new EndStatement();
 		}
 
-		private Statement ProcessLetStatement()
+		private IStatement ProcessLetStatement()
 		{
+			var token = _reader.Next(TokenType.Word, false, "LET");
+			if (token == null)
+			{
+				return null;
+			}
+
 			ProcessSpace(true);
 
 			VariableExpression targetExpr;
@@ -265,7 +247,11 @@ namespace ECMABasic.Core
 				targetExpr = new VariableExpression(variableNameToken.Text);
 			}
 
+			ProcessSpace(false);
+
 			_reader.Next(TokenType.Equals);
+
+			ProcessSpace(false);
 
 			Token valueToken;
 			IExpression valueExpr;
@@ -275,7 +261,7 @@ namespace ECMABasic.Core
 				if (valueToken != null)
 				{
 					// The actual string is everything between the "".
-					var text = valueToken.Text.Substring(1, valueToken.Text.Length - 2);
+					var text = valueToken.Text[1..^1];
 					valueExpr = new StringExpression(text);
 				}
 				else
@@ -307,8 +293,14 @@ namespace ECMABasic.Core
 			return new LetStatement(targetExpr, valueExpr);
 		}
 
-		private Statement ProcessPrintStatement()
+		private IStatement ProcessPrintStatement(int lineNumber)
 		{
+			var token = _reader.Next(TokenType.Word, false, "PRINT");
+			if (token == null)
+			{
+				return null;
+			}
+
 			var spaceToken = ProcessSpace(false);
 			if (spaceToken == null)
 			{
@@ -316,17 +308,17 @@ namespace ECMABasic.Core
 				return new PrintStatement();
 			}
 
-			var printList = ProcessPrintList();
+			var printList = ProcessPrintList(lineNumber);
 			return new PrintStatement(printList);
 		}
 
-		private List<IExpression> ProcessPrintList()
+		private List<IExpression> ProcessPrintList(int lineNumber)
 		{
 			var items = new List<IExpression>();
 
 			while (true)
 			{
-				var printItem = ProcessPrintItem();
+				var printItem = ProcessPrintItem(lineNumber);
 				if (printItem != null)
 				{
 					items.Add(printItem);
@@ -351,13 +343,13 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ProcessPrintItem()
+		private IExpression ProcessPrintItem(int lineNumber)
 		{
 			var token = _reader.Next(TokenType.String, false);
 			if (token != null)
 			{
 				// The actual string is everything between the "".
-				var text = token.Text.Substring(1, token.Text.Length - 2);
+				var text = token.Text[1..^1];
 				return new StringExpression(text);
 			}
 
@@ -366,28 +358,58 @@ namespace ECMABasic.Core
 			{
 				return new VariableExpression(token.Text);
 			}
-			
-			token = _reader.Next(TokenType.Keyword_TAB, false);
-			if (token != null)
-			{
-				_reader.Next(TokenType.OpenParenthesis);
-				IExpression valueExpr;
-				var valueToken = _reader.Next(TokenType.NumericVariable, false);
-				if (valueToken != null)
-				{
-					valueExpr = new VariableExpression(valueToken.Text);
-				}
-				else
-				{
-					var tabValue = _reader.NextNumber().Value;
-					valueExpr = new NumberExpression(tabValue);
-				}
-				_reader.Next(TokenType.CloseParenthesis);
 
-				return new TabExpression(valueExpr);
+			var expr = ProcessTabExpression(lineNumber);
+			if (expr != null)
+			{
+				return expr;
 			}
 
 			return null;
+		}
+
+		private IExpression ProcessTabExpression(int lineNumber)
+		{
+			var token = _reader.Next(TokenType.Word, false, "TAB");
+			if (token == null)
+			{
+				return null;
+			}
+
+			_reader.Next(TokenType.OpenParenthesis);
+
+			IExpression valueExpr = ProcessVariableExpression();
+			if (valueExpr == null)
+			{
+				valueExpr = ProcessNumberExpression();
+				if (valueExpr == null)
+				{
+					throw new LineSyntaxException("A TAB ARGUMENT WAS EXPECTED", lineNumber);
+				}
+			}
+			_reader.Next(TokenType.CloseParenthesis);
+
+			return new TabExpression(valueExpr);
+		}
+
+		private IExpression ProcessVariableExpression()
+		{
+			var valueToken = _reader.Next(TokenType.NumericVariable, false);
+			if (valueToken == null)
+			{
+				return null;
+			}
+			return new VariableExpression(valueToken.Text);
+		}
+
+		private IExpression ProcessNumberExpression()
+		{
+			var tabValue = _reader.NextNumber(false);
+			if (!tabValue.HasValue)
+			{
+				return null;
+			}
+			return new NumberExpression(tabValue.Value);
 		}
 
 		private IExpression ProcessPrintSeparator()
@@ -407,6 +429,17 @@ namespace ECMABasic.Core
 			return null;
 		}
 
+		private IStatement ProcessStopStatement()
+		{
+			var token = _reader.Next(TokenType.Word, false, "STOP");
+			if (token == null)
+			{
+				return null;
+			}
+			return new StopStatement();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
 		private ProgramLine ProcessForBlock()
 		{
 			// TODO: Implement for-block processing.
