@@ -312,9 +312,9 @@ namespace ECMABasic.Core
 			return new PrintStatement(printList);
 		}
 
-		private List<IExpression> ProcessPrintList(int lineNumber)
+		private List<IPrintItem> ProcessPrintList(int lineNumber)
 		{
-			var items = new List<IExpression>();
+			var items = new List<IPrintItem>();
 
 			while (true)
 			{
@@ -343,7 +343,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ProcessPrintItem(int lineNumber)
+		private IPrintItem ProcessPrintItem(int lineNumber)
 		{
 			var token = _reader.Next(TokenType.String, false);
 			if (token != null)
@@ -368,7 +368,7 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		private IExpression ProcessTabExpression(int lineNumber)
+		private IPrintItem ProcessTabExpression(int lineNumber)
 		{
 			var token = _reader.Next(TokenType.Word, false, "TAB");
 			if (token == null)

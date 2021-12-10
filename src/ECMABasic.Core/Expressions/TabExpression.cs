@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ECMABasic.Core.Expressions
 {
-	public class TabExpression : IExpression
+	public class TabExpression : IPrintItem
 	{
 		private readonly IBasicConfiguration _config;
 
