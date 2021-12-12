@@ -25,7 +25,7 @@ namespace ECMABasic.Core
 		}
 		protected static IExpression ProcessExpression(ComplexTokenReader reader)
 		{
-			var valueExpr = ProcessVariableExpression(reader);
+			IExpression valueExpr = ProcessVariableExpression(reader);
 			if (valueExpr != null)
 			{
 				return valueExpr;
@@ -74,7 +74,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		protected static IExpression ProcessVariableExpression(ComplexTokenReader reader)
+		protected static VariableExpression ProcessVariableExpression(ComplexTokenReader reader)
 		{
 			var valueToken = reader.Next(TokenType.NumericVariable, false);
 			if (valueToken == null)
@@ -90,7 +90,18 @@ namespace ECMABasic.Core
 
 		protected static IExpression ProcessNumberExpression(ComplexTokenReader reader)
 		{
-			var isNegative = reader.Next(TokenType.Negation, false) != null;
+			var isNegative = false;
+
+			var signToken = reader.Next(TokenType.Symbol, false, "-");
+			if (signToken != null)
+			{
+				isNegative = true;
+			}
+			else
+			{
+				reader.Next(TokenType.Symbol, false, "+");
+				// If a positive sign is found, no action is needed.
+			}
 
 			var tabValue = reader.NextNumber(false);
 			if (!tabValue.HasValue)

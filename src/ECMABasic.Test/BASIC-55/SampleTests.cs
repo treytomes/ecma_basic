@@ -121,7 +121,7 @@ namespace ECMABasic.Test.Basic55
             RunSample("P014");
         }
 
-        private void RunSample(string sampleName)
+        private static void RunSample(string sampleName)
 		{
             var env = new TestEnvironment();
 

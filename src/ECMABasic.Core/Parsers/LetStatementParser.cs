@@ -1,4 +1,4 @@
-﻿using ECMABasic.Core.Expressions;
+﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Statements;
 
 namespace ECMABasic.Core
@@ -15,16 +15,10 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, true);
 
-			VariableExpression targetExpr;
-			var variableNameToken = reader.Next(TokenType.StringVariable, false);
-			if (variableNameToken != null)
+			var targetExpr = ProcessVariableExpression(reader);
+			if (targetExpr == null)
 			{
-				targetExpr = new VariableExpression(variableNameToken.Text);
-			}
-			else
-			{
-				variableNameToken = reader.Next(TokenType.NumericVariable);
-				targetExpr = new VariableExpression(variableNameToken.Text);
+				throw new SyntaxException("EXPECTED A VARIABLE NAME", lineNumber);
 			}
 
 			ProcessSpace(reader, false);
@@ -33,41 +27,10 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			Token valueToken;
-			IExpression valueExpr;
-			if (targetExpr.IsString)
+			var valueExpr = ProcessExpression(reader);
+			if (valueExpr == null)
 			{
-				valueToken = reader.Next(TokenType.String, false);
-				if (valueToken != null)
-				{
-					// The actual string is everything between the "".
-					var text = valueToken.Text[1..^1];
-					valueExpr = new StringExpression(text);
-				}
-				else
-				{
-					valueToken = reader.Next(TokenType.StringVariable);
-					valueExpr = new VariableExpression(valueToken.Text);
-				}
-			}
-			else
-			{
-				var isNegative = reader.Next(TokenType.Negation, false) != null;
-
-				var number = reader.NextNumber(false);
-				if (number != null)
-				{
-					if (isNegative)
-					{
-						number = -number.Value;
-					}
-					valueExpr = new NumberExpression(number.Value);
-				}
-				else
-				{
-					valueToken = reader.Next(TokenType.NumericVariable);
-					valueExpr = new VariableExpression(valueToken.Text);
-				}
+				throw new SyntaxException("EXPECTED AN EXPRESSION", lineNumber);
 			}
 
 			return new LetStatement(targetExpr, valueExpr);

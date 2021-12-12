@@ -73,11 +73,6 @@
 		NumericVariable,
 
 		/// <summary>
-		/// The minus sign, either binary or unary.
-		/// </summary>
-		Negation,
-
-		/// <summary>
 		/// A real number: [0-9]*\.[0-9]+
 		/// </summary>
 		Number,
