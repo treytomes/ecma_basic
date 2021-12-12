@@ -79,7 +79,7 @@ namespace ECMABasic.Core
 			var integerToken = Next(TokenType.Integer, false);
 			var decimalToken = Next(TokenType.DecimalPoint, false);
 			double value;
-			if (decimalToken == null)
+			if ((decimalToken == null) && (integerToken != null))
 			{
 				value = int.Parse(integerToken.Text);
 			}

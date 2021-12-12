@@ -5,7 +5,7 @@ namespace ECMABasic.Core.Expressions
 	/// <summary>
 	/// Used when a comma occurs in a print list.
 	/// </summary>
-	public class CommaExpression : IExpression
+	public class CommaExpression : IPrintItemSeparator
 	{
 		private readonly IBasicConfiguration _config;
 

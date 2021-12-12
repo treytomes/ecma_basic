@@ -197,7 +197,7 @@ namespace ECMABasic.Test.BASIC_55
 				var reader = new CharacterReader(stream);
 				throw new InvalidOperationException("This should have thrown an exception.");
 			}
-			catch (LineSyntaxException ex)
+			catch (SyntaxException ex)
 			{
 				Assert.Equal("? LINE IS TOO LONG BY 9 CHARACTERS IN LINE 20", ex.Message);
 			}

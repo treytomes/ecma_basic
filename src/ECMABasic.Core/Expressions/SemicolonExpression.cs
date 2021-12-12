@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions
 {
 	/// <summary>
 	/// Used when a semi-colon occurs in a print list.
 	/// </summary>
-	public class SemicolonExpression : IExpression
+	public class SemicolonExpression : IPrintItemSeparator
 	{
 		public object Evaluate(IEnvironment env)
 		{

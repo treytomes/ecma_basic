@@ -306,7 +306,7 @@ namespace ECMABasic.Core
 				throw new SyntaxException("Every line should start with a line number.");
 			}
 
-			throw new LineSyntaxException($"LINE IS TOO LONG BY {longLine.Length - _config.MaxLineLength} CHARACTERS", lineNumber);
+			throw new SyntaxException($"LINE IS TOO LONG BY {longLine.Length - _config.MaxLineLength} CHARACTERS", lineNumber);
 		}
 
         protected virtual void Dispose(bool disposing)
