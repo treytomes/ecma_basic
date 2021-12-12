@@ -180,7 +180,7 @@ namespace ECMABasic.Core
 			var lastLineNumber = Program.Max(x => x.LineNumber);
 			if (ENDs.First().LineNumber != lastLineNumber)
 			{
-				throw new LineSyntaxException("END IS NOT LAST", ENDs.First().LineNumber);
+				throw new SyntaxException("END IS NOT LAST", ENDs.First().LineNumber);
 			}
 		}
 
@@ -188,255 +188,31 @@ namespace ECMABasic.Core
 		{
 			IStatement stmt;
 
-			stmt = ProcessEndStatement();
+			stmt = new EndStatementParser().Parse(_reader, lineNumber);
 			if (stmt != null)
 			{
 				return stmt;
 			}
 
-			stmt = ProcessLetStatement();
+			stmt = new LetStatementParser().Parse(_reader, lineNumber);
 			if (stmt != null)
 			{
 				return stmt;
 			}
 
-			stmt = ProcessPrintStatement(lineNumber);
+			stmt = new PrintStatementParser().Parse(_reader, lineNumber);
 			if (stmt != null)
 			{
 				return stmt;
 			}
 
-			stmt = ProcessStopStatement();
+			stmt = new StopStatementParser().Parse(_reader, lineNumber);
 			if (stmt != null)
 			{
 				return stmt;
 			}
 
-			throw new LineSyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
-		}
-
-		private IStatement ProcessEndStatement()
-		{
-			var token = _reader.Next(TokenType.Word, false, "END");
-			if (token == null)
-			{
-				return null;
-			}
-			return new EndStatement();
-		}
-
-		private IStatement ProcessLetStatement()
-		{
-			var token = _reader.Next(TokenType.Word, false, "LET");
-			if (token == null)
-			{
-				return null;
-			}
-
-			ProcessSpace(true);
-
-			VariableExpression targetExpr;
-			var variableNameToken = _reader.Next(TokenType.StringVariable, false);
-			if (variableNameToken != null)
-			{
-				targetExpr = new VariableExpression(variableNameToken.Text);
-			}
-			else
-			{
-				variableNameToken = _reader.Next(TokenType.NumericVariable);
-				targetExpr = new VariableExpression(variableNameToken.Text);
-			}
-
-			ProcessSpace(false);
-
-			_reader.Next(TokenType.Equals);
-
-			ProcessSpace(false);
-
-			Token valueToken;
-			IExpression valueExpr;
-			if (targetExpr.IsString)
-			{
-				valueToken = _reader.Next(TokenType.String, false);
-				if (valueToken != null)
-				{
-					// The actual string is everything between the "".
-					var text = valueToken.Text[1..^1];
-					valueExpr = new StringExpression(text);
-				}
-				else
-				{
-					valueToken = _reader.Next(TokenType.StringVariable);
-					valueExpr = new VariableExpression(valueToken.Text);
-				}
-			}
-			else
-			{
-				var isNegative = _reader.Next(TokenType.Negation, false) != null;
-
-				var number = _reader.NextNumber(false);
-				if (number != null)
-				{
-					if (isNegative)
-					{
-						number = -number.Value;
-					}
-					valueExpr = new NumberExpression(number.Value);
-				}
-				else
-				{
-					valueToken = _reader.Next(TokenType.NumericVariable);
-					valueExpr = new VariableExpression(valueToken.Text);
-				}
-			}
-
-			return new LetStatement(targetExpr, valueExpr);
-		}
-
-		private IStatement ProcessPrintStatement(int lineNumber)
-		{
-			var token = _reader.Next(TokenType.Word, false, "PRINT");
-			if (token == null)
-			{
-				return null;
-			}
-
-			var spaceToken = ProcessSpace(false);
-			if (spaceToken == null)
-			{
-				// It's just an empty print statement.
-				return new PrintStatement();
-			}
-
-			var printList = ProcessPrintList(lineNumber);
-			return new PrintStatement(printList);
-		}
-
-		private List<IPrintItem> ProcessPrintList(int lineNumber)
-		{
-			var items = new List<IPrintItem>();
-
-			while (true)
-			{
-				var printItem = ProcessPrintItem(lineNumber);
-				if (printItem != null)
-				{
-					items.Add(printItem);
-				}
-
-				ProcessSpace(false);  // Optional space.
-
-				var printSeparator = ProcessPrintSeparator();
-
-				ProcessSpace(false);  // Optional space.
-
-				if (printSeparator == null)
-				{
-					// No separator, so this is the end of the list.
-					return items;
-				}
-				else
-				{
-					// If there's a separator, there might be another item.
-					items.Add(printSeparator);
-				}
-			}
-		}
-
-		private IPrintItem ProcessPrintItem(int lineNumber)
-		{
-			var token = _reader.Next(TokenType.String, false);
-			if (token != null)
-			{
-				// The actual string is everything between the "".
-				var text = token.Text[1..^1];
-				return new StringExpression(text);
-			}
-
-			token = _reader.Next(TokenType.StringVariable, false);
-			if (token != null)
-			{
-				return new VariableExpression(token.Text);
-			}
-
-			var expr = ProcessTabExpression(lineNumber);
-			if (expr != null)
-			{
-				return expr;
-			}
-
-			return null;
-		}
-
-		private IPrintItem ProcessTabExpression(int lineNumber)
-		{
-			var token = _reader.Next(TokenType.Word, false, "TAB");
-			if (token == null)
-			{
-				return null;
-			}
-
-			_reader.Next(TokenType.OpenParenthesis);
-
-			IExpression valueExpr = ProcessVariableExpression();
-			if (valueExpr == null)
-			{
-				valueExpr = ProcessNumberExpression();
-				if (valueExpr == null)
-				{
-					throw new LineSyntaxException("A TAB ARGUMENT WAS EXPECTED", lineNumber);
-				}
-			}
-			_reader.Next(TokenType.CloseParenthesis);
-
-			return new TabExpression(valueExpr);
-		}
-
-		private IExpression ProcessVariableExpression()
-		{
-			var valueToken = _reader.Next(TokenType.NumericVariable, false);
-			if (valueToken == null)
-			{
-				return null;
-			}
-			return new VariableExpression(valueToken.Text);
-		}
-
-		private IExpression ProcessNumberExpression()
-		{
-			var tabValue = _reader.NextNumber(false);
-			if (!tabValue.HasValue)
-			{
-				return null;
-			}
-			return new NumberExpression(tabValue.Value);
-		}
-
-		private IExpression ProcessPrintSeparator()
-		{
-			var symbolToken = _reader.Next(TokenType.Comma, false);
-			if (symbolToken != null)
-			{
-				return new CommaExpression();
-			}
-
-			symbolToken = _reader.Next(TokenType.Semicolon, false);
-			if (symbolToken != null)
-			{
-				return new SemicolonExpression();
-			}
-
-			return null;
-		}
-
-		private IStatement ProcessStopStatement()
-		{
-			var token = _reader.Next(TokenType.Word, false, "STOP");
-			if (token == null)
-			{
-				return null;
-			}
-			return new StopStatement();
+			throw new SyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
