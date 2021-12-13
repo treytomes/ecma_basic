@@ -54,7 +54,7 @@ namespace ECMABasic.Core
 				valueExpr = ProcessNumberExpression(reader);
 				if (valueExpr == null)
 				{
-					throw new SyntaxException("EXPECTED A TAB ARGUMENT");
+					throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
 				}
 				else
 				{
@@ -76,16 +76,24 @@ namespace ECMABasic.Core
 
 		protected static VariableExpression ProcessVariableExpression(ComplexTokenReader reader)
 		{
-			var valueToken = reader.Next(TokenType.NumericVariable, false);
-			if (valueToken == null)
+			var nameToken = reader.Next(TokenType.Word, false, @"[A-Z][\$\d]?");
+			if (nameToken == null)
 			{
-				valueToken = reader.Next(TokenType.StringVariable, false);
-				if (valueToken == null)
-				{
-					return null;
-				}
+				return null;
 			}
-			return new VariableExpression(valueToken.Text);
+
+			return new VariableExpression(nameToken.Text);
+
+			//var nameToken = reader.Next(TokenType.NumericVariable, false);
+			//if (nameToken == null)
+			//{
+			//	nameToken = reader.Next(TokenType.StringVariable, false);
+			//	if (nameToken == null)
+			//	{
+			//		return null;
+			//	}
+			//}
+			//return new VariableExpression(nameToken.Text);
 		}
 
 		protected static IExpression ProcessNumberExpression(ComplexTokenReader reader)

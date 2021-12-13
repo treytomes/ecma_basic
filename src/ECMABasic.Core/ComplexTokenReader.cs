@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ECMABasic.Core
@@ -53,10 +54,10 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public int? NextInteger(int maxDigits = 0, bool throwOnError = true)
 		{
-			var signToken = Next(TokenType.Symbol, false, "+");
+			var signToken = Next(TokenType.Symbol, false, @"\+");
 			if (signToken == null)
 			{
-				signToken = Next(TokenType.Symbol, false, "-");
+				signToken = Next(TokenType.Symbol, false, @"\-");
 			}
 			var isNegative = signToken?.Text == "-";
 
@@ -87,10 +88,10 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public double? NextNumber(bool throwOnError = true)
 		{
-			var signToken = Next(TokenType.Symbol, false, "+");
+			var signToken = Next(TokenType.Symbol, false, @"\+");
 			if (signToken == null)
 			{
-				signToken = Next(TokenType.Symbol, false, "-");
+				signToken = Next(TokenType.Symbol, false, @"\-");
 			}
 
 			var integerToken = Next(TokenType.Integer, false);
@@ -112,13 +113,13 @@ namespace ECMABasic.Core
 			}
 
 			// TODO: I don't really like how the "E" is typed here.
-			var exradToken = Next(TokenType.NumericVariable, false, "E");
+			var exradToken = Next(TokenType.Word, false, "E");
 			if (exradToken != null)
 			{
-				var exsignToken = Next(TokenType.Symbol, false, "+");
+				var exsignToken = Next(TokenType.Symbol, false, @"\+");
 				if (exsignToken == null)
 				{
-					exsignToken = Next(TokenType.Symbol, false, "-");
+					exsignToken = Next(TokenType.Symbol, false, @"\-");
 				}
 				var signText = exsignToken?.Text ?? "+";
 				var powerToken = Next(TokenType.Integer, true);
@@ -143,13 +144,16 @@ namespace ECMABasic.Core
 		/// </summary>
 		/// <param name="type">The type of token to retrieve.</param>
 		/// <param name="throwOnError">If true, an exception will be thrown if the type does not match.</param>
+		/// <param name="pattern">An optional regular expression pattern to match on the next token text.</param>
 		/// <returns>The token that was read.</returns>
 		/// <exception cref="UnexpectedTokenException">Throws an exception if the token type doesn't match what was expected.</exception>
-		public Token Next(TokenType type, bool throwOnError = true, string text = null)
+		public Token Next(TokenType type, bool throwOnError = true, string pattern = null)
 		{
+			// TODO: The text parameter should be a regular expression to match.
+
 			var startPosition = _tokenIndex;
 			var token = Next();
-			if ((token == null) || (token.Type != type) || ((text != null) && (token.Text != text)))
+			if ((token == null) || (token.Type != type) || ((pattern != null) && !Regex.IsMatch(token.Text, @"^" + pattern + @"$", RegexOptions.Singleline)))
 			{
 				if (throwOnError)
 				{
@@ -182,6 +186,9 @@ namespace ECMABasic.Core
 			}
 
 			var token = Read();
+			
+			// TODO: Aggressively identify numbers.  Or remove variable name tokenizing.  That might work better actually.
+
 			if (token.Type == TokenType.Symbol)
 			{
 				if (token.Text == "\"")
@@ -225,7 +232,7 @@ namespace ECMABasic.Core
 					if ((nextToken.Type == TokenType.Symbol) && (nextToken.Text == "$"))
 					{
 						Read();  // Read off the $.
-						return new Token(TokenType.StringVariable, new[] { token, nextToken });
+						return new Token(TokenType.Word, new[] { token, nextToken });
 					}
 					else
 					{
@@ -234,12 +241,12 @@ namespace ECMABasic.Core
 						{
 							Read();  // Read off the digit.
 							// It's a numeric variable with a letter followed by a digit.
-							return new Token(TokenType.NumericVariable, new[] { token, nextToken });
+							return new Token(TokenType.Word, new[] { token, nextToken });
 						}
 						else
 						{
 							// It's a numeric variable with just a single letter.
-							return new Token(TokenType.NumericVariable, new[] { token });
+							return new Token(TokenType.Word, new[] { token });
 						}
 					}
 				}
