@@ -90,32 +90,12 @@ namespace ECMABasic.Core
 
 		protected static IExpression ProcessNumberExpression(ComplexTokenReader reader)
 		{
-			var isNegative = false;
-
-			var signToken = reader.Next(TokenType.Symbol, false, "-");
-			if (signToken != null)
-			{
-				isNegative = true;
-			}
-			else
-			{
-				reader.Next(TokenType.Symbol, false, "+");
-				// If a positive sign is found, no action is needed.
-			}
-
-			var tabValue = reader.NextNumber(false);
-			if (!tabValue.HasValue)
+			var nextValue = reader.NextNumber(false);
+			if (!nextValue.HasValue)
 			{
 				return null;
 			}
-
-			var value = tabValue.Value;
-			if (isNegative)
-			{
-				value = -value;
-			}
-
-			return new NumberExpression(value);
+			return new NumberExpression(nextValue.Value);
 		}
 
 		protected static IExpression ProcessStringExpression(ComplexTokenReader reader)

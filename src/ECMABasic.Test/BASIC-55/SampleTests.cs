@@ -138,11 +138,11 @@ namespace ECMABasic.Test.Basic55
 			{
 				if (expectedLines[line] != actualLines[line])
 				{
-					for (var column = 0; column < expectedLines[line].Length; column++)
+					for (var chn = 0; chn < expectedLines[line].Length; chn++)
 					{
-						if (expectedLines[line][column] != actualLines[line][column])
+						if (expectedLines[line][chn] != actualLines[line][chn])
 						{
-							Assert.True(actualLines[line][column] == expectedLines[line][column], $"({line + 1}:{column + 1}) Expected '{expectedLines[line][column]}', found '{actualLines[line][column]}'.");
+							Assert.True(actualLines[line][chn] == expectedLines[line][chn], $"({line + 1}:{chn + 1}) Expected '{expectedLines[line][chn]}', found '{actualLines[line][chn]}'.");
 						}
 					}
 				}

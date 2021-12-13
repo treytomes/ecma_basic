@@ -53,6 +53,13 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public int? NextInteger(int maxDigits = 0, bool throwOnError = true)
 		{
+			var signToken = Next(TokenType.Symbol, false, "+");
+			if (signToken == null)
+			{
+				signToken = Next(TokenType.Symbol, false, "-");
+			}
+			var isNegative = signToken?.Text == "-";
+
 			var token = Next(TokenType.Integer, throwOnError);
 			if (token == null)
 			{
@@ -65,6 +72,10 @@ namespace ECMABasic.Core
 			}
 
 			int value = int.Parse(token.Text);
+			if (isNegative)
+			{
+				value = -value;
+			}
 			return value;
 		}
 
@@ -76,25 +87,53 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if an integer could not be read.</exception>
 		public double? NextNumber(bool throwOnError = true)
 		{
+			var signToken = Next(TokenType.Symbol, false, "+");
+			if (signToken == null)
+			{
+				signToken = Next(TokenType.Symbol, false, "-");
+			}
+
 			var integerToken = Next(TokenType.Integer, false);
 			var decimalToken = Next(TokenType.DecimalPoint, false);
-			double value;
+			string valueText;
 			if ((decimalToken == null) && (integerToken != null))
 			{
-				value = int.Parse(integerToken.Text);
+				valueText = string.Concat(signToken?.Text ?? string.Empty, integerToken.Text, ".0");
 			}
 			else
 			{
 				var fractionToken = Next(TokenType.Integer, throwOnError);
-				if (fractionToken == null)
+				if ((fractionToken == null) && (integerToken == null))
 				{
 					return null;
 				}
 
-				value = double.Parse(string.Concat(integerToken?.Text ?? string.Empty, ".", fractionToken.Text));
+				valueText = string.Concat(signToken?.Text ?? string.Empty, integerToken?.Text ?? string.Empty, ".", fractionToken?.Text ?? string.Empty);
 			}
 
-			return value;
+			// TODO: I don't really like how the "E" is typed here.
+			var exradToken = Next(TokenType.NumericVariable, false, "E");
+			if (exradToken != null)
+			{
+				var exsignToken = Next(TokenType.Symbol, false, "+");
+				if (exsignToken == null)
+				{
+					exsignToken = Next(TokenType.Symbol, false, "-");
+				}
+				var signText = exsignToken?.Text ?? "+";
+				var powerToken = Next(TokenType.Integer, true);
+
+				valueText = string.Concat(valueText, "E", signText, powerToken.Text);
+			}
+
+			try
+			{
+				return double.Parse(valueText, System.Globalization.NumberStyles.Float);
+			}
+			catch (OverflowException ex)
+			{
+				throw new OverflowException($"'{valueText}' couldn't be converted.", ex);
+			}
 		}
 
 		/// <summary>
