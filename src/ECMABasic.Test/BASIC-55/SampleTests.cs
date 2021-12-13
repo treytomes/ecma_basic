@@ -127,11 +127,30 @@ namespace ECMABasic.Test.Basic55
 
 			var output = File.ReadAllText($"./Resources/{sampleName}.OK");
 			output = NormalizeLineEndings(output);
+			var expectedLines = output.Split(Environment.NewLine);
 
 			var interpreter = Interpreter.FromFile($"./Resources/{sampleName}.BAS", env);
 			var program = interpreter.Program;
 			program.Execute(env);
-			Assert.Equal(output, env.Text);
+			var actualLines = env.Text.Split(Environment.NewLine);
+
+			for (var line = 0; line < expectedLines.Length; line++)
+			{
+				if (expectedLines[line] != actualLines[line])
+				{
+					for (var column = 0; column < expectedLines[line].Length; column++)
+					{
+						if (expectedLines[line][column] != actualLines[line][column])
+						{
+							Assert.True(actualLines[line][column] == expectedLines[line][column], $"({line + 1}:{column + 1}) Expected '{expectedLines[line][column]}', found '{actualLines[line][column]}'.");
+						}
+					}
+				}
+				else
+				{
+					Assert.Equal(expectedLines[line], actualLines[line]);
+				}
+			}
 		}
 
 		/// <summary>
