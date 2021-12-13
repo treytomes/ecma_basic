@@ -113,7 +113,7 @@ namespace ECMABasic.Core
 			}
 
 			// TODO: I don't really like how the "E" is typed here.
-			var exradToken = Next(TokenType.Word, false, "E");
+			var exradToken = Next(TokenType.Word, false, @"E\d?");
 			if (exradToken != null)
 			{
 				var exsignToken = Next(TokenType.Symbol, false, @"\+");
@@ -121,10 +121,15 @@ namespace ECMABasic.Core
 				{
 					exsignToken = Next(TokenType.Symbol, false, @"\-");
 				}
-				var signText = exsignToken?.Text ?? "+";
-				var powerToken = Next(TokenType.Integer, true);
+				var signText = exsignToken?.Text ?? "";
 
-				valueText = string.Concat(valueText, "E", signText, powerToken.Text);
+				Token powerToken = null;
+				if (!char.IsDigit(exradToken.Text.Last()))
+				{
+					powerToken = Next(TokenType.Integer, true);
+				}
+
+				valueText = string.Concat(valueText, exradToken.Text, signText, powerToken?.Text ?? string.Empty);
 			}
 
 			try

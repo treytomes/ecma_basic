@@ -7,7 +7,7 @@ namespace ECMABasic.Core
 	{
 		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
-			if (lineNumber == 870)
+			if (lineNumber == 120)
 			{
 				var a = 0;
 			}
