@@ -7,6 +7,9 @@ namespace ECMABasic.Core.Statements
 {
 	public class PrintStatement : IStatement
 	{
+		private const int NUM_SIGNIFICANT_DIGITS = 6;
+		private readonly static string _doubleFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', NUM_SIGNIFICANT_DIGITS));
+
 		public PrintStatement(IEnumerable<IPrintItem> expr = null)
 		{
 			PrintItems = new List<IPrintItem>(expr ?? Enumerable.Empty<IPrintItem>());
@@ -25,9 +28,29 @@ namespace ECMABasic.Core.Statements
 				return;
 			}
 
+			//if (env.CurrentLineNumber == 200)
+			//{
+			//	var a = 0;
+			//}
+
 			foreach (var expr in PrintItems)
 			{
-				var text = Convert.ToString(expr.Evaluate(env));
+				var value = expr.Evaluate(env);
+				string text;
+
+				if (value is int)
+				{
+					text = PrintInteger((int)value);
+				}
+				else if (value is double)
+				{
+					text = PrintDouble((double)value);
+				}
+				else
+				{
+					text = Convert.ToString(value);
+				}
+
 				env.Print(text);
 			}
 
@@ -35,6 +58,17 @@ namespace ECMABasic.Core.Statements
 			{
 				env.PrintLine();
 			}
+		}
+
+		private string PrintInteger(int value)
+		{
+			var sign = (value > 0) ? " " : "";
+			return sign + value.ToString() + " ";
+		}
+
+		private string PrintDouble(double value)
+		{
+			return value.ToString(_doubleFormat);
 		}
 	}
 }
