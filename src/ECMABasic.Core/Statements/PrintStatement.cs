@@ -7,9 +7,10 @@ namespace ECMABasic.Core.Statements
 {
 	public class PrintStatement : IStatement
 	{
-		private const int NUM_SIGNIFICANT_DIGITS = 6;
-		private readonly static string _largeNumberFormat = string.Format(" .{0}E+# ;-.{0}E+# ", new string('#', NUM_SIGNIFICANT_DIGITS));
-		private readonly static string _numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', NUM_SIGNIFICANT_DIGITS));
+		private const int SIGNIFICANCE_WIDTH = 6;
+		private const int EXRAD_WIDTH = 2;
+		private readonly static string _scientificFormat = string.Format(" #.#####E+0 ;-#.#####E+0 ", new string('#', SIGNIFICANCE_WIDTH), new string('0', EXRAD_WIDTH));
+		private readonly static string _numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', SIGNIFICANCE_WIDTH));
 
 		public PrintStatement(IEnumerable<IPrintItem> expr = null)
 		{
@@ -29,7 +30,7 @@ namespace ECMABasic.Core.Statements
 				return;
 			}
 
-			//if (env.CurrentLineNumber == 1400)
+			//if (env.CurrentLineNumber == 240)
 			//{
 			//	var a = 0;
 			//}
@@ -39,78 +40,59 @@ namespace ECMABasic.Core.Statements
 				var value = expr.Evaluate(env);
 				string text = value switch
 				{
-					int => PrintInteger((int)value),
-					double => PrintDouble((double)value),
+					int => PrintNumber((double)value),
+					double => PrintNumber((double)value),
 					_ => Convert.ToString(value),
 				};
 				env.Print(text);
 			}
 
-			if (!(PrintItems.Last() is SemicolonExpression))
+			if (!(PrintItems.Last() is IPrintItemSeparator))
 			{
 				env.PrintLine();
 			}
 		}
 
-		private static string PrintInteger(int value)
+		private static string PrintNumber(double value)
 		{
-			var sign = (value > 0) ? " " : "";
-			return sign + value.ToString() + " ";
-		}
-
-		private static string PrintDouble(double value)
-		{
-			if (value == -0.0)
+			if ((value == 0) || (value == -0.0))
 			{
-				value = 0.0;
+				return " 0 ";
 			}
 
-			// TODO: G6 replacement? 0.000000E0##
-			///var expFormat = "G6";
-			var expFormat = "#.######E+0##";
-
-			string text;
-			if ((value > 0) && ((value > 999999) || (value < 0.000001)))
+			var numDigits = Math.Floor(Math.Log10(Math.Abs(value)));
+			var scale = (double)Math.Pow(10, numDigits + 1);  // Calculate the scale of the number.
+			var newValue = (double)(scale * Math.Round((double)value / scale, SIGNIFICANCE_WIDTH));  // Reduce the significant digit width.
+			if (numDigits == -SIGNIFICANCE_WIDTH)
 			{
-				text = " " + value.ToString(expFormat) + " ";
-			}
-			else if ((value < 0) && ((value < -999999) || (value > -0.000001)))
-			{
-				text = value.ToString(expFormat) + " ";
-			}
-			else
-			{
-				text = value.ToString(_numberFormat);
-			}
-
-			var dotIndex = text.IndexOf('.');
-			var eIndex = text.IndexOf('E');
-			if (dotIndex >= 0)
-			{
-				if (eIndex >= 0)
+				if (Math.Round(value, SIGNIFICANCE_WIDTH) == value)
 				{
-					if ((eIndex - dotIndex + 1 == 1) && (text[dotIndex + 1] == '0'))
-					{
-						// There's a single character, and it's a 0.
-						text = string.Concat(text.Substring(0, dotIndex), text[eIndex..]);
-					}
+					return newValue.ToString(_numberFormat);
 				}
 				else
 				{
-					eIndex = text.Length;
-					if ((eIndex - dotIndex + 1 == 1) && (text[dotIndex + 1] == '0'))
-					{
-						// There's a single character, and it's a 0.
-						text = string.Concat(text.Substring(0, dotIndex), text[eIndex..]);
-					}
+					return newValue.ToString(_scientificFormat);
 				}
 			}
-			else if (eIndex >= 0)
+			else if ((numDigits > -SIGNIFICANCE_WIDTH) && (numDigits <= SIGNIFICANCE_WIDTH))
 			{
-				text = string.Concat(text.Substring(0, eIndex), ".", text[eIndex..]);
+				return newValue.ToString(_numberFormat);
 			}
-
-			return text;
+			else
+			{
+				var text = newValue.ToString(_scientificFormat);
+				var eIndex = text.IndexOf("E");
+				if (eIndex >= 0)
+				{
+					var dotIndex = text.IndexOf(".");
+					if (dotIndex < 0)
+					{
+						// There should always be a full-stop between the integer and the E.
+						text = text.Insert(eIndex, ".");
+					}
+				}
+				return text;
+			}
 		}
 	}
 }

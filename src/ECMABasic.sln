@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Test", "ECMABasic.Test\ECMABasic.Test.csproj", "{00D4237D-0765-465B-8033-D29282DCA861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic.Test", "ECMABasic.Test\ECMABasic.Test.csproj", "{00D4237D-0765-465B-8033-D29282DCA861}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F714F94-417A-4F40-8A2A-8DB416CD6A35}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,11 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F714F94-4
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{0C020B93-2F51-4424-839F-07E08928184E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{0C020B93-2F51-4424-839F-07E08928184E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic55", "ECMABasic55\ECMABasic55.csproj", "{C4F46742-62BA-4989-83FC-60C3906C578D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic55", "ECMABasic55\ECMABasic55.csproj", "{C4F46742-62BA-4989-83FC-60C3906C578D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic116", "ECMABasic116\ECMABasic116.csproj", "{C818CB4B-2972-46F2-801B-53A9E8730A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic116", "ECMABasic116\ECMABasic116.csproj", "{C818CB4B-2972-46F2-801B-53A9E8730A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
