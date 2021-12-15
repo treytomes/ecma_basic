@@ -14,6 +14,7 @@ namespace ECMABasic.Core
 		public EnvironmentBase(IBasicConfiguration config = null)
 		{
 			_config = config ?? MinimalBasicConfiguration.Instance;
+			Program = new Program();
 		}
 
 		/// <summary>
@@ -24,6 +25,8 @@ namespace ECMABasic.Core
 		public abstract int TerminalRow { get; set; }
 
 		public abstract int TerminalColumn { get; set; }
+
+		public Program Program { get; private set; }
 
 		public abstract void Print(string text);
 
@@ -69,6 +72,14 @@ namespace ECMABasic.Core
 		{
 			// TODO: Validate variable name?
 			_numericVariables[variableName] = value;
+		}
+
+		public void Clear()
+		{
+			Program.Clear();
+			_numericVariables.Clear();
+			_stringVariables.Clear();
+			CurrentLineNumber = 0;
 		}
 	}
 }

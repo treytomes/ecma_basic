@@ -7,10 +7,10 @@ namespace ECMABasic.Core
 	{
 		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
-			if (lineNumber == 120)
-			{
-				var a = 0;
-			}
+			//if (lineNumber == 120)
+			//{
+			//	var a = 0;
+			//}
 			var token = reader.Next(TokenType.Word, false, "LET");
 			if (token == null)
 			{

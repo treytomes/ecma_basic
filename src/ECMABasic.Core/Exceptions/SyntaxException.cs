@@ -2,7 +2,7 @@
 
 namespace ECMABasic.Core.Exceptions
 {
-	public class SyntaxException : Exception
+	public class SyntaxException : RuntimeException
 	{
 		public SyntaxException(string message, int? line = null)
 			: base(string.Concat($"? {message.ToUpper()}", (line.HasValue ? $" IN LINE {line}" : string.Empty)))

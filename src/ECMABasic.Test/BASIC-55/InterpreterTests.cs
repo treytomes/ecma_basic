@@ -1,10 +1,7 @@
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Statements;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ECMABasic.Test.BASIC_55
@@ -19,8 +16,8 @@ namespace ECMABasic.Test.BASIC_55
 
 			var sourceText = @"10 PRINT ""HELLO, WORLD!""
 20 END";
-			var interpreter = Interpreter.FromText(sourceText, env);
-			var program = interpreter.Program;
+			Interpreter.FromText(sourceText, env);
+			var program = env.Program;
 
 			Assert.Equal(2, program.Length);
 

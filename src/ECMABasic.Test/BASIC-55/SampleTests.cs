@@ -129,8 +129,8 @@ namespace ECMABasic.Test.Basic55
 			output = NormalizeLineEndings(output);
 			var expectedLines = output.Split(Environment.NewLine);
 
-			var interpreter = Interpreter.FromFile($"./Resources/{sampleName}.BAS", env);
-			var program = interpreter.Program;
+			Interpreter.FromFile($"./Resources/{sampleName}.BAS", env);
+			var program = env.Program;
 			program.Execute(env);
 			var actualLines = env.Text.Split(Environment.NewLine);
 

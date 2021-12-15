@@ -1,4 +1,5 @@
 ﻿using ECMABasic.Core.Exceptions;
+using ECMABasic.Core.Statements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,13 +56,18 @@ namespace ECMABasic.Core
 				return;
 			}
 
-			// Begin executing with the first line number.
-			var lineIndex = 0;
-			env.CurrentLineNumber = _sortedLines[lineIndex].LineNumber;
-
-			while (true)
+			try
 			{
-				try
+				ValidateEndLine();
+
+				// Begin executing with the first line number.
+				var lineIndex = 0;
+				if (env.CurrentLineNumber == 0)
+				{
+					env.CurrentLineNumber = _sortedLines[lineIndex].LineNumber;
+				}
+
+				while (true)
 				{
 					var oldLineNumber = env.CurrentLineNumber;
 					var line = this[env.CurrentLineNumber];
@@ -85,15 +91,23 @@ namespace ECMABasic.Core
 						throw new ProgramEndException();
 					}
 				}
-				catch (ProgramEndException)
-				{
-					break;
-				}
-				catch (RuntimeException ex)
-				{
-					env.ReportError(ex.Message);
-					break;
-				}
+			}
+			catch (ProgramEndException)
+			{
+			}
+			catch (RuntimeException ex)
+			{
+				env.ReportError(ex.Message);
+			}
+		}
+
+		public void MoveToNextLine(IEnvironment env)
+		{
+			var lineIndex = _lineNumberToIndex[env.CurrentLineNumber];
+			lineIndex++;
+			if (lineIndex < Length)
+			{
+				env.CurrentLineNumber = _sortedLines[lineIndex].LineNumber;
 			}
 		}
 
@@ -103,6 +117,16 @@ namespace ECMABasic.Core
 			_sortedLines.Clear();
 			_sortedLines.AddRange(_lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value));
 			_lineNumberToIndex[line.LineNumber] = _sortedLines.IndexOf(line);
+		}
+		
+		public void Delete(int lineNumber)
+		{
+			if (_lines.ContainsKey(lineNumber))
+			{
+				_sortedLines.Remove(_lines[lineNumber]);
+				_lines.Remove(lineNumber);
+				_lineNumberToIndex.Remove(lineNumber);
+			}
 		}
 
 		public void Clear()
@@ -122,6 +146,21 @@ namespace ECMABasic.Core
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		private void ValidateEndLine()
+		{
+			var ENDs = this.Where(x => x.Statement is EndStatement);
+			if (!ENDs.Any())
+			{
+				throw new NoEndInstructionException();
+			}
+
+			var lastLineNumber = this.Max(x => x.LineNumber);
+			if (ENDs.First().LineNumber != lastLineNumber)
+			{
+				throw new SyntaxException("END IS NOT LAST", ENDs.First().LineNumber);
+			}
 		}
 	}
 }

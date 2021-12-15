@@ -12,6 +12,11 @@ namespace ECMABasic.Core
 	public interface IEnvironment : IErrorReporter
 	{
 		/// <summary>
+		/// The full program, ready to execute.
+		/// </summary>
+		public Program Program { get; }
+
+		/// <summary>
 		/// The line number currently being executed.
 		/// </summary>
 		int CurrentLineNumber { get; set; }
@@ -25,6 +30,11 @@ namespace ECMABasic.Core
 		/// The terminal column to write to next.
 		/// </summary>
 		int TerminalColumn { get; set; }
+
+		/// <summary>
+		/// Clear everything except for the screen.
+		/// </summary>
+		void Clear();
 
 		/// <summary>
 		/// Print a string to the output stream, followed by a new-line.

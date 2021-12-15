@@ -4,30 +4,64 @@ using System.IO;
 
 namespace ECMABasic55
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        private static readonly IEnvironment _env = new ConsoleEnvironment();
+
+        public static int Main(string[] args)
         {
             Console.WriteLine("ECMA Basic 55 Runtime Environment");
+            Console.WriteLine("Usage: ecmabasic55 {optional file path}");
+            Console.WriteLine();
 
-            if (args.Length < 1)
+            if (args.Length == 1)
 			{
-                Console.WriteLine("Usage: ecmabasic55 {optional file path}");
-                return;
+                return RunBatch(args[0]);
 			}
-
-            var path = args[0];
-
-            if (!File.Exists(path))
+            else
 			{
-                throw new FileNotFoundException(null, path);
+                return RunREPL();
 			}
-
-            var env = new ConsoleEnvironment();
-
-            var interpreter = Interpreter.FromFile(path, env);
-            var program = interpreter.Program;
-            program.Execute(env);
         }
+
+        private static int RunBatch(string path)
+		{
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(null, path);
+            }
+
+            Interpreter.FromFile(path, _env);
+            _env.Program.Execute(_env);
+            return 0;
+        }
+
+        private static int RunREPL()
+		{
+            var interpreter = new Interpreter(_env);
+            var isRunning = true;
+            Console.WriteLine("OK");
+
+            while (isRunning)
+			{
+                var line = Console.ReadLine() + Environment.NewLine;
+
+				try
+				{
+                    var statement = interpreter.ProcessImmediate(line);
+                    if (statement != null)
+					{
+                        statement.Execute(_env);
+                        Console.WriteLine("OK");
+                    }
+                }
+				catch (Exception ex)
+				{
+                    Console.WriteLine(ex.Message);
+				}
+			}
+
+			return 0;
+		}
     }
 }

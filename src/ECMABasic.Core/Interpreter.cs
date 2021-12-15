@@ -1,6 +1,7 @@
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
+using ECMABasic.Core.Parsers;
 using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
@@ -15,21 +16,20 @@ namespace ECMABasic.Core
 	/// </summary>
 	public class Interpreter
 	{
-		private readonly ComplexTokenReader _reader;
+		private ComplexTokenReader _reader;
 		private readonly IBasicConfiguration _config;
+		private readonly IEnvironment _env;
 
-		private Interpreter(ComplexTokenReader reader, IErrorReporter reporter, IBasicConfiguration config = null)
+		public Interpreter(IEnvironment env, IBasicConfiguration config = null)
 		{
+			_env = env;
 			_config = config ?? MinimalBasicConfiguration.Instance;
-			_reader = reader;
-			Program = new Program();
-			ProcessProgram(reporter);
 		}
 
-		/// <summary>
-		/// The full program, ready to execute.
-		/// </summary>
-		public Program Program { get; }
+		//public static Interpreter ImmediateMode(IErrorReporter reporter, IBasicConfiguration config = null)
+		//{
+		//	return new Interpreter(null, reporter, config, true);
+		//}
 
 		/// <summary>
 		/// Create an interpreter that will interpret the input text directly.
@@ -37,9 +37,10 @@ namespace ECMABasic.Core
 		/// <param name="text">The text to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>The interpreter instance.</returns>
-		public static Interpreter FromText(string text, IErrorReporter reporter)
+		public static void FromText(string text, IEnvironment env, IBasicConfiguration config = null)
 		{
-			return new Interpreter(ComplexTokenReader.FromText(text), reporter);
+			var interpreter = new Interpreter(env, config);
+			interpreter.InterpretProgramFromText(text);
 		}
 
 		/// <summary>
@@ -48,12 +49,25 @@ namespace ECMABasic.Core
 		/// <param name="path">The path to the file to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>The interpreter instance.</returns>
-		public static Interpreter FromFile(string path, IErrorReporter reporter)
+		public static void FromFile(string path, IEnvironment env, IBasicConfiguration config = null)
 		{
-			return new Interpreter(ComplexTokenReader.FromFile(path), reporter);
+			var interpreter = new Interpreter(env, config);
+			interpreter.InterpretProgramFromFile(path);
 		}
 
-		private void ProcessProgram(IErrorReporter reporter)
+		public void InterpretProgramFromFile(string path)
+		{
+			_reader = ComplexTokenReader.FromFile(path);
+			InterpretProgram();
+		}
+
+		public void InterpretProgramFromText(string text)
+		{
+			_reader = ComplexTokenReader.FromText(text);
+			InterpretProgram();
+		}
+
+		private void InterpretProgram()
 		{
 			try
 			{
@@ -66,11 +80,9 @@ namespace ECMABasic.Core
 					}
 					else
 					{
-						Program.Insert(line);
+						_env.Program.Insert(line);
 					}
 				}
-
-				ValidateEndLine();
 
 				var token = _reader.Next();
 				if (token != null)
@@ -80,8 +92,8 @@ namespace ECMABasic.Core
 			}
 			catch (SyntaxException e)
 			{
-				reporter.ReportError(e.Message);
-				Program.Clear();
+				_env.ReportError(e.Message);
+				//_env.Program.Clear();
 			}
 		}
 
@@ -108,18 +120,58 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private ProgramLine ProcessLine()
+		public IStatement ProcessImmediate(string text)
+		{
+			_reader = ComplexTokenReader.FromText(text);
+
+			var line = ProcessLine(false);
+			if (line != null)
+			{
+				if (line.Statement != null)
+				{
+					_env.Program.Insert(line);
+				}
+				else
+				{
+					_env.Program.Delete(line.LineNumber);
+				}
+				return null;
+			}
+			else
+			{
+				ProcessSpace(false);
+				var statement = ProcessStatement(null, false);
+				if (statement == null)
+				{
+					statement = ProcessImmediateStatement();
+				}
+
+				ProcessSpace(false);
+				ProcessEndOfLine();
+				return statement;
+			}
+		}
+
+		private ProgramLine ProcessLine(bool throwsOnError = true)
 		{
 			if (_reader.IsAtEnd)
 			{
 				return null;
 			}
 
-			var lineNumber = ProcessLineNumber();
+			var lineNumber = ProcessLineNumber(throwsOnError);
+			if (!lineNumber.HasValue)
+			{
+				return null;
+			}
 
-			ProcessSpace();
+			if (ProcessSpace(throwsOnError) == null)
+			{
+				// An empty line triggers a deletion.
+				return new ProgramLine(lineNumber.Value, null);
+			}
 
-			var statement = ProcessStatement(lineNumber);
+			var statement = ProcessStatement(lineNumber, throwsOnError);
 
 			// Optional space.
 			ProcessSpace(false);
@@ -127,7 +179,7 @@ namespace ECMABasic.Core
 			// Require an end-of-line.
 			ProcessEndOfLine();
 
-			return new ProgramLine(lineNumber, statement);
+			return new ProgramLine(lineNumber.Value, statement);
 		}
 
 		/// <summary>
@@ -135,9 +187,9 @@ namespace ECMABasic.Core
 		/// An exception will occur if a line number could not be read.
 		/// </summary>
 		/// <returns>The line number.</returns>
-		private int ProcessLineNumber()
+		private int? ProcessLineNumber(bool throwsOnError = true)
 		{
-			var lineNumber = _reader.NextInteger(_config.MaxLineNumberDigits).Value;
+			var lineNumber = _reader.NextInteger(_config.MaxLineNumberDigits, throwsOnError);
 			return lineNumber;
 		}
 
@@ -169,22 +221,32 @@ namespace ECMABasic.Core
 			return _reader.Next(TokenType.Space, throwOnError);
 		}
 
-		private void ValidateEndLine()
+		private IStatement ProcessImmediateStatement()
 		{
-			var ENDs = Program.Where(x => x.Statement is EndStatement);
-			if (!ENDs.Any())
+			IStatement stmt;
+
+			stmt = new RunStatementParser().Parse(_reader);
+			if (stmt != null)
 			{
-				throw new NoEndInstructionException();
+				return stmt;
 			}
 
-			var lastLineNumber = Program.Max(x => x.LineNumber);
-			if (ENDs.First().LineNumber != lastLineNumber)
+			stmt = new NewStatementParser().Parse(_reader);
+			if (stmt != null)
 			{
-				throw new SyntaxException("END IS NOT LAST", ENDs.First().LineNumber);
+				return stmt;
 			}
+
+			stmt = new ContinueStatementParser().Parse(_reader);
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
+			return null;
 		}
 
-		private IStatement ProcessStatement(int lineNumber)
+		private IStatement ProcessStatement(int? lineNumber, bool throwOnError = true)
 		{
 			IStatement stmt;
 
@@ -212,7 +274,11 @@ namespace ECMABasic.Core
 				return stmt;
 			}
 
-			throw new SyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
+			if (throwOnError)
+			{
+				throw new SyntaxException("A STATEMENT WAS EXPECTED", lineNumber);
+			}
+			return null;
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]

@@ -10,18 +10,18 @@ namespace ECMABasic.Core.Statements
 		private readonly string _scientificFormat;
 		private readonly string _numberFormat;
 
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		public PrintStatement(IEnumerable<IPrintItem> expr = null, IBasicConfiguration config = null)
 		{
 			_config = config ?? MinimalBasicConfiguration.Instance;
 			if (_scientificFormat == null)
 			{
-				_scientificFormat = string.Format(" #.#####E+0 ;-#.#####E+0 ", new string('#', _config.SignificanceWidth), new string('0', _config.ExradWidth));
+				_scientificFormat = string.Format(" #.{0}E+{1} ;-#.{0}E+{1} ", new string('#', _config.SignificanceWidth - 1), new string('0', _config.ExradWidth - 1));
 			}
 			if (_numberFormat == null)
 			{
-				_numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', config.SignificanceWidth));
+				_numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', _config.SignificanceWidth));
 			}
 
 			PrintItems = new List<IPrintItem>(expr ?? Enumerable.Empty<IPrintItem>());
