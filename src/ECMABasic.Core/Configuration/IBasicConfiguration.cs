@@ -31,5 +31,15 @@
 		/// The total number of digits allowed in a line number.
 		/// </summary>
 		public int MaxLineNumberDigits { get; }
+
+		/// <summary>
+		/// The number of significant decimal digits printed in numeric representations.
+		/// </summary>
+		public int SignificanceWidth { get; }
+
+		/// <summary>
+		/// The number of digits printed in the exrad component of a numeric representation.
+		/// </summary>
+		public int ExradWidth { get; }
 	}
 }

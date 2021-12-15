@@ -1,4 +1,4 @@
-﻿using ECMABasic.Core.Expressions;
+﻿using ECMABasic.Core.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +7,23 @@ namespace ECMABasic.Core.Statements
 {
 	public class PrintStatement : IStatement
 	{
-		private const int SIGNIFICANCE_WIDTH = 6;
-		private const int EXRAD_WIDTH = 2;
-		private readonly static string _scientificFormat = string.Format(" #.#####E+0 ;-#.#####E+0 ", new string('#', SIGNIFICANCE_WIDTH), new string('0', EXRAD_WIDTH));
-		private readonly static string _numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', SIGNIFICANCE_WIDTH));
+		private readonly string _scientificFormat;
+		private readonly string _numberFormat;
 
-		public PrintStatement(IEnumerable<IPrintItem> expr = null)
+		private IBasicConfiguration _config;
+
+		public PrintStatement(IEnumerable<IPrintItem> expr = null, IBasicConfiguration config = null)
 		{
+			_config = config ?? MinimalBasicConfiguration.Instance;
+			if (_scientificFormat == null)
+			{
+				_scientificFormat = string.Format(" #.#####E+0 ;-#.#####E+0 ", new string('#', _config.SignificanceWidth), new string('0', _config.ExradWidth));
+			}
+			if (_numberFormat == null)
+			{
+				_numberFormat = string.Format(" .{0} ;-.{0} ; 0 ", new string('#', config.SignificanceWidth));
+			}
+
 			PrintItems = new List<IPrintItem>(expr ?? Enumerable.Empty<IPrintItem>());
 		}
 
@@ -53,7 +63,7 @@ namespace ECMABasic.Core.Statements
 			}
 		}
 
-		private static string PrintNumber(double value)
+		private string PrintNumber(double value)
 		{
 			if ((value == 0) || (value == -0.0))
 			{
@@ -62,10 +72,10 @@ namespace ECMABasic.Core.Statements
 
 			var numDigits = Math.Floor(Math.Log10(Math.Abs(value)));
 			var scale = (double)Math.Pow(10, numDigits + 1);  // Calculate the scale of the number.
-			var newValue = (double)(scale * Math.Round((double)value / scale, SIGNIFICANCE_WIDTH));  // Reduce the significant digit width.
-			if (numDigits == -SIGNIFICANCE_WIDTH)
+			var newValue = (double)(scale * Math.Round((double)value / scale, _config.SignificanceWidth));  // Reduce the significant digit width.
+			if (numDigits == -_config.SignificanceWidth)
 			{
-				if (Math.Round(value, SIGNIFICANCE_WIDTH) == value)
+				if (Math.Round(value, _config.SignificanceWidth) == value)
 				{
 					return newValue.ToString(_numberFormat);
 				}
@@ -74,7 +84,7 @@ namespace ECMABasic.Core.Statements
 					return newValue.ToString(_scientificFormat);
 				}
 			}
-			else if ((numDigits > -SIGNIFICANCE_WIDTH) && (numDigits <= SIGNIFICANCE_WIDTH))
+			else if ((numDigits > -_config.SignificanceWidth) && (numDigits <= _config.SignificanceWidth))
 			{
 				return newValue.ToString(_numberFormat);
 			}

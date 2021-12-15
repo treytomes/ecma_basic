@@ -19,6 +19,8 @@ namespace ECMABasic.Core.Configuration
 			TerminalWidth = GetValueOrDefault(config, "terminalWidth", MinimalBasicConfigDefaults.TERMINAL_WIDTH);
 			NumTerminalColumns = GetValueOrDefault(config, "numTerminalColumns", MinimalBasicConfigDefaults.NUM_TERMINAL_COLUMNS);
 			MaxLineNumberDigits = GetValueOrDefault(config, "maxLineNumberDigits", MinimalBasicConfigDefaults.MAX_LINE_NUMBER_DIGITS);
+			SignificanceWidth = GetValueOrDefault(config, "significanceWidth", MinimalBasicConfigDefaults.SIGNIFICANCE_WIDTH);
+			ExradWidth = GetValueOrDefault(config, "exradWidth", MinimalBasicConfigDefaults.EXRAD_WIDTH);
 		}
 
 		public static IBasicConfiguration Instance { get; } = new MinimalBasicConfiguration();
@@ -40,6 +42,10 @@ namespace ECMABasic.Core.Configuration
 		}
 
 		public int MaxLineNumberDigits { get; }
+
+		public int SignificanceWidth { get; }
+
+		public int ExradWidth { get; }
 
 		private T GetValueOrDefault<T>(IConfiguration config, string key, T defaultValue)
 		{

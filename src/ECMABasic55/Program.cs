@@ -12,7 +12,7 @@ namespace ECMABasic55
 
             if (args.Length < 1)
 			{
-                Console.WriteLine("Usage: ecmabasic55 [file path]");
+                Console.WriteLine("Usage: ecmabasic55 {optional file path}");
                 return;
 			}
 
