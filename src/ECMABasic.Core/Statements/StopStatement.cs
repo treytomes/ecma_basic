@@ -6,7 +6,7 @@ namespace ECMABasic.Core.Statements
 	{
 		public void Execute(IEnvironment env)
 		{
-			throw new ProgramEndException();
+			throw new ProgramStopException(env.CurrentLineNumber);
 		}
 	}
 }

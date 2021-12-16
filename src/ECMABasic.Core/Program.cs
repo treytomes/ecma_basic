@@ -66,6 +66,10 @@ namespace ECMABasic.Core
 				{
 					env.CurrentLineNumber = _sortedLines[lineIndex].LineNumber;
 				}
+				else
+				{
+					lineIndex = _lineNumberToIndex[env.CurrentLineNumber];
+				}
 
 				while (true)
 				{
