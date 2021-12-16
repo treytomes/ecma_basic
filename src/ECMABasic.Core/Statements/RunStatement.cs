@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ECMABasic.Core.Exceptions;
+using System;
 using System.Linq;
 
 namespace ECMABasic.Core.Statements
@@ -19,7 +20,12 @@ namespace ECMABasic.Core.Statements
 		{
 			if (LineNumber != null)
 			{
-				env.CurrentLineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
+				var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
+				if (!env.Program.Any(x => x.LineNumber == lineNumber))
+				{
+					throw new RuntimeException($"% LINE NUMBER {lineNumber} IS NOT DEFINED");
+				}
+				env.CurrentLineNumber = lineNumber;
 			}
 			else
 			{
