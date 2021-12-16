@@ -120,6 +120,62 @@ namespace ECMABasic.Test.Basic55
 			RunSample("P014");
 		}
 
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P015_The_REM_and_GOTO_statements()
+		{
+			RunSample("P015");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P016_ERROR_Transfer_to_a_non_existing_line()
+		{
+			RunSample("P016");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P017_Elementary_use_of_GOSUB_and_RETURN()
+		{
+			RunSample("P017");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P018_The_IF_THEN_statement_with_string_operands()
+		{
+			RunSample("P018");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P019_The_IF_THEN_statement_with_numeric_operands()
+		{
+			RunSample("P019");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P020_ERROR_IF_THEN_statement_with_a_string_and_numeric_operand()
+		{
+			RunSample("P020");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Control Statements and REM")]
+		public void P021_ERROR_Transfer_to_a_non_existing_line_number_using_the_IF_THEN_statement()
+		{
+			RunSample("P021");
+		}
+
 		private static void RunSample(string sampleName)
 		{
 			var env = new TestEnvironment();
