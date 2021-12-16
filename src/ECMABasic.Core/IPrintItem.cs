@@ -6,7 +6,7 @@
 	/// <remarks>
 	/// A print-item may not be a valid expression component.  e.g. TAB.
 	/// </remarks>
-	public interface IPrintItem
+	public interface IPrintItem : IListable
 	{
 		/// <summary>
 		/// Convert the expression a base type.
