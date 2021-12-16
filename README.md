@@ -1,6 +1,8 @@
 # ecma_basic
 A .Net implementation of the ECMA-55 and ECMA-116 BASIC standards.
 
+![Screenshot for v0.0.2](images/v0.0.2.PNG)
+
 There is a wiki with more project details [here](https://github.com/treytomes/ecma_basic/wiki/).
 
 # Sub Projects
