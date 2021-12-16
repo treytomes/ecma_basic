@@ -9,7 +9,11 @@ namespace ECMABasic.Core.Parsers
 			var token = reader.Next(TokenType.Word, false, "CONTINUE");
 			if (token == null)
 			{
-				return null;
+				token = reader.Next(TokenType.Word, false, "CONT");
+				if (token == null)
+				{
+					return null;
+				}
 			}
 			return new ContinueStatement();
 		}
