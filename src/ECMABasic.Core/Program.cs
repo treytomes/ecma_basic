@@ -87,7 +87,6 @@ namespace ECMABasic.Core
 						// The statement modified the current line number, so we need to recalculate the line index.
 						var nextLine = _lines[env.CurrentLineNumber];
 						lineIndex = _lineNumberToIndex[env.CurrentLineNumber];
-						// TODO: It would be worth creating an index of lineNumber-->lineIndex to speed things up a bit.
 					}
 
 					if (lineIndex >= Length)

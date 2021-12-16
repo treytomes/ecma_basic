@@ -61,7 +61,6 @@ namespace ECMABasic.Test.Basic55
 		[Trait("Category", "String variables and TAB")]
 		public void P007_Exception_String_overflow_using_the_LET_statement()
 		{
-			// TODO: This shouldn't be passing yet...
 			RunSample("P007");
 		}
 

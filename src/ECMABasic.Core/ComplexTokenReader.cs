@@ -154,8 +154,6 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if the token type doesn't match what was expected.</exception>
 		public Token Next(TokenType type, bool throwOnError = true, string pattern = null)
 		{
-			// TODO: The text parameter should be a regular expression to match.
-
 			var startPosition = _tokenIndex;
 			var token = Next();
 			if ((token == null) || (token.Type != type) || ((pattern != null) && !Regex.IsMatch(token.Text, @"^" + pattern + @"$", RegexOptions.Singleline)))
@@ -191,8 +189,6 @@ namespace ECMABasic.Core
 			}
 
 			var token = Read();
-			
-			// TODO: Aggressively identify numbers.  Or remove variable name tokenizing.  That might work better actually.
 
 			if (token.Type == TokenType.Symbol)
 			{
