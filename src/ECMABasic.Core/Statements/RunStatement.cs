@@ -36,5 +36,17 @@ namespace ECMABasic.Core.Statements
 			}
 			env.Program.Execute(env);
 		}
+
+		public string ToListing()
+		{
+			if (LineNumber != null)
+			{
+				return string.Concat("RUN ", LineNumber.ToListing());
+			}
+			else
+			{
+				return "RUN";
+			}
+		}
 	}
 }

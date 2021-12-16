@@ -46,5 +46,10 @@ namespace ECMABasic.Core.Expressions
 			}
 			return sb.ToString();
 		}
+
+		public string ToListing()
+		{
+			return string.Concat("TAB(", Value.ToListing(), ")");
+		}
 	}
 }

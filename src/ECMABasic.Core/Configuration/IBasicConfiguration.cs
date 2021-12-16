@@ -41,5 +41,10 @@
 		/// The number of digits printed in the exrad component of a numeric representation.
 		/// </summary>
 		public int ExradWidth { get; }
+
+		/// <summary>
+		/// The highest possible line number.
+		/// </summary>
+		public int MaxLineNumber { get; }
 	}
 }

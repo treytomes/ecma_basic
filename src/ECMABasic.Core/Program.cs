@@ -1,18 +1,15 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Statements;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
 	/// <summary>
 	/// A program is an executable list of program lines.
 	/// </summary>
-	public class Program : IEnumerable<ProgramLine>
+	public class Program : IEnumerable<ProgramLine>, IListable
 	{
 		private readonly Dictionary<int, ProgramLine> _lines;
 		private readonly List<ProgramLine> _sortedLines;
@@ -136,6 +133,11 @@ namespace ECMABasic.Core
 		{
 			_lines.Clear();
 			_sortedLines.Clear();
+		}
+
+		public string ToListing()
+		{
+			return string.Join(string.Empty, _lines.Select(x => x.Value.ToListing()));
 		}
 
 		public IEnumerator<ProgramLine> GetEnumerator()

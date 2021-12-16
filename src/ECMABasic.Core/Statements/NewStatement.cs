@@ -6,5 +6,10 @@
 		{
 			env.Clear();
 		}
+
+		public string ToListing()
+		{
+			return "NEW";
+		}
 	}
 }

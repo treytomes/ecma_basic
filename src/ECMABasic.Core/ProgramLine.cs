@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
     /// <summary>
     /// Represents a single line of a program.
     /// </summary>
-    public class ProgramLine
+    public class ProgramLine : IListable
     {
         /// <summary>
         /// Construct a program line instance.
@@ -31,5 +27,10 @@ namespace ECMABasic.Core
         /// The statement to execute on this line.
         /// </summary>
         public IStatement Statement { get; }
-    }
+
+		public string ToListing()
+		{
+			return string.Concat(LineNumber.ToString(), " ", Statement.ToListing(), Environment.NewLine);
+		}
+	}
 }

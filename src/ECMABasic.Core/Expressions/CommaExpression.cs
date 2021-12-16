@@ -27,5 +27,10 @@ namespace ECMABasic.Core.Expressions
 			var text = new string(' ', numRemainingSpaces);
 			return text;
 		}
+
+		public string ToListing()
+		{
+			return ",";
+		}
 	}
 }

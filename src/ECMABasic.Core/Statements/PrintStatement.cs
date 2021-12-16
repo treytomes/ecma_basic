@@ -63,6 +63,11 @@ namespace ECMABasic.Core.Statements
 			}
 		}
 
+		public string ToListing()
+		{
+			return string.Concat("PRINT ", string.Join(string.Empty, PrintItems.Select(x => x.ToListing())));
+		}
+
 		private string PrintNumber(double value)
 		{
 			if ((value == 0) || (value == -0.0))

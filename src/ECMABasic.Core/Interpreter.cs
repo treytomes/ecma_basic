@@ -120,6 +120,8 @@ namespace ECMABasic.Core
 			}
 		}
 
+		// TODO: Some statements can only be run in immediate mode, some only in program mode, and some in both.  Need an indicator.
+
 		public IStatement ProcessImmediate(string text)
 		{
 			_reader = ComplexTokenReader.FromText(text);
@@ -244,6 +246,12 @@ namespace ECMABasic.Core
 			}
 
 			stmt = new LoadStatementParser().Parse(_reader);
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
+			stmt = new ListStatementParser().Parse(_reader);
 			if (stmt != null)
 			{
 				return stmt;

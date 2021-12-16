@@ -24,5 +24,10 @@ namespace ECMABasic.Core.Statements
 			env.Program.Clear();
 			Interpreter.FromFile(path, env);
 		}
+
+		public string ToListing()
+		{
+			return string.Concat("LOAD ", Path.ToListing());
+		}
 	}
 }

@@ -26,5 +26,10 @@ namespace ECMABasic.Core.Statements
 				env.SetNumericVariableValue(Target.Name, Convert.ToDouble(value));
 			}
 		}
+
+		public string ToListing()
+		{
+			return string.Concat("LET ", Target.ToListing(), "=", Value.ToListing());
+		}
 	}
 }

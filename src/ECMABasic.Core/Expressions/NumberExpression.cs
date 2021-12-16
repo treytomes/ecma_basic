@@ -13,5 +13,10 @@
 		{
 			return Value;
 		}
+
+		public string ToListing()
+		{
+			return Value.ToString();
+		}
 	}
 }

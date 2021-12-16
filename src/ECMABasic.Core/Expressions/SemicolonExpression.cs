@@ -10,5 +10,10 @@
 			// Nothing really to do here.  Printing will naturally move to the next column on it's own.
 			return string.Empty;
 		}
+
+		public string ToListing()
+		{
+			return ";";
+		}
 	}
 }

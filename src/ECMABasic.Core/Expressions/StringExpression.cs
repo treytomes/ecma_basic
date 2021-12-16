@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions
 {
 	class StringExpression : IExpression
 	{
@@ -19,6 +13,11 @@ namespace ECMABasic.Core.Expressions
 		public object Evaluate(IEnvironment env)
 		{
 			return Text;
+		}
+
+		public string ToListing()
+		{
+			return string.Concat("\"", Text, "\"");
 		}
 	}
 }

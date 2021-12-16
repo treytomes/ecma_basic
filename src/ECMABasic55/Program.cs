@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ECMABasic55
 {
-    // TODO: Implement SAVE, LIST.
+    // TODO: Implement SAVE.
     public static class Program
     {
         private static readonly IEnvironment _env = new ConsoleEnvironment();

@@ -8,5 +8,10 @@ namespace ECMABasic.Core.Statements
 		{
 			throw new ProgramEndException();
 		}
+
+		public string ToListing()
+		{
+			return "END";
+		}
 	}
 }

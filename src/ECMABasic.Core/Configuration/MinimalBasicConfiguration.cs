@@ -47,6 +47,14 @@ namespace ECMABasic.Core.Configuration
 
 		public int ExradWidth { get; }
 
+		public int MaxLineNumber
+		{
+			get
+			{
+				return (int)(Math.Pow(10, MaxLineNumberDigits) - 1);
+			}
+		}
+
 		private T GetValueOrDefault<T>(IConfiguration config, string key, T defaultValue)
 		{
 			var section = config.GetSection(key);
