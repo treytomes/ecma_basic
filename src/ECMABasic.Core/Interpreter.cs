@@ -243,6 +243,12 @@ namespace ECMABasic.Core
 				return stmt;
 			}
 
+			stmt = new LoadStatementParser().Parse(_reader);
+			if (stmt != null)
+			{
+				return stmt;
+			}
+
 			return null;
 		}
 

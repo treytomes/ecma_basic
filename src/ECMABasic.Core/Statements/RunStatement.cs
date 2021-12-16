@@ -23,7 +23,10 @@ namespace ECMABasic.Core.Statements
 			}
 			else
 			{
-				env.CurrentLineNumber = env.Program.OrderBy(x => x.LineNumber).First().LineNumber;
+				if (env.Program.Length > 0)
+				{
+					env.CurrentLineNumber = env.Program.OrderBy(x => x.LineNumber).First().LineNumber;
+				}
 			}
 			env.Program.Execute(env);
 		}
