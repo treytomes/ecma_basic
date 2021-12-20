@@ -83,5 +83,17 @@ namespace ECMABasic.Core
 		/// <param name="throwsIfMissing">Should a runtime exception be thrown if the line number is not found?</param>
 		/// <returns>True or false; does the line number currently exist in the program?</returns>
 		bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false);
+
+		/// <summary>
+		/// Push a line number onto the call stack for RETURN-ing from a GOSUB.
+		/// </summary>
+		/// <param name="lineNumber">The line number to save for later.</param>
+		void PushCallStack(int lineNumber);
+
+		/// <summary>
+		/// Pop a line number off of the call stack for RETURN-ing from a GOSUB.
+		/// </summary>
+		/// <returns>The line number to RETURN to.</returns>
+		int PopCallStack();
 	}
 }

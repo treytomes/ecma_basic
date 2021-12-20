@@ -110,14 +110,23 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public void MoveToNextLine(IEnvironment env)
+		public int GetNextLineNumber(int fromLineNumber)
 		{
-			var lineIndex = _lineNumberToIndex[env.CurrentLineNumber];
+			var lineIndex = _lineNumberToIndex[fromLineNumber];
 			lineIndex++;
 			if (lineIndex < Length)
 			{
-				env.CurrentLineNumber = _sortedLines[lineIndex].LineNumber;
+				return _sortedLines[lineIndex].LineNumber;
 			}
+			else
+			{
+				return -1;
+			}
+		}
+
+		public void MoveToNextLine(IEnvironment env)
+		{
+			env.CurrentLineNumber = GetNextLineNumber(env.CurrentLineNumber);
 		}
 
 		public void Insert(ProgramLine line)

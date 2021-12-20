@@ -36,6 +36,8 @@ namespace ECMABasic.Core
 				new StopStatementParser(),
 				new RemarkStatementParser(),
 				new GotoStatementParser(),
+				new GosubStatementParser(),
+				new ReturnStatementParser(),
 			};
 
 			_immediateStatements = new List<StatementParser>()
