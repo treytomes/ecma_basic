@@ -1,11 +1,6 @@
 ﻿using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core.Parsers
 {

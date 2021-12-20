@@ -26,11 +26,7 @@ namespace ECMABasic.Core.Parsers
 
 			if ((From != null) && (To == null))
 			{
-				if (!env.Program.Any(x => x.LineNumber == fromLineNumber))
-				{
-					throw new RuntimeException($"% LINE NUMBER {fromLineNumber} IS NOT DEFINED");
-				}
-
+				env.ValidateLineNumber(fromLineNumber, true);
 				env.Print(env.Program[fromLineNumber].ToListing());
 				return;
 			}

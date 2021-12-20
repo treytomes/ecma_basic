@@ -1,6 +1,7 @@
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ECMABasic.Core
 {
@@ -80,6 +81,25 @@ namespace ECMABasic.Core
 			_numericVariables.Clear();
 			_stringVariables.Clear();
 			CurrentLineNumber = 0;
+		}
+
+		public bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false)
+		{
+			if (!Program.Any(x => x.LineNumber == lineNumber))
+			{
+				if (throwsIfMissing)
+				{
+					throw new RuntimeException($"% LINE NUMBER {lineNumber} IS NOT DEFINED");
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return true;
+			}
 		}
 	}
 }

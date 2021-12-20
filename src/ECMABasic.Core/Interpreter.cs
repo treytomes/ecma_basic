@@ -16,6 +16,9 @@ namespace ECMABasic.Core
 	/// </summary>
 	public class Interpreter
 	{
+		private readonly List<StatementParser> _lineStatements;
+		private readonly List<StatementParser> _immediateStatements;
+
 		private ComplexTokenReader _reader;
 		private readonly IBasicConfiguration _config;
 		private readonly IEnvironment _env;
@@ -24,6 +27,25 @@ namespace ECMABasic.Core
 		{
 			_env = env;
 			_config = config ?? MinimalBasicConfiguration.Instance;
+
+			_lineStatements = new List<StatementParser>()
+			{
+				new EndStatementParser(),
+				new LetStatementParser(),
+				new PrintStatementParser(),
+				new StopStatementParser(),
+				new RemarkStatementParser(),
+				new GotoStatementParser(),
+			};
+
+			_immediateStatements = new List<StatementParser>()
+			{
+				new RunStatementParser(),
+				new NewStatementParser(),
+				new ContinueStatementParser(),
+				new LoadStatementParser(),
+				new ListStatementParser(),
+			};
 		}
 
 		//public static Interpreter ImmediateMode(IErrorReporter reporter, IBasicConfiguration config = null)
@@ -225,67 +247,26 @@ namespace ECMABasic.Core
 
 		private IStatement ProcessImmediateStatement()
 		{
-			IStatement stmt;
-
-			stmt = new RunStatementParser().Parse(_reader);
-			if (stmt != null)
+			foreach (var parser in _immediateStatements)
 			{
-				return stmt;
+				var stmt = parser.Parse(_reader);
+				if (stmt != null)
+				{
+					return stmt;
+				}
 			}
-
-			stmt = new NewStatementParser().Parse(_reader);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
-			stmt = new ContinueStatementParser().Parse(_reader);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
-			stmt = new LoadStatementParser().Parse(_reader);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
-			stmt = new ListStatementParser().Parse(_reader);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
 			return null;
 		}
 
 		private IStatement ProcessStatement(int? lineNumber, bool throwOnError = true)
 		{
-			IStatement stmt;
-
-			stmt = new EndStatementParser().Parse(_reader, lineNumber);
-			if (stmt != null)
+			foreach (var parser in _lineStatements)
 			{
-				return stmt;
-			}
-
-			stmt = new LetStatementParser().Parse(_reader, lineNumber);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
-			stmt = new PrintStatementParser().Parse(_reader, lineNumber);
-			if (stmt != null)
-			{
-				return stmt;
-			}
-
-			stmt = new StopStatementParser().Parse(_reader, lineNumber);
-			if (stmt != null)
-			{
-				return stmt;
+				var stmt = parser.Parse(_reader);
+				if (stmt != null)
+				{
+					return stmt;
+				}
 			}
 
 			if (throwOnError)

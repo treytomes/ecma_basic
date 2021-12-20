@@ -75,5 +75,13 @@ namespace ECMABasic.Core
 		/// <param name="variableName">The name of the value.</param>
 		/// <param name="value">The value to assign.</param>
 		void SetNumericVariableValue(string variableName, double value);
+
+		/// <summary>
+		/// Is the given line number defined?
+		/// </summary>
+		/// <param name="lineNumber">The line number to look for.</param>
+		/// <param name="throwsIfMissing">Should a runtime exception be thrown if the line number is not found?</param>
+		/// <returns>True or false; does the line number currently exist in the program?</returns>
+		bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false);
 	}
 }

@@ -194,7 +194,15 @@ namespace ECMABasic.Core
 			{
 				if (token.Text == "\"")
 				{
-					return ReadRestOfString(token);
+					var stringToken = ReadRestOfString(token);
+					if (stringToken != null)
+					{
+						return stringToken;
+					}
+					else
+					{
+						return token;
+					}
 				}
 				else if (token.Text == ",")
 				{
@@ -266,11 +274,19 @@ namespace ECMABasic.Core
 
 		private Token ReadRestOfString(Token start)
 		{
+			var startIndex = _tokenIndex;
 			List<Token> stringTokens = new() { start };
 
 			while (true)
 			{
 				var token = Read();
+				if ((token == null) || (token.Type == TokenType.EndOfLine))
+				{
+					// Rewind.
+					_tokenIndex = startIndex;
+					return null;
+				}
+
 				stringTokens.Add(token);
 				if (token.Type == TokenType.Symbol)
 				{
@@ -296,7 +312,7 @@ namespace ECMABasic.Core
 			return token;
 		}
 
-		private Token Peek()
+		public Token Peek()
 		{
 			if (IsAtEnd)
 			{
