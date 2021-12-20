@@ -141,9 +141,10 @@ namespace ECMABasic.Core
 		{
 			if (_lines.ContainsKey(lineNumber))
 			{
-				_sortedLines.Remove(_lines[lineNumber]);
 				_lines.Remove(lineNumber);
 				_lineNumberToIndex.Remove(lineNumber);
+				_sortedLines.Clear();
+				_sortedLines.AddRange(_lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value));
 			}
 		}
 
