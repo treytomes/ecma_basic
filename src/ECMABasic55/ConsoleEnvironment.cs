@@ -51,10 +51,7 @@ namespace ECMABasic55
 
 		public override void ReportError(string message)
 		{
-			if (TerminalColumn != 0)
-			{
-				PrintLine(string.Empty);
-			}
+			PrintLine(string.Empty);
 			PrintLine(message);
 		}
 	}
