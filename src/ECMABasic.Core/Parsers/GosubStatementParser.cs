@@ -24,7 +24,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var lineNumberExpr = ProcessNumericalExpression(reader);
+			var lineNumberExpr = ParseNumericalExpression(reader);
 			return new GosubStatement(lineNumberExpr);
 		}
 	}

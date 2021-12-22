@@ -1,10 +1,6 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Statements;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -19,7 +15,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var conditionExpr = ProcessExpression(reader);
+			var conditionExpr = ParseExpression(reader);
 			if (conditionExpr == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");
@@ -31,7 +27,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var lineNumberExpr = ProcessExpression(reader);
+			var lineNumberExpr = ParseExpression(reader);
 			if (lineNumberExpr == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");

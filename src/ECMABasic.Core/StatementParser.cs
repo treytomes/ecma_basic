@@ -51,14 +51,14 @@ namespace ECMABasic.Core
 			
 		//}
 
-		protected static IExpression ProcessExpression(ComplexTokenReader reader)
+		protected static IExpression ParseExpression(ComplexTokenReader reader)
 		{
-			return ProcessBinaryExpression(reader);
+			return ParseBinaryExpression(reader);
 		}
 
-		protected static IExpression ProcessBinaryExpression(ComplexTokenReader reader)
+		protected static IExpression ParseBinaryExpression(ComplexTokenReader reader)
 		{
-			var left = ProcessAtomicExpression(reader);
+			var left = ParseAtomicExpression(reader);
 			if (left == null)
 			{
 				return null;
@@ -101,7 +101,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var right = ProcessAtomicExpression(reader);
+			var right = ParseAtomicExpression(reader);
 			if (right == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");
@@ -137,21 +137,21 @@ namespace ECMABasic.Core
 			}
 		}
 
-		protected static IExpression ProcessAtomicExpression(ComplexTokenReader reader)
+		protected static IExpression ParseAtomicExpression(ComplexTokenReader reader)
 		{
-			IExpression valueExpr = ProcessVariableExpression(reader);
+			IExpression valueExpr = ParseVariableExpression(reader);
 			if (valueExpr != null)
 			{
 				return valueExpr;
 			}
 
-			valueExpr = ProcessNumberExpression(reader);
+			valueExpr = ParseNumberExpression(reader);
 			if (valueExpr != null)
 			{
 				return valueExpr;
 			}
 
-			valueExpr = ProcessStringExpression(reader);
+			valueExpr = ParseStringExpression(reader);
 			if (valueExpr != null)
 			{
 				return valueExpr;
@@ -160,12 +160,12 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		protected static IExpression ProcessNumericalExpression(ComplexTokenReader reader, int? lineNumber = null)
+		protected static IExpression ParseNumericalExpression(ComplexTokenReader reader, int? lineNumber = null)
 		{
-			IExpression valueExpr = ProcessVariableExpression(reader);
+			IExpression valueExpr = ParseVariableExpression(reader);
 			if (valueExpr == null)
 			{
-				valueExpr = ProcessNumberExpression(reader);
+				valueExpr = ParseNumberExpression(reader);
 				if (valueExpr == null)
 				{
 					throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
@@ -188,7 +188,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		protected static VariableExpression ProcessVariableExpression(ComplexTokenReader reader)
+		protected static VariableExpression ParseVariableExpression(ComplexTokenReader reader)
 		{
 			var nameToken = reader.Next(TokenType.Word, false, @"[A-Z][\$\d]?");
 			if (nameToken == null)
@@ -210,7 +210,7 @@ namespace ECMABasic.Core
 			//return new VariableExpression(nameToken.Text);
 		}
 
-		protected static IExpression ProcessNumberExpression(ComplexTokenReader reader)
+		protected static IExpression ParseNumberExpression(ComplexTokenReader reader)
 		{
 			var nextValue = reader.NextNumber(false);
 			if (!nextValue.HasValue)
@@ -220,7 +220,7 @@ namespace ECMABasic.Core
 			return new NumberExpression(nextValue.Value);
 		}
 
-		protected static IExpression ProcessStringExpression(ComplexTokenReader reader)
+		protected static IExpression ParseStringExpression(ComplexTokenReader reader)
 		{
 			var valueToken = reader.Next(TokenType.String, false);
 			if (valueToken == null)

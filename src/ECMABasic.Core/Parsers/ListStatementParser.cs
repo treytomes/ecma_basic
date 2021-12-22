@@ -29,7 +29,7 @@ namespace ECMABasic.Core.Parsers
 			var endToken = reader.Next(TokenType.Symbol, false, @"\-");
 			if (endToken != null)
 			{
-				var onlyToExpr = ProcessNumberExpression(reader) as NumberExpression;
+				var onlyToExpr = ParseNumberExpression(reader) as NumberExpression;
 				if (onlyToExpr.Value < 0)
 				{
 					throw new Exception("LINE NUMBER MUST BE > 0");
@@ -37,7 +37,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(null, new IntegerExpression((int)onlyToExpr.Value));
 			}
 
-			var fromExpr = ProcessNumberExpression(reader) as NumberExpression;
+			var fromExpr = ParseNumberExpression(reader) as NumberExpression;
 			if (fromExpr.Value < 0)
 			{
 				throw new Exception("LINE NUMBER MUST BE > 0");
@@ -49,7 +49,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(new IntegerExpression((int)fromExpr.Value), null);
 			}
 
-			var toExpr = ProcessNumberExpression(reader) as NumberExpression;
+			var toExpr = ParseNumberExpression(reader) as NumberExpression;
 			if (toExpr == null)
 			{
 				toExpr = new NumberExpression(_config.MaxLineNumber);

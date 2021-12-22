@@ -19,7 +19,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, true);
 
-			var targetExpr = ProcessVariableExpression(reader);
+			var targetExpr = ParseVariableExpression(reader);
 			if (targetExpr == null)
 			{
 				throw new SyntaxException("EXPECTED A VARIABLE NAME", lineNumber);
@@ -31,7 +31,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var valueExpr = ProcessExpression(reader);
+			var valueExpr = ParseExpression(reader);
 			if (valueExpr == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION", lineNumber);

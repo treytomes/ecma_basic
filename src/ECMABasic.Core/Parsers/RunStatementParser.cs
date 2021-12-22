@@ -17,7 +17,7 @@ namespace ECMABasic.Core.Parsers
 				return new RunStatement(null);
 			}
 
-			var lineNumberExpr = ProcessNumericalExpression(reader, lineNumber);
+			var lineNumberExpr = ParseNumericalExpression(reader, lineNumber);
 
 			return new RunStatement(lineNumberExpr);
 		}
