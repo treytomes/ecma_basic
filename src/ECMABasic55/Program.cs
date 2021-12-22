@@ -6,8 +6,6 @@ namespace ECMABasic55
 {
     // TODO: Implement SAVE.
 
-    // TODO: LOAD "SAMPLE.BAS".  Insert a line just before the STOP.  RUN, the try CONT.  It doesn't go past the STOP.
-
     public static class Program
     {
         private static readonly IEnvironment _env = new ConsoleEnvironment();

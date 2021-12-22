@@ -125,9 +125,7 @@ namespace ECMABasic.Core
 		public void Insert(ProgramLine line)
 		{
 			_lines[line.LineNumber] = line;
-			_sortedLines.Clear();
-			_sortedLines.AddRange(_lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value));
-			_lineNumberToIndex[line.LineNumber] = _sortedLines.IndexOf(line);
+			RebuildIndex();
 		}
 		
 		public void Delete(int lineNumber)
@@ -135,9 +133,21 @@ namespace ECMABasic.Core
 			if (_lines.ContainsKey(lineNumber))
 			{
 				_lines.Remove(lineNumber);
-				_lineNumberToIndex.Remove(lineNumber);
-				_sortedLines.Clear();
-				_sortedLines.AddRange(_lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value));
+				RebuildIndex();
+			}
+		}
+
+		private void RebuildIndex()
+		{
+			_sortedLines.Clear();
+			_lineNumberToIndex.Clear();
+
+			var n = 0;
+			foreach (var l in _lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value))
+			{
+				_sortedLines.Add(l);
+				_lineNumberToIndex[l.LineNumber] = n;
+				n++;
 			}
 		}
 
