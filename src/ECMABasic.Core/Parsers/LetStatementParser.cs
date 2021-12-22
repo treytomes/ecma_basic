@@ -27,7 +27,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			reader.Next(TokenType.Equals);
+			reader.Next(TokenType.Symbol, true, @"\=");
 
 			ProcessSpace(reader, false);
 

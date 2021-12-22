@@ -1,10 +1,4 @@
-﻿using ECMABasic.Core.Expressions;
-using ECMABasic.Core.Statements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ECMABasic.Core.Statements;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -12,12 +6,10 @@ namespace ECMABasic.Core.Parsers
 	{
 		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
-			var token = reader.Next(TokenType.Word, false, @"GOTO");
-			if (token == null)
+			if (reader.Next(TokenType.Word, false, @"GOTO") == null)
 			{
 				// "GOTO" might be "GO TO".
-				token = reader.Next(TokenType.Word, false, @"GO");
-				if (token == null)
+				if (reader.Next(TokenType.Word, false, @"GO") == null)
 				{
 					return null;
 				}
@@ -30,7 +22,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var lineNumberExpr = ProcessNumberExpression(reader) as NumberExpression;
+			var lineNumberExpr = ProcessNumericalExpression(reader);
 			return new GotoStatement(lineNumberExpr);
 		}
 	}

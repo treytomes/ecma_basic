@@ -58,21 +58,6 @@
 		CloseParenthesis,
 
 		/// <summary>
-		/// The equals sign used in comparison and assignment.
-		/// </summary>
-		Equals,
-
-		///// <summary>
-		///// A string variable name: [A-Z]\$
-		///// </summary>
-		//StringVariable,
-
-		///// <summary>
-		///// A numeric variable name: [A-Z][0-9]?
-		///// </summary>
-		//NumericVariable,
-
-		/// <summary>
 		/// A real number: [0-9]*\.[0-9]+
 		/// </summary>
 		Number,

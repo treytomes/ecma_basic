@@ -12,7 +12,7 @@ namespace ECMABasic.Core.Statements
 
 		public IExpression LineNumber { get; }
 
-		public void Execute(IEnvironment env)
+		public virtual void Execute(IEnvironment env)
 		{
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!env.ValidateLineNumber(lineNumber, false))
@@ -22,7 +22,7 @@ namespace ECMABasic.Core.Statements
 			env.CurrentLineNumber = lineNumber;
 		}
 
-		public string ToListing()
+		public virtual string ToListing()
 		{
 			return string.Concat("GOTO ", LineNumber.ToListing());
 		}

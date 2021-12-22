@@ -1,10 +1,4 @@
-﻿using ECMABasic.Core.Expressions;
-using ECMABasic.Core.Statements;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ECMABasic.Core.Statements;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -30,7 +24,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var lineNumberExpr = ProcessNumberExpression(reader) as NumberExpression;
+			var lineNumberExpr = ProcessNumericalExpression(reader);
 			return new GosubStatement(lineNumberExpr);
 		}
 	}

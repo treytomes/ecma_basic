@@ -172,14 +172,14 @@ namespace ECMABasic.Test.BASIC_55
 			Assert.Equal(15, reader.NextInteger());
 			Assert.Equal(TokenType.Space, reader.Next().Type);
 			Assert.Equal(TokenType.Word, reader.Next().Type);
-			Assert.Equal(TokenType.Equals, reader.Next().Type);
+			Assert.Equal(TokenType.Symbol, reader.Next().Type);
 			Assert.Equal(5, reader.NextNumber());
 			Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
 
 			Assert.Equal(16, reader.NextInteger());
 			Assert.Equal(TokenType.Space, reader.Next().Type);
 			Assert.Equal(TokenType.Word, reader.Next().Type);
-			Assert.Equal(TokenType.Equals, reader.Next().Type);
+			Assert.Equal(TokenType.Symbol, reader.Next().Type);
 			Assert.Equal(10, reader.NextNumber());
 			Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
 		}

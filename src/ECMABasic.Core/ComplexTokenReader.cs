@@ -220,10 +220,6 @@ namespace ECMABasic.Core
 				{
 					return new Token(TokenType.CloseParenthesis, token);
 				}
-				else if (token.Text == "=")
-				{
-					return new Token(TokenType.Equals, token);
-				}
 				else if (token.Text == ".")
 				{
 					return new Token(TokenType.DecimalPoint, token);

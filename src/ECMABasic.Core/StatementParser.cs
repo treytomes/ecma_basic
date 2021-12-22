@@ -23,7 +23,121 @@ namespace ECMABasic.Core
 		{
 			return reader.Next(TokenType.Space, throwOnError);
 		}
+
+		//protected static IExpression ParseExpression(ComplexTokenReader reader)
+		//{
+		//	var expr = ParseNumericExpression(reader);
+		//	if (expr != null)
+		//	{
+		//		return expr;
+		//	}
+
+		//	expr = ParseStringExpression(reader);
+		//	if (expr != null)
+		//	{
+		//		return expr;
+		//	}
+
+		//	throw new SyntaxException("EXPECTED AN EXPRESSION");
+		//}
+
+		//protected static IExpression ParseNumericExpression(ComplexTokenReader reader)
+		//{
+			
+		//}
+
+		//protected static IExpression ParseStringExpression(ComplexTokenReader reader)
+		//{
+			
+		//}
+
 		protected static IExpression ProcessExpression(ComplexTokenReader reader)
+		{
+			return ProcessBinaryExpression(reader);
+		}
+
+		protected static IExpression ProcessBinaryExpression(ComplexTokenReader reader)
+		{
+			var left = ProcessAtomicExpression(reader);
+			if (left == null)
+			{
+				return null;
+			}
+
+			ProcessSpace(reader, false);
+
+			var symbol = reader.Next(TokenType.Symbol, false, @"\=|\<|\>"); //\>");
+			if (symbol == null)
+			{
+				return left;
+			}
+
+			if (symbol.Text == "<")
+			{
+				var nextBit = reader.Next(TokenType.Symbol, false, @"\=|\>");
+				if (nextBit != null)
+				{
+					if (nextBit.Text == ">")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the inequality operator.
+					}
+					else if (nextBit.Text == "=")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the >= operator.
+					}
+				}
+			}
+			else if (symbol.Text == ">")
+			{
+				var nextBit = reader.Next(TokenType.Symbol, false, @"\=");
+				if (nextBit != null)
+				{
+					if (nextBit.Text == "=")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the <= operator.
+					}
+				}
+			}
+
+			ProcessSpace(reader, false);
+
+			var right = ProcessAtomicExpression(reader);
+			if (right == null)
+			{
+				throw new SyntaxException("EXPECTED AN EXPRESSION");
+			}
+
+			if (symbol.Text == "=")
+			{
+				return new EqualsExpression(left, right);
+			}
+			else if (symbol.Text == "<>")
+			{
+				return new NotEqualsExpression(left, right);
+			}
+			else if (symbol.Text == "<")
+			{
+				return new LessThanExpression(left, right);
+			}
+			else if (symbol.Text == "<=")
+			{
+				return new LessThanOrEqualExpression(left, right);
+			}
+			else if (symbol.Text == ">")
+			{
+				return new GreaterThanExpression(left, right);
+			}
+			else if (symbol.Text == ">=")
+			{
+				return new GreaterThanOrEqualExpression(left, right);
+			}
+			else
+			{
+				throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+			}
+		}
+
+		protected static IExpression ProcessAtomicExpression(ComplexTokenReader reader)
 		{
 			IExpression valueExpr = ProcessVariableExpression(reader);
 			if (valueExpr != null)

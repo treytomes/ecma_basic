@@ -38,6 +38,7 @@ namespace ECMABasic.Core
 				new GotoStatementParser(),
 				new GosubStatementParser(),
 				new ReturnStatementParser(),
+				new IfThenStatementParser(),
 			};
 
 			_immediateStatements = new List<StatementParser>()
@@ -264,7 +265,7 @@ namespace ECMABasic.Core
 		{
 			foreach (var parser in _lineStatements)
 			{
-				var stmt = parser.Parse(_reader);
+				var stmt = parser.Parse(_reader, lineNumber);
 				if (stmt != null)
 				{
 					return stmt;
