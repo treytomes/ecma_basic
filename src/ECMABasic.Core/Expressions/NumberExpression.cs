@@ -9,6 +9,8 @@
 
 		public double Value { get; }
 
+		public ExpressionType Type => ExpressionType.Number;
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Value;

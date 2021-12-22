@@ -24,41 +24,14 @@ namespace ECMABasic.Core
 			return reader.Next(TokenType.Space, throwOnError);
 		}
 
-		//protected static IExpression ParseExpression(ComplexTokenReader reader)
-		//{
-		//	var expr = ParseNumericExpression(reader);
-		//	if (expr != null)
-		//	{
-		//		return expr;
-		//	}
-
-		//	expr = ParseStringExpression(reader);
-		//	if (expr != null)
-		//	{
-		//		return expr;
-		//	}
-
-		//	throw new SyntaxException("EXPECTED AN EXPRESSION");
-		//}
-
-		//protected static IExpression ParseNumericExpression(ComplexTokenReader reader)
-		//{
-			
-		//}
-
-		//protected static IExpression ParseStringExpression(ComplexTokenReader reader)
-		//{
-			
-		//}
-
-		protected static IExpression ParseExpression(ComplexTokenReader reader)
+		protected static IExpression ParseExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			return ParseBinaryExpression(reader);
+			return ParseBinaryExpression(reader, lineNumber, throwOnError);
 		}
 
-		protected static IExpression ParseBinaryExpression(ComplexTokenReader reader)
+		protected static IExpression ParseBinaryExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			var left = ParseAtomicExpression(reader);
+			var left = ParseAtomicExpression(reader, lineNumber, throwOnError);
 			if (left == null)
 			{
 				return null;
@@ -101,57 +74,64 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var right = ParseAtomicExpression(reader);
+			var right = ParseAtomicExpression(reader, lineNumber, throwOnError);
 			if (right == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");
 			}
 
-			if (symbol.Text == "=")
+			try
 			{
-				return new EqualsExpression(left, right);
+				if (symbol.Text == "=")
+				{
+					return new EqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<>")
+				{
+					return new NotEqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<")
+				{
+					return new LessThanExpression(left, right);
+				}
+				else if (symbol.Text == "<=")
+				{
+					return new LessThanOrEqualExpression(left, right);
+				}
+				else if (symbol.Text == ">")
+				{
+					return new GreaterThanExpression(left, right);
+				}
+				else if (symbol.Text == ">=")
+				{
+					return new GreaterThanOrEqualExpression(left, right);
+				}
+				else
+				{
+					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+				}
 			}
-			else if (symbol.Text == "<>")
+			catch (SyntaxException ex)
 			{
-				return new NotEqualsExpression(left, right);
-			}
-			else if (symbol.Text == "<")
-			{
-				return new LessThanExpression(left, right);
-			}
-			else if (symbol.Text == "<=")
-			{
-				return new LessThanOrEqualExpression(left, right);
-			}
-			else if (symbol.Text == ">")
-			{
-				return new GreaterThanExpression(left, right);
-			}
-			else if (symbol.Text == ">=")
-			{
-				return new GreaterThanOrEqualExpression(left, right);
-			}
-			else
-			{
-				throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+				throw new SyntaxException(ex, lineNumber);
 			}
 		}
 
-		protected static IExpression ParseAtomicExpression(ComplexTokenReader reader)
+		protected static IExpression ParseAtomicExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			IExpression valueExpr = ParseVariableExpression(reader);
+			//IExpression valueExpr = ParseVariableExpression(reader);
+			//if (valueExpr != null)
+			//{
+			//	return valueExpr;
+			//}
+
+			var valueExpr = ParseNumberExpression(reader, lineNumber, false);
 			if (valueExpr != null)
 			{
 				return valueExpr;
 			}
 
-			valueExpr = ParseNumberExpression(reader);
-			if (valueExpr != null)
-			{
-				return valueExpr;
-			}
-
-			valueExpr = ParseStringExpression(reader);
+			valueExpr = ParseStringExpression(reader, lineNumber, throwOnError);
 			if (valueExpr != null)
 			{
 				return valueExpr;
@@ -160,32 +140,34 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		protected static IExpression ParseNumericalExpression(ComplexTokenReader reader, int? lineNumber = null)
+		protected static IExpression ParseNumericalExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			IExpression valueExpr = ParseVariableExpression(reader);
-			if (valueExpr == null)
-			{
-				valueExpr = ParseNumberExpression(reader);
-				if (valueExpr == null)
-				{
-					throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
-				}
-				else
-				{
-					return valueExpr;
-				}
-			}
-			else
-			{
-				if ((valueExpr as VariableExpression).IsNumeric)
-				{
-					return valueExpr;
-				}
-				else
-				{
-					throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", lineNumber);
-				}
-			}
+			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
+
+			//IExpression valueExpr = ParseVariableExpression(reader);
+			//if (valueExpr == null)
+			//{
+			//	valueExpr = ParseNumberExpression(reader);
+			//	if (valueExpr == null)
+			//	{
+			//		throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
+			//	}
+			//	else
+			//	{
+			//		return valueExpr;
+			//	}
+			//}
+			//else
+			//{
+			//	if ((valueExpr as VariableExpression).IsNumeric)
+			//	{
+			//		return valueExpr;
+			//	}
+			//	else
+			//	{
+			//		throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", lineNumber);
+			//	}
+			//}
 		}
 
 		protected static VariableExpression ParseVariableExpression(ComplexTokenReader reader)
@@ -210,19 +192,99 @@ namespace ECMABasic.Core
 			//return new VariableExpression(nameToken.Text);
 		}
 
-		protected static IExpression ParseNumberExpression(ComplexTokenReader reader)
+		protected static IExpression ParseNumberExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			var nextValue = reader.NextNumber(false);
+			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
+		}
+
+		protected static IExpression ParseStringExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		{
+			return new StringExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
+		}
+	}
+
+	public class NumericExpressionParser
+	{
+		private readonly ComplexTokenReader _reader;
+		private readonly int? _lineNumber;
+		private readonly bool _throwOnError;
+
+		public NumericExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		{
+			_reader = reader;
+			_lineNumber = lineNumber;
+			_throwOnError = throwOnError;
+		}
+
+		public IExpression ParseAtomic()
+		{
+			var expr = ParseLiteral() ?? ParseVariable();
+			if ((expr == null) && _throwOnError)
+			{
+				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
+			}
+			return expr;
+		}
+
+		public IExpression ParseVariable()
+		{
+			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\d?");
+			if (nameToken == null)
+			{
+				return null;
+			}
+
+			return new VariableExpression(nameToken.Text);
+		}
+
+		public IExpression ParseLiteral()
+		{
+			var nextValue = _reader.NextNumber(false);
 			if (!nextValue.HasValue)
 			{
 				return null;
 			}
 			return new NumberExpression(nextValue.Value);
 		}
+	}
 
-		protected static IExpression ParseStringExpression(ComplexTokenReader reader)
+	public class StringExpressionParser
+	{
+		private readonly ComplexTokenReader _reader;
+		private readonly int? _lineNumber;
+		private readonly bool _throwOnError;
+
+		public StringExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			var valueToken = reader.Next(TokenType.String, false);
+			_reader = reader;
+			_lineNumber = lineNumber;
+			_throwOnError = throwOnError;
+		}
+
+		public IExpression ParseAtomic()
+		{
+			var expr = ParseLiteral() ?? ParseVariable();
+			if ((expr == null) && _throwOnError)
+			{
+				throw new SyntaxException("EXPECTED A STRING EXPRESSION", _lineNumber);
+			}
+			return expr;
+		}
+
+		public IExpression ParseVariable()
+		{
+			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\$");
+			if (nameToken == null)
+			{
+				return null;
+			}
+
+			return new VariableExpression(nameToken.Text);
+		}
+
+		public IExpression ParseLiteral()
+		{
+			var valueToken = _reader.Next(TokenType.String, false);
 			if (valueToken == null)
 			{
 				return null;

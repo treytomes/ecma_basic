@@ -1,6 +1,5 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Statements;
-using System;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -15,7 +14,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var conditionExpr = ParseExpression(reader);
+			var conditionExpr = ParseExpression(reader, lineNumber, true);
 			if (conditionExpr == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");
@@ -27,18 +26,13 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 
-			var lineNumberExpr = ParseExpression(reader);
+			var lineNumberExpr = ParseExpression(reader, lineNumber, true);
 			if (lineNumberExpr == null)
 			{
 				throw new SyntaxException("EXPECTED AN EXPRESSION");
 			}
 
 			return new IfThenStatement(conditionExpr, lineNumberExpr);
-		}
-
-		private IExpression ParseCondition(ComplexTokenReader reader, int? lineNumber)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

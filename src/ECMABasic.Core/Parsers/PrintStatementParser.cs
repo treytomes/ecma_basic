@@ -81,7 +81,7 @@ namespace ECMABasic.Core
 			//	var a = 0;
 			//}
 
-			IPrintItem expr = ParseExpression(reader);
+			IPrintItem expr = ParseExpression(reader, lineNumber, false);
 			if (expr != null)
 			{
 				return expr;
@@ -106,7 +106,7 @@ namespace ECMABasic.Core
 
 			reader.Next(TokenType.OpenParenthesis);
 
-			var valueExpr = ParseNumericalExpression(reader, lineNumber);
+			var valueExpr = ParseNumericalExpression(reader, lineNumber, true);
 
 			reader.Next(TokenType.CloseParenthesis);
 

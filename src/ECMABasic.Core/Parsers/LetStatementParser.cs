@@ -31,10 +31,14 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var valueExpr = ParseExpression(reader);
-			if (valueExpr == null)
+			IExpression valueExpr;
+			if (targetExpr.IsNumeric)
 			{
-				throw new SyntaxException("EXPECTED AN EXPRESSION", lineNumber);
+				valueExpr = ParseNumericalExpression(reader, lineNumber, true);
+			}
+			else
+			{
+				valueExpr = ParseStringExpression(reader, lineNumber, true);
 			}
 
 			return new LetStatement(targetExpr, valueExpr);

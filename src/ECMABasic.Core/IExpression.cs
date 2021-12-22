@@ -2,5 +2,6 @@
 {
 	public interface IExpression : IPrintItem
 	{
+		ExpressionType Type { get; }
 	}
 }

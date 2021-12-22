@@ -14,7 +14,7 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader);
 
-			var filenameExpr = ParseStringExpression(reader);
+			var filenameExpr = ParseStringExpression(reader, null, true);
 
 			return new LoadStatement(filenameExpr);
 		}

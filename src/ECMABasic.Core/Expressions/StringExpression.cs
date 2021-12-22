@@ -10,6 +10,8 @@
 
 		public string Text { get; }
 
+		public ExpressionType Type => ExpressionType.String;
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Text;

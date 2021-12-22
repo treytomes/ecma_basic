@@ -27,6 +27,21 @@ namespace ECMABasic.Core.Expressions
 			}
 		}
 
+		public ExpressionType Type
+		{
+			get
+			{
+				if (IsNumeric)
+				{
+					return ExpressionType.Number;
+				}
+				else
+				{
+					return ExpressionType.String;
+				}
+			}
+		}
+
 		public object Evaluate(IEnvironment env)
 		{
 			if (IsString)

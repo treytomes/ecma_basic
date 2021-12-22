@@ -6,7 +6,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class ListStatementParser : StatementParser
 	{
-		private IBasicConfiguration _config;
+		private readonly IBasicConfiguration _config;
 
 		public ListStatementParser(IBasicConfiguration config = null)
 		{
@@ -29,7 +29,7 @@ namespace ECMABasic.Core.Parsers
 			var endToken = reader.Next(TokenType.Symbol, false, @"\-");
 			if (endToken != null)
 			{
-				var onlyToExpr = ParseNumberExpression(reader) as NumberExpression;
+				var onlyToExpr = ParseNumberExpression(reader, lineNumber, true) as NumberExpression;
 				if (onlyToExpr.Value < 0)
 				{
 					throw new Exception("LINE NUMBER MUST BE > 0");
@@ -37,7 +37,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(null, new IntegerExpression((int)onlyToExpr.Value));
 			}
 
-			var fromExpr = ParseNumberExpression(reader) as NumberExpression;
+			var fromExpr = ParseNumberExpression(reader, lineNumber, false) as NumberExpression;
 			if (fromExpr.Value < 0)
 			{
 				throw new Exception("LINE NUMBER MUST BE > 0");
@@ -49,8 +49,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(new IntegerExpression((int)fromExpr.Value), null);
 			}
 
-			var toExpr = ParseNumberExpression(reader) as NumberExpression;
-			if (toExpr == null)
+			if (ParseNumberExpression(reader, lineNumber, false) is not NumberExpression toExpr)
 			{
 				toExpr = new NumberExpression(_config.MaxLineNumber);
 			}

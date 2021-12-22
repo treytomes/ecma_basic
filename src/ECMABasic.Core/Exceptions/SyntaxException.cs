@@ -11,6 +11,13 @@ namespace ECMABasic.Core.Exceptions
 			LineNumber = line;
 		}
 
+		public SyntaxException(SyntaxException ex, int? line = null)
+			: base(string.Concat(ex.Message, (line.HasValue ? $" IN LINE {line}" : string.Empty)))
+		{
+			RootMessage = ex.RootMessage.ToUpper();
+			LineNumber = line;
+		}
+
 		public string RootMessage { get; }
 		public int? LineNumber { get; }
 	}
