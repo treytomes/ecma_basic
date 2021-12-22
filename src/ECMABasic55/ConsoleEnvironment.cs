@@ -1,4 +1,5 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,6 @@ namespace ECMABasic55
 {
 	class ConsoleEnvironment : EnvironmentBase
 	{
-
 		public override int TerminalRow
 		{
 			get
@@ -53,6 +53,18 @@ namespace ECMABasic55
 		{
 			PrintLine(string.Empty);
 			PrintLine(message);
+		}
+
+		public override void CheckForStopRequest()
+		{
+			if (Console.KeyAvailable)
+			{
+				var key = Console.ReadKey(true);
+				if (key.Key == ConsoleKey.Escape)
+				{
+					new StopStatement().Execute(this);
+				}
+			}
 		}
 	}
 }

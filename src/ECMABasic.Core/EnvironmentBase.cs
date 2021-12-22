@@ -112,5 +112,7 @@ namespace ECMABasic.Core
 		{
 			return _callStack.Pop();
 		}
+
+		public abstract void CheckForStopRequest();
 	}
 }

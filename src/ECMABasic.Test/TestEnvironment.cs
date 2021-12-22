@@ -54,5 +54,10 @@ namespace ECMABasic.Test
 			}
 			PrintLine(message);
 		}
+
+		public override void CheckForStopRequest()
+		{
+			// There's no stopping the test environment.
+		}
 	}
 }

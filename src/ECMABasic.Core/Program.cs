@@ -70,14 +70,7 @@ namespace ECMABasic.Core
 
 				while (true)
 				{
-					if (System.Console.KeyAvailable)
-					{
-						var key = System.Console.ReadKey(true);
-						if (key.Key == System.ConsoleKey.Escape)
-						{
-							new StopStatement().Execute(env);
-						}
-					}
+					env.CheckForStopRequest();
 
 					var oldLineNumber = env.CurrentLineNumber;
 					var line = this[env.CurrentLineNumber];

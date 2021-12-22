@@ -95,5 +95,10 @@ namespace ECMABasic.Core
 		/// </summary>
 		/// <returns>The line number to RETURN to.</returns>
 		int PopCallStack();
+
+		/// <summary>
+		/// Used by the Program evaluator to see if a stop has been requested.
+		/// </summary>
+		public void CheckForStopRequest();
 	}
 }
