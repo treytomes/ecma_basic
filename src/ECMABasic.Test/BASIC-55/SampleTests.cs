@@ -1,5 +1,6 @@
 using ECMABasic.Core;
 using System;
+using System.ComponentModel;
 using System.IO;
 using Xunit;
 
@@ -7,119 +8,119 @@ namespace ECMABasic.Test.Basic55
 {
 	public class SampleTests
 	{
-		[Fact]
+		[Fact(DisplayName = "P001: Null print and printing quoted strings.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Simple PRINTing of string constants")]
-		public void P001_Null_print_and_printing_quoted_strings()
+		public void P001()
 		{
 			RunSample("P001");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P002: The END statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "END and STOP")]
-		public void P002_The_END_statement()
+		public void P002()
 		{
 			RunSample("P002");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P003: Error - Misplaced END statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "END and STOP")]
-		public void P003_Error_Misplaced_END_statement()
+		public void P003()
 		{
 			RunSample("P003");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P004: Error - Missing END statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "END and STOP")]
-		public void P004_Error_Missing_END_statement()
+		public void P004()
 		{
 			RunSample("P004");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P005: The STOP statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "END and STOP")]
-		public void P005_The_STOP_statement()
+		public void P005()
 		{
 			RunSample("P005");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P006: PRINT separators, TABs, and string variables.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "String variables and TAB")]
-		public void P006_PRINT_separators_TABs_and_string_variables()
+		public void P006()
 		{
 			RunSample("P006");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P007: Exception - String overflow using the LET statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "String variables and TAB")]
-		public void P007_Exception_String_overflow_using_the_LET_statement()
+		public void P007()
 		{
 			RunSample("P007");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P008: Exception - TAB argument.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "String variables and TAB")]
-		public void P008_Exception_TAB_argument()
+		public void P008()
 		{
 			RunSample("P008");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P009: Printing NR1 and NR2 numeric constants.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P009_Printing_NR1_and_NR2_numeric_constants()
+		public void P009()
 		{
 			RunSample("P009");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P010: Printing NR3 numeric constants.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P010_Printing_NR3_numeric_constants()
+		public void P010()
 		{
 			RunSample("P010");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P011: Printing numeric variables assigned NR1 and NR2 constants.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P011_Printing_numeric_Variables_assigned_NR1_and_NR2_constants()
+		public void P011()
 		{
 			RunSample("P011");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P012: Printing numeric variables assigned NR3 constants.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P012_Printing_numeric_variables_assigned_NR3_constants()
+		public void P012()
 		{
 			RunSample("P012");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P013: Format and rounding of printed numeric constants.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P013_Format_and_rounding_of_printed_numeric_constants()
+		public void P013()
 		{
 			RunSample("P013");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P014: Printing and assigning numeric values near to the maximum and minimum magnitude.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Numeric constants and variables")]
-		public void P014_Printing_and_assigning_numeric_values_near_to_the_maximum_and_minimum_magnitude()
+		public void P014()
 		{
 			RunSample("P014");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P015: The REM and GOTO statements.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
 		public void P015_The_REM_and_GOTO_statements()
@@ -127,68 +128,100 @@ namespace ECMABasic.Test.Basic55
 			RunSample("P015");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P016: Error - Transfer to a non existing line.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P016_ERROR_Transfer_to_a_non_existing_line()
+		public void P016()
 		{
 			RunSample("P016");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P017: Elementary use of GOSUB and RETURN.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P017_Elementary_use_of_GOSUB_and_RETURN()
+		public void P017()
 		{
 			RunSample("P017");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P018: The IF-THEN statement with string operands.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P018_The_IF_THEN_statement_with_string_operands()
+		public void P018()
 		{
 			RunSample("P018");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P019: The IF-THEN statement with numeric operands.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P019_The_IF_THEN_statement_with_numeric_operands()
+		public void P019()
 		{
 			RunSample("P019");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P020: Error - IF-THEN statement with a string and numeric operand.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P020_ERROR_IF_THEN_statement_with_a_string_and_numeric_operand()
+		public void P020()
 		{
 			RunSample("P020");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P021: Error - Transfer to a non-existing line number using the IF-THEN statement.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Control Statements and REM")]
-		public void P021_ERROR_Transfer_to_a_non_existing_line_number_using_the_IF_THEN_statement()
+		public void P021()
 		{
 			RunSample("P021");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P022: Numeric and string variable names with the same initial letter.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Variables")]
-		public void P022_Numeric_and_string_variable_names_with_the_same_initial_letter()
+		public void P022()
 		{
 			RunSample("P022");
 		}
 
-		[Fact]
+		[Fact(DisplayName = "P023: Initialization of string and numeric variables.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Variables")]
-		public void P023_Initialization_of_string_and_numeric_variables()
+		public void P023()
 		{
 			RunSample("P023");
+		}
+
+		[Fact(DisplayName = "P024: Plus and minus.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Standard Capabilities")]
+		public void P024()
+		{
+			RunSample("P024");
+		}
+
+		[Fact(DisplayName = "P025: Multiple, divide, and involute.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Standard Capabilities")]
+		public void P025()
+		{
+			RunSample("P025");
+		}
+
+		[Fact(DisplayName = "P026: Dependence rules for numeric expressions.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Standard Capabilities")]
+		public void P026()
+		{
+			RunSample("P026");
+		}
+
+		[Fact(DisplayName = "P027: Accuracy of constants and variables.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Standard Capabilities")]
+		public void P027()
+		{
+			RunSample("P027");
 		}
 
 		private static void RunSample(string sampleName)
