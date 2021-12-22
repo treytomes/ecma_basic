@@ -180,11 +180,11 @@ namespace ECMABasic.Core
 					return statement;
 				}
 			}
-			catch (SyntaxException ex)
+			catch (SyntaxException)
 			{
-				throw ex;
+				throw;
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				throw new SyntaxException("SYNTAX ERROR");
 			}
