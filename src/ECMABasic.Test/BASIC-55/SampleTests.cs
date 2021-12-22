@@ -175,6 +175,22 @@ namespace ECMABasic.Test.Basic55
 			RunSample("P021");
 		}
 
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Variables")]
+		public void P022_Numeric_and_string_variable_names_with_the_same_initial_letter()
+		{
+			RunSample("P022");
+		}
+
+		[Fact]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Variables")]
+		public void P023_Initialization_of_string_and_numeric_variables()
+		{
+			RunSample("P023");
+		}
+
 		private static void RunSample(string sampleName)
 		{
 			var env = new TestEnvironment();
