@@ -53,7 +53,7 @@ namespace ECMABasic.Core
 			// TODO: Validate variable name?
 			if (value.Length > _config.MaxStringLength)
 			{
-				throw new LineRuntimeException("STRING OVERFLOW", CurrentLineNumber);
+				throw new RuntimeException("STRING OVERFLOW", CurrentLineNumber);
 			}
 			_stringVariables[variableName] = value;
 		}

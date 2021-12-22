@@ -12,12 +12,12 @@ namespace ECMABasic.Core.Statements
 
 		public IExpression LineNumber { get; }
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!env.ValidateLineNumber(lineNumber, false))
 			{
-				throw new LineRuntimeException($"UNDEFINED LINE NUMBER {lineNumber}", env.CurrentLineNumber);
+				throw new RuntimeException($"UNDEFINED LINE NUMBER {lineNumber}", isImmediate ? null : env.CurrentLineNumber);
 			}
 
 			var returnToLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);

@@ -74,7 +74,7 @@ namespace ECMABasic.Core
 
 					var oldLineNumber = env.CurrentLineNumber;
 					var line = this[env.CurrentLineNumber];
-					line.Statement.Execute(env);
+					line.Statement.Execute(env, false);
 					if (oldLineNumber == env.CurrentLineNumber)
 					{
 						// The statement didn't modify the current line number, so we can simply move to the next one.
@@ -98,6 +98,10 @@ namespace ECMABasic.Core
 			{
 			}
 			catch (RuntimeException ex)
+			{
+				env.ReportError(ex.Message);
+			}
+			catch (SyntaxException ex)
 			{
 				env.ReportError(ex.Message);
 			}

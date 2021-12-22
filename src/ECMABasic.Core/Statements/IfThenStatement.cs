@@ -12,12 +12,12 @@ namespace ECMABasic.Core.Statements
 
 		public IExpression Condition { get; }
 
-		public override void Execute(IEnvironment env)
+		public override void Execute(IEnvironment env, bool isImmediate)
 		{
 			var condition = Convert.ToBoolean(Condition.Evaluate(env));
 			if (condition)
 			{
-				base.Execute(env);
+				base.Execute(env, isImmediate);
 			}
 		}
 

@@ -9,6 +9,7 @@
         /// Execute this statement inside of an environment.
         /// </summary>
         /// <param name="env">The environment to execute the statement inside of.</param>
-        public abstract void Execute(IEnvironment env);
+        /// <param name="isImmediate">Is the statement running in immediate-mode, or as part of a program?</param>
+        public abstract void Execute(IEnvironment env, bool isImmediate);
     }
 }

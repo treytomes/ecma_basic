@@ -4,7 +4,7 @@ namespace ECMABasic.Core.Statements
 {
 	public class StopStatement : IStatement
 	{
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
 			throw new ProgramStopException(env.CurrentLineNumber);
 		}

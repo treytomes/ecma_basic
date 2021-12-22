@@ -1,4 +1,7 @@
-﻿namespace ECMABasic.Core.Statements
+﻿using ECMABasic.Core.Exceptions;
+using System;
+
+namespace ECMABasic.Core.Statements
 {
 	public class ReturnStatement : IStatement
 	{
@@ -6,11 +9,18 @@
 		{
 		}
 
-		// TODO: Need a "% RETURN WITHOUT GOSUB".
+		// TODO: Need a "% RETURN WITHOUT GOSUB".  Without the line # if running as an immediate statement.
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
-			env.CurrentLineNumber = env.PopCallStack();
+			try
+			{
+				env.CurrentLineNumber = env.PopCallStack();
+			}
+			catch (InvalidOperationException)
+			{
+				throw new RuntimeException("RETURN WITHOUT GOSUB", isImmediate ? null : env.CurrentLineNumber);
+			}
 		}
 
 		public string ToListing()

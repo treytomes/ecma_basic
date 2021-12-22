@@ -39,7 +39,7 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var symbol = ParseOperator(reader, lineNumber, throwOnError);
+			var symbol = ParseOperator(reader);
 			if (symbol == null)
 			{
 				return left;
@@ -86,7 +86,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private static Token ParseOperator(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		private static Token ParseOperator(ComplexTokenReader reader)
 		{
 			var symbol = reader.Next(TokenType.Symbol, false, @"\=|\<|\>"); //\>");
 			if (symbol == null)
@@ -165,101 +165,6 @@ namespace ECMABasic.Core
 		protected static IExpression ParseStringExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
 			return new StringExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
-		}
-	}
-
-	public class NumericExpressionParser
-	{
-		private readonly ComplexTokenReader _reader;
-		private readonly int? _lineNumber;
-		private readonly bool _throwOnError;
-
-		public NumericExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
-		{
-			_reader = reader;
-			_lineNumber = lineNumber;
-			_throwOnError = throwOnError;
-		}
-
-		public IExpression ParseAtomic()
-		{
-			var expr = ParseLiteral() ?? ParseVariable();
-			if ((expr == null) && _throwOnError)
-			{
-				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
-			}
-			return expr;
-		}
-
-		public IExpression ParseVariable()
-		{
-			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\d?");
-			if (nameToken == null)
-			{
-				return null;
-			}
-
-			return new VariableExpression(nameToken.Text);
-		}
-
-		public IExpression ParseLiteral()
-		{
-			var nextValue = _reader.NextNumber(false);
-			if (!nextValue.HasValue)
-			{
-				return null;
-			}
-			return new NumberExpression(nextValue.Value);
-		}
-	}
-
-	public class StringExpressionParser
-	{
-		private readonly ComplexTokenReader _reader;
-		private readonly int? _lineNumber;
-		private readonly bool _throwOnError;
-
-		public StringExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
-		{
-			_reader = reader;
-			_lineNumber = lineNumber;
-			_throwOnError = throwOnError;
-		}
-
-		public IExpression ParseAtomic()
-		{
-			var expr = ParseLiteral() ?? ParseVariable();
-			if ((expr == null) && _throwOnError)
-			{
-				throw new SyntaxException("EXPECTED A STRING EXPRESSION", _lineNumber);
-			}
-			return expr;
-		}
-
-		public IExpression ParseVariable()
-		{
-			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\$");
-			if (nameToken == null)
-			{
-				return null;
-			}
-
-			return new VariableExpression(nameToken.Text);
-		}
-
-		public IExpression ParseLiteral()
-		{
-			var valueToken = _reader.Next(TokenType.String, false);
-			if (valueToken == null)
-			{
-				return null;
-			}
-			else
-			{
-				// The actual string is everything between the "".
-				var text = valueToken.Text[1..^1];
-				return new StringExpression(text);
-			}
 		}
 	}
 }

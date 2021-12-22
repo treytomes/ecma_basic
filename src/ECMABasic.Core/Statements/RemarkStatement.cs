@@ -9,7 +9,7 @@
 
 		public string Remark { get; }
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
 			// This statement doesn't actually affect the environment at all.
 		}

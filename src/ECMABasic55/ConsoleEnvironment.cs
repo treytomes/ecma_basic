@@ -1,4 +1,5 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Statements;
 using System;
 
@@ -54,7 +55,7 @@ namespace ECMABasic55
 				var key = Console.ReadKey(true);
 				if (key.Key == ConsoleKey.Escape)
 				{
-					new StopStatement().Execute(this);
+					throw new ProgramStopException(CurrentLineNumber);
 				}
 			}
 		}

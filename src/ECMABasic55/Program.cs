@@ -53,7 +53,7 @@ namespace ECMABasic55
                     var statement = interpreter.ProcessImmediate(line);
                     if (statement != null)
 					{
-                        statement.Execute(_env);
+                        statement.Execute(_env, true);
                         Console.WriteLine("OK");
                     }
                 }

@@ -14,7 +14,7 @@ namespace ECMABasic.Core.Statements
 		public VariableExpression Target { get; }
 		public IExpression Value { get; }
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
 			var value = Value.Evaluate(env);
 			if (Target.IsString)

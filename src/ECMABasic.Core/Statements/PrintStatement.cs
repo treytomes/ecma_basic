@@ -32,7 +32,7 @@ namespace ECMABasic.Core.Statements
 		/// </summary>
 		public List<IPrintItem> PrintItems { get; }
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
 			if (PrintItems.Count == 0)
 			{

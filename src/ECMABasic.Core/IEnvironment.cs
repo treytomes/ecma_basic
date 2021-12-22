@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECMABasic.Core
+﻿namespace ECMABasic.Core
 {
 	/// <summary>
 	/// The environment that a program is run in.
@@ -18,6 +12,7 @@ namespace ECMABasic.Core
 
 		/// <summary>
 		/// The line number currently being executed.
+		/// If the program is not running this value will be null.
 		/// </summary>
 		int CurrentLineNumber { get; set; }
 

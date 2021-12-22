@@ -1,4 +1,5 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Exceptions;
 using System;
 using System.IO;
 
@@ -13,8 +14,13 @@ namespace ECMABasic55.Statements
 
 		public IExpression Path { get; }
 
-		public void Execute(IEnvironment env)
+		public void Execute(IEnvironment env, bool isImmediate)
 		{
+			if (!isImmediate)
+			{
+				throw new SyntaxException("NOT ALLOWED IN PROGRAM");
+			}
+
 			var path = Convert.ToString(Path.Evaluate(env));
 			if (!File.Exists(path))
 			{

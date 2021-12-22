@@ -25,7 +25,7 @@ namespace ECMABasic.Core.Expressions
 				value = 1;
 
 				// Report a non-fatal error, then continue execution.
-				env.ReportError(new LineRuntimeException("TAB OUT OF RANGE", env.CurrentLineNumber).Message);
+				env.ReportError(new RuntimeException("TAB OUT OF RANGE", env.CurrentLineNumber).Message);
 			}
 
 			if (value > _config.TerminalWidth)
