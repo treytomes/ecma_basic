@@ -149,33 +149,44 @@ namespace ECMABasic.Core
 
 		public IStatement ProcessImmediate(string text)
 		{
-			_reader = ComplexTokenReader.FromText(text);
-
-			var line = ProcessLine(false);
-			if (line != null)
+			try
 			{
-				if (line.Statement != null)
+				_reader = ComplexTokenReader.FromText(text);
+
+				var line = ProcessLine(false);
+				if (line != null)
 				{
-					_env.Program.Insert(line);
+					if (line.Statement != null)
+					{
+						_env.Program.Insert(line);
+					}
+					else
+					{
+						_env.Program.Delete(line.LineNumber);
+					}
+					return null;
 				}
 				else
 				{
-					_env.Program.Delete(line.LineNumber);
-				}
-				return null;
-			}
-			else
-			{
-				ProcessSpace(false);
-				var statement = ProcessStatement(null, false);
-				if (statement == null)
-				{
-					statement = ProcessImmediateStatement();
-				}
+					ProcessSpace(false);
+					var statement = ProcessStatement(null, false);
+					if (statement == null)
+					{
+						statement = ProcessImmediateStatement();
+					}
 
-				ProcessSpace(false);
-				ProcessEndOfLine();
-				return statement;
+					ProcessSpace(false);
+					ProcessEndOfLine();
+					return statement;
+				}
+			}
+			catch (SyntaxException ex)
+			{
+				throw ex;
+			}
+			catch (Exception ex)
+			{
+				throw new SyntaxException("SYNTAX ERROR");
 			}
 		}
 

@@ -1,11 +1,6 @@
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Statements;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic55
 {
@@ -39,14 +34,11 @@ namespace ECMABasic55
 		{
 			Print(text);
 			Console.WriteLine();
-			//TerminalRow++;
-			//TerminalColumn = 0;
 		}
 
 		public override void Print(string text)
 		{
 			Console.Write(text);
-			//TerminalColumn += text.Length;
 		}
 
 		public override void ReportError(string message)
