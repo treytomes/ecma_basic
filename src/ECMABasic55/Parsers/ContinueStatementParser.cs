@@ -1,6 +1,7 @@
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core;
+using ECMABasic55.Statements;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic55.Parsers
 {
 	public class ContinueStatementParser : StatementParser
 	{

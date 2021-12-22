@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ECMABasic.Core.Statements
+﻿namespace ECMABasic.Core.Statements
 {
 	public class ReturnStatement : IStatement
 	{
 		public ReturnStatement()
 		{
 		}
+
+		// TODO: Need a "% RETURN WITHOUT GOSUB".
 
 		public void Execute(IEnvironment env)
 		{

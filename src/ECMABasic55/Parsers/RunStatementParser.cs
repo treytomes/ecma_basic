@@ -1,6 +1,7 @@
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core;
+using ECMABasic55.Statements;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic55.Parsers
 {
 	public class RunStatementParser : StatementParser
 	{
@@ -17,7 +18,7 @@ namespace ECMABasic.Core.Parsers
 				return new RunStatement(null);
 			}
 
-			var lineNumberExpr = ParseNumericalExpression(reader, lineNumber, false);
+			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, false);
 
 			return new RunStatement(lineNumberExpr);
 		}

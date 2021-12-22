@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace ECMABasic.Test.BASIC_55
+namespace ECMABasic.Test.Basic55
 {
 	public class InterpreterTests
 	{

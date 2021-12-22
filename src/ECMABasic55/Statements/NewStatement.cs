@@ -1,4 +1,6 @@
-﻿namespace ECMABasic.Core.Statements
+﻿using ECMABasic.Core;
+
+namespace ECMABasic55.Statements
 {
 	public class NewStatement : IStatement
 	{

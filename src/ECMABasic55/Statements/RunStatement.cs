@@ -1,8 +1,9 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core;
+using ECMABasic.Core.Exceptions;
 using System;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements
+namespace ECMABasic55.Statements
 {
 	/// <summary>
 	/// Run the current program, optionally specifying a line number to start at.

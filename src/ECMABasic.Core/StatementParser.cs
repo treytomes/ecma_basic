@@ -39,46 +39,15 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			var symbol = reader.Next(TokenType.Symbol, false, @"\=|\<|\>"); //\>");
+			var symbol = ParseOperator(reader, lineNumber, throwOnError);
 			if (symbol == null)
 			{
 				return left;
 			}
 
-			if (symbol.Text == "<")
-			{
-				var nextBit = reader.Next(TokenType.Symbol, false, @"\=|\>");
-				if (nextBit != null)
-				{
-					if (nextBit.Text == ">")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the inequality operator.
-					}
-					else if (nextBit.Text == "=")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the >= operator.
-					}
-				}
-			}
-			else if (symbol.Text == ">")
-			{
-				var nextBit = reader.Next(TokenType.Symbol, false, @"\=");
-				if (nextBit != null)
-				{
-					if (nextBit.Text == "=")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the <= operator.
-					}
-				}
-			}
-
 			ProcessSpace(reader, false);
 
-			var right = ParseAtomicExpression(reader, lineNumber, throwOnError);
-			if (right == null)
-			{
-				throw new SyntaxException("EXPECTED AN EXPRESSION");
-			}
+			var right = ParseAtomicExpression(reader, lineNumber, true);
 
 			try
 			{
@@ -117,15 +86,47 @@ namespace ECMABasic.Core
 			}
 		}
 
+		private static Token ParseOperator(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		{
+			var symbol = reader.Next(TokenType.Symbol, false, @"\=|\<|\>"); //\>");
+			if (symbol == null)
+			{
+				return null;
+			}
+
+			if (symbol.Text == "<")
+			{
+				var nextBit = reader.Next(TokenType.Symbol, false, @"\=|\>");
+				if (nextBit != null)
+				{
+					if (nextBit.Text == ">")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the inequality operator.
+					}
+					else if (nextBit.Text == "=")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the >= operator.
+					}
+				}
+			}
+			else if (symbol.Text == ">")
+			{
+				var nextBit = reader.Next(TokenType.Symbol, false, @"\=");
+				if (nextBit != null)
+				{
+					if (nextBit.Text == "=")
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the <= operator.
+					}
+				}
+			}
+
+			return symbol;
+		}
+
 		protected static IExpression ParseAtomicExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			//IExpression valueExpr = ParseVariableExpression(reader);
-			//if (valueExpr != null)
-			//{
-			//	return valueExpr;
-			//}
-
-			var valueExpr = ParseNumberExpression(reader, lineNumber, false);
+			var valueExpr = ParseNumericExpression(reader, lineNumber, false);
 			if (valueExpr != null)
 			{
 				return valueExpr;
@@ -140,36 +141,11 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		protected static IExpression ParseNumericalExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
-		{
-			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
-
-			//IExpression valueExpr = ParseVariableExpression(reader);
-			//if (valueExpr == null)
-			//{
-			//	valueExpr = ParseNumberExpression(reader);
-			//	if (valueExpr == null)
-			//	{
-			//		throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
-			//	}
-			//	else
-			//	{
-			//		return valueExpr;
-			//	}
-			//}
-			//else
-			//{
-			//	if ((valueExpr as VariableExpression).IsNumeric)
-			//	{
-			//		return valueExpr;
-			//	}
-			//	else
-			//	{
-			//		throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", lineNumber);
-			//	}
-			//}
-		}
-
+		/// <summary>
+		/// This will parse either a numeric variable or a string variable.
+		/// </summary>
+		/// <param name="reader">The tokenizer to pull the variable text from.</param>
+		/// <returns>The variable expression.</returns>
 		protected static VariableExpression ParseVariableExpression(ComplexTokenReader reader)
 		{
 			var nameToken = reader.Next(TokenType.Word, false, @"[A-Z][\$\d]?");
@@ -179,20 +155,9 @@ namespace ECMABasic.Core
 			}
 
 			return new VariableExpression(nameToken.Text);
-
-			//var nameToken = reader.Next(TokenType.NumericVariable, false);
-			//if (nameToken == null)
-			//{
-			//	nameToken = reader.Next(TokenType.StringVariable, false);
-			//	if (nameToken == null)
-			//	{
-			//		return null;
-			//	}
-			//}
-			//return new VariableExpression(nameToken.Text);
 		}
 
-		protected static IExpression ParseNumberExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		protected static IExpression ParseNumericExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
 			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
 		}

@@ -1,8 +1,8 @@
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Core;
 using System.Linq;
 using System.Text;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic55.Statements
 {
 	public class ListStatement : IStatement
 	{

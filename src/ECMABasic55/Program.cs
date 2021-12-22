@@ -42,7 +42,7 @@ namespace ECMABasic55
 
         private static int RunREPL()
 		{
-            var interpreter = new Interpreter(_env);
+            var interpreter = new RuntimeInterpreter(_env);
             var isRunning = true;
             Console.WriteLine("OK");
 

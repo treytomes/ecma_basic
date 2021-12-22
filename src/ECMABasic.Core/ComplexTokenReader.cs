@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Core
 {
+	// TODO: Do I *really* need to tokenizers?
+
 	/// <summary>
 	/// Assembly simple tokens into more complex tokens, e.g. strings, keywords, and operators.
 	/// </summary>

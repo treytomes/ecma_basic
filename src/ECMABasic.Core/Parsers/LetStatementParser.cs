@@ -34,7 +34,7 @@ namespace ECMABasic.Core
 			IExpression valueExpr;
 			if (targetExpr.IsNumeric)
 			{
-				valueExpr = ParseNumericalExpression(reader, lineNumber, true);
+				valueExpr = ParseNumericExpression(reader, lineNumber, true);
 			}
 			else
 			{

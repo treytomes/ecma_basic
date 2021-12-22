@@ -1,8 +1,9 @@
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core;
+using ECMABasic55.Statements;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic55.Parsers
 {
-	class LoadStatementParser : StatementParser
+	public class LoadStatementParser : StatementParser
 	{
 		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{

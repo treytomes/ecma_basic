@@ -1,8 +1,10 @@
-﻿using ECMABasic.Core.Configuration;
+﻿using ECMABasic.Core;
+using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Expressions;
+using ECMABasic55.Statements;
 using System;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic55.Parsers
 {
 	public class ListStatementParser : StatementParser
 	{
@@ -29,7 +31,7 @@ namespace ECMABasic.Core.Parsers
 			var endToken = reader.Next(TokenType.Symbol, false, @"\-");
 			if (endToken != null)
 			{
-				var onlyToExpr = ParseNumberExpression(reader, lineNumber, true) as NumberExpression;
+				var onlyToExpr = ParseNumericExpression(reader, lineNumber, true) as NumberExpression;
 				if (onlyToExpr.Value < 0)
 				{
 					throw new Exception("LINE NUMBER MUST BE > 0");
@@ -37,7 +39,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(null, new IntegerExpression((int)onlyToExpr.Value));
 			}
 
-			var fromExpr = ParseNumberExpression(reader, lineNumber, false) as NumberExpression;
+			var fromExpr = ParseNumericExpression(reader, lineNumber, false) as NumberExpression;
 			if (fromExpr.Value < 0)
 			{
 				throw new Exception("LINE NUMBER MUST BE > 0");
@@ -49,7 +51,7 @@ namespace ECMABasic.Core.Parsers
 				return new ListStatement(new IntegerExpression((int)fromExpr.Value), null);
 			}
 
-			if (ParseNumberExpression(reader, lineNumber, false) is not NumberExpression toExpr)
+			if (ParseNumericExpression(reader, lineNumber, false) is not NumberExpression toExpr)
 			{
 				toExpr = new NumberExpression(_config.MaxLineNumber);
 			}

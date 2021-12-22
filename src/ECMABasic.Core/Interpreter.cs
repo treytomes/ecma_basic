@@ -1,11 +1,8 @@
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
 using ECMABasic.Core.Parsers;
-using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ECMABasic.Core
 {
@@ -17,11 +14,10 @@ namespace ECMABasic.Core
 	public class Interpreter
 	{
 		private readonly List<StatementParser> _lineStatements;
-		private readonly List<StatementParser> _immediateStatements;
 
-		private ComplexTokenReader _reader;
+		protected ComplexTokenReader _reader;
 		private readonly IBasicConfiguration _config;
-		private readonly IEnvironment _env;
+		protected readonly IEnvironment _env;
 
 		public Interpreter(IEnvironment env, IBasicConfiguration config = null)
 		{
@@ -39,15 +35,6 @@ namespace ECMABasic.Core
 				new GosubStatementParser(),
 				new ReturnStatementParser(),
 				new IfThenStatementParser(),
-			};
-
-			_immediateStatements = new List<StatementParser>()
-			{
-				new RunStatementParser(),
-				new NewStatementParser(),
-				new ContinueStatementParser(),
-				new LoadStatementParser(),
-				new ListStatementParser(),
 			};
 		}
 
@@ -145,52 +132,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		// TODO: Some statements can only be run in immediate mode, some only in program mode, and some in both.  Need an indicator.
-
-		public IStatement ProcessImmediate(string text)
-		{
-			try
-			{
-				_reader = ComplexTokenReader.FromText(text);
-
-				var line = ProcessLine(false);
-				if (line != null)
-				{
-					if (line.Statement != null)
-					{
-						_env.Program.Insert(line);
-					}
-					else
-					{
-						_env.Program.Delete(line.LineNumber);
-					}
-					return null;
-				}
-				else
-				{
-					ProcessSpace(false);
-					var statement = ProcessStatement(null, false);
-					if (statement == null)
-					{
-						statement = ProcessImmediateStatement();
-					}
-
-					ProcessSpace(false);
-					ProcessEndOfLine();
-					return statement;
-				}
-			}
-			catch (SyntaxException)
-			{
-				throw;
-			}
-			catch (Exception)
-			{
-				throw new SyntaxException("SYNTAX ERROR");
-			}
-		}
-
-		private ProgramLine ProcessLine(bool throwsOnError = true)
+		protected ProgramLine ProcessLine(bool throwsOnError = true)
 		{
 			if (_reader.IsAtEnd)
 			{
@@ -235,7 +177,7 @@ namespace ECMABasic.Core
 		/// Read the end-of-line token off of the token stream.
 		/// An exception will occur if the end-of-line could not be read.
 		/// </summary>
-		private void ProcessEndOfLine()
+		protected void ProcessEndOfLine()
 		{
 			var next = _reader.Next();
 			if (next == null)
@@ -254,25 +196,12 @@ namespace ECMABasic.Core
 		/// </summary>
 		/// <param name="throwOnError">Throw an exception if space is not found.  Default to true.</param>
 		/// <returns>The space token.</returns>
-		private Token ProcessSpace(bool throwOnError = true)
+		protected Token ProcessSpace(bool throwOnError = true)
 		{
 			return _reader.Next(TokenType.Space, throwOnError);
 		}
 
-		private IStatement ProcessImmediateStatement()
-		{
-			foreach (var parser in _immediateStatements)
-			{
-				var stmt = parser.Parse(_reader);
-				if (stmt != null)
-				{
-					return stmt;
-				}
-			}
-			return null;
-		}
-
-		private IStatement ProcessStatement(int? lineNumber, bool throwOnError = true)
+		protected IStatement ProcessStatement(int? lineNumber, bool throwOnError = true)
 		{
 			foreach (var parser in _lineStatements)
 			{

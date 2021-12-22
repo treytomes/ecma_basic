@@ -1,7 +1,6 @@
 using ECMABasic.Core;
 using System;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace ECMABasic.Test.Basic55

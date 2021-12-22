@@ -1,4 +1,7 @@
-﻿namespace ECMABasic.Core.Statements
+﻿using ECMABasic.Core;
+using ECMABasic.Core.Statements;
+
+namespace ECMABasic55.Statements
 {
 	/// <summary>
 	/// Continue after a program has been stopped.

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ECMABasic.Core;
+using System;
 using System.IO;
 
-namespace ECMABasic.Core.Statements
+namespace ECMABasic55.Statements
 {
 	public class LoadStatement : IStatement
 	{

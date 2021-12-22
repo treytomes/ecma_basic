@@ -106,7 +106,7 @@ namespace ECMABasic.Core
 
 			reader.Next(TokenType.OpenParenthesis);
 
-			var valueExpr = ParseNumericalExpression(reader, lineNumber, true);
+			var valueExpr = ParseNumericExpression(reader, lineNumber, true);
 
 			reader.Next(TokenType.CloseParenthesis);
 
