@@ -90,7 +90,7 @@ namespace ECMABasic.Core
 			{
 				if (throwsIfMissing)
 				{
-					throw new RuntimeException($"% LINE NUMBER {lineNumber} IS NOT DEFINED");
+					throw new RuntimeException($"LINE NUMBER {lineNumber} IS NOT DEFINED");
 				}
 				else
 				{
