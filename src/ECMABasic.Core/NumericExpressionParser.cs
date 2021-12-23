@@ -12,11 +12,6 @@ namespace ECMABasic.Core
 
 		public IExpression ParseBinary()
 		{
-			if (_lineNumber.Value == 1000)
-			{
-				var a = 1;
-			}
-
 			var left = ParseAtomic(false);
 			if (left == null)
 			{
