@@ -116,12 +116,16 @@ namespace ECMABasic.Core
 			var exradToken = Next(TokenType.Word, false, @"E\d?");
 			if (exradToken != null)
 			{
-				var exsignToken = Next(TokenType.Symbol, false, @"\+");
-				if (exsignToken == null)
+				var signText = string.Empty;
+				if (exradToken.Text == "E")
 				{
-					exsignToken = Next(TokenType.Symbol, false, @"\-");
+					var exsignToken = Next(TokenType.Symbol, false, @"\+");
+					if (exsignToken == null)
+					{
+						exsignToken = Next(TokenType.Symbol, false, @"\-");
+					}
+					signText = exsignToken?.Text ?? string.Empty;
 				}
-				var signText = exsignToken?.Text ?? "";
 
 				Token powerToken = null;
 				if (!char.IsDigit(exradToken.Text.Last()))

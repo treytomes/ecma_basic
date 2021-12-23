@@ -33,9 +33,15 @@ namespace ECMABasic55
                 throw new FileNotFoundException(null, path);
             }
 
-            Interpreter.FromFile(path, _env);
-            _env.Program.Execute(_env);
-            return 0;
+            if (Interpreter.FromFile(path, _env))
+            {
+                _env.Program.Execute(_env);
+                return 0;
+            }
+            else
+			{
+                return -1;
+			}
         }
 
         private static int RunREPL()

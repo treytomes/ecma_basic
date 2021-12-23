@@ -232,9 +232,11 @@ namespace ECMABasic.Test.Basic55
 			output = NormalizeLineEndings(output);
 			var expectedLines = output.Split(Environment.NewLine);
 
-			Interpreter.FromFile($"./Resources/{sampleName}.BAS", env);
-			var program = env.Program;
-			program.Execute(env);
+			if (Interpreter.FromFile($"./Resources/{sampleName}.BAS", env))
+			{
+				env.Program.Execute(env);
+			}
+
 			var actualLines = env.Text.Split(Environment.NewLine);
 
 			for (var line = 0; line < expectedLines.Length; line++)

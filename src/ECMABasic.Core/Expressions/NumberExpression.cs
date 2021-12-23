@@ -11,6 +11,15 @@
 
 		public ExpressionType Type => ExpressionType.Number;
 
+		/// <summary>
+		/// Get a new expression that negates this one.
+		/// </summary>
+		/// <returns>The new number expression.</returns>
+		public NumberExpression Negate()
+		{
+			return new NumberExpression(-Value);
+		}
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Value;

@@ -31,97 +31,12 @@ namespace ECMABasic.Core
 
 		protected static IExpression ParseBinaryExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			var left = ParseAtomicExpression(reader, lineNumber, throwOnError);
-			if (left == null)
+			var expr = new StringExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
+			if (expr == null)
 			{
-				return null;
+				expr = new NumericExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
 			}
-
-			ProcessSpace(reader, false);
-
-			var symbol = ParseOperator(reader);
-			if (symbol == null)
-			{
-				return left;
-			}
-
-			ProcessSpace(reader, false);
-
-			var right = ParseAtomicExpression(reader, lineNumber, true);
-
-			try
-			{
-				if (symbol.Text == "=")
-				{
-					return new EqualsExpression(left, right);
-				}
-				else if (symbol.Text == "<>")
-				{
-					return new NotEqualsExpression(left, right);
-				}
-				else if (symbol.Text == "<")
-				{
-					return new LessThanExpression(left, right);
-				}
-				else if (symbol.Text == "<=")
-				{
-					return new LessThanOrEqualExpression(left, right);
-				}
-				else if (symbol.Text == ">")
-				{
-					return new GreaterThanExpression(left, right);
-				}
-				else if (symbol.Text == ">=")
-				{
-					return new GreaterThanOrEqualExpression(left, right);
-				}
-				else
-				{
-					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
-				}
-			}
-			catch (SyntaxException ex)
-			{
-				throw new SyntaxException(ex, lineNumber);
-			}
-		}
-
-		private static Token ParseOperator(ComplexTokenReader reader)
-		{
-			var symbol = reader.Next(TokenType.Symbol, false, @"\=|\<|\>"); //\>");
-			if (symbol == null)
-			{
-				return null;
-			}
-
-			if (symbol.Text == "<")
-			{
-				var nextBit = reader.Next(TokenType.Symbol, false, @"\=|\>");
-				if (nextBit != null)
-				{
-					if (nextBit.Text == ">")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the inequality operator.
-					}
-					else if (nextBit.Text == "=")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the >= operator.
-					}
-				}
-			}
-			else if (symbol.Text == ">")
-			{
-				var nextBit = reader.Next(TokenType.Symbol, false, @"\=");
-				if (nextBit != null)
-				{
-					if (nextBit.Text == "=")
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, nextBit });  // Finish out the <= operator.
-					}
-				}
-			}
-
-			return symbol;
+			return expr;
 		}
 
 		protected static IExpression ParseAtomicExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
@@ -159,12 +74,12 @@ namespace ECMABasic.Core
 
 		protected static IExpression ParseNumericExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
+			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
 		}
 
 		protected static IExpression ParseStringExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			return new StringExpressionParser(reader, lineNumber, throwOnError).ParseAtomic();
+			return new StringExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
 		}
 	}
 }

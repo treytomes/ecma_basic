@@ -3,23 +3,89 @@ using ECMABasic.Core.Expressions;
 
 namespace ECMABasic.Core
 {
-	public class StringExpressionParser
+	public class StringExpressionParser : ExpressionParser
 	{
-		private readonly ComplexTokenReader _reader;
-		private readonly int? _lineNumber;
-		private readonly bool _throwOnError;
-
 		public StringExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+			: base(reader, lineNumber, throwOnError)
 		{
-			_reader = reader;
-			_lineNumber = lineNumber;
-			_throwOnError = throwOnError;
 		}
 
-		public IExpression ParseAtomic()
+		public IExpression ParseBinary()
+		{
+			var left = ParseAtomic(false);
+			if (left == null)
+			{
+				return null;
+			}
+
+			_reader.Next(TokenType.Space, false);
+
+			var symbol = ParseOperator();
+			if (symbol == null)
+			{
+				return left;
+			}
+
+			_reader.Next(TokenType.Space, false);
+
+			IExpression right;
+			try
+			{
+				right = ParseAtomic(true);
+			}
+			catch (SyntaxException)
+			{
+				if (new NumericExpressionParser(_reader, _lineNumber, false).ParseBinary() != null)
+				{
+					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			try
+			{
+				if (symbol.Text == "=")
+				{
+					return new EqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<>")
+				{
+					return new NotEqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<")
+				{
+					return new LessThanExpression(left, right);
+				}
+				else if (symbol.Text == "<=")
+				{
+					return new LessThanOrEqualExpression(left, right);
+				}
+				else if (symbol.Text == ">")
+				{
+					return new GreaterThanExpression(left, right);
+				}
+				else if (symbol.Text == ">=")
+				{
+					return new GreaterThanOrEqualExpression(left, right);
+				}
+				else
+				{
+					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+				}
+			}
+			catch (SyntaxException ex)
+			{
+				throw new SyntaxException(ex, _lineNumber);
+			}
+		}
+
+		private IExpression ParseAtomic(bool throwOnError)
 		{
 			var expr = ParseLiteral() ?? ParseVariable();
-			if ((expr == null) && _throwOnError)
+			if ((expr == null) && throwOnError)
 			{
 				throw new SyntaxException("EXPECTED A STRING EXPRESSION", _lineNumber);
 			}

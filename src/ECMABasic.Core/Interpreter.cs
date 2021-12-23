@@ -38,21 +38,16 @@ namespace ECMABasic.Core
 			};
 		}
 
-		//public static Interpreter ImmediateMode(IErrorReporter reporter, IBasicConfiguration config = null)
-		//{
-		//	return new Interpreter(null, reporter, config, true);
-		//}
-
 		/// <summary>
 		/// Create an interpreter that will interpret the input text directly.
 		/// </summary>
 		/// <param name="text">The text to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
-		/// <returns>The interpreter instance.</returns>
-		public static void FromText(string text, IEnvironment env, IBasicConfiguration config = null)
+		/// <returns>Was the input interpreted successfully?</returns>
+		public static bool FromText(string text, IEnvironment env, IBasicConfiguration config = null)
 		{
 			var interpreter = new Interpreter(env, config);
-			interpreter.InterpretProgramFromText(text);
+			return interpreter.InterpretProgramFromText(text);
 		}
 
 		/// <summary>
@@ -60,26 +55,38 @@ namespace ECMABasic.Core
 		/// </summary>
 		/// <param name="path">The path to the file to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
-		/// <returns>The interpreter instance.</returns>
-		public static void FromFile(string path, IEnvironment env, IBasicConfiguration config = null)
+		/// <returns>Was the input interpreted successfully?</returns>
+		public static bool FromFile(string path, IEnvironment env, IBasicConfiguration config = null)
 		{
 			var interpreter = new Interpreter(env, config);
-			interpreter.InterpretProgramFromFile(path);
+			return interpreter.InterpretProgramFromFile(path);
 		}
 
-		public void InterpretProgramFromFile(string path)
+		/// <summary>
+		/// Interpret the source text contained at the file path.
+		/// </summary>
+		/// <param name="path">The path to the file to interpret.</param>
+		/// <param name="reporter">A receiver for error messages.</param>
+		/// <returns>Was the input interpreted successfully?</returns>
+		public bool InterpretProgramFromFile(string path)
 		{
 			_reader = ComplexTokenReader.FromFile(path);
-			InterpretProgram();
+			return InterpretProgram();
 		}
 
-		public void InterpretProgramFromText(string text)
+		/// <summary>
+		/// Interpret the input text directly.
+		/// </summary>
+		/// <param name="text">The text to interpret.</param>
+		/// <param name="reporter">A receiver for error messages.</param>
+		/// <returns>Was the input interpreted successfully?</returns>
+		public bool InterpretProgramFromText(string text)
 		{
 			_reader = ComplexTokenReader.FromText(text);
-			InterpretProgram();
+			return InterpretProgram();
 		}
 
-		private void InterpretProgram()
+		private bool InterpretProgram()
 		{
 			try
 			{
@@ -101,11 +108,12 @@ namespace ECMABasic.Core
 				{
 					throw new InvalidOperationException("Expected end-of-record.");
 				}
+				return true;
 			}
 			catch (SyntaxException e)
 			{
 				_env.ReportError(e.Message);
-				//_env.Program.Clear();
+				return false;
 			}
 		}
 

@@ -3,26 +3,121 @@ using ECMABasic.Core.Expressions;
 
 namespace ECMABasic.Core
 {
-	public class NumericExpressionParser
+	public class NumericExpressionParser : ExpressionParser
 	{
-		private readonly ComplexTokenReader _reader;
-		private readonly int? _lineNumber;
-		private readonly bool _throwOnError;
-
 		public NumericExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+			: base(reader, lineNumber, throwOnError)
 		{
-			_reader = reader;
-			_lineNumber = lineNumber;
-			_throwOnError = throwOnError;
 		}
 
-		public IExpression ParseAtomic()
+		public IExpression ParseBinary()
 		{
+			if (_lineNumber.Value == 1000)
+			{
+				var a = 1;
+			}
+
+			var left = ParseAtomic(false);
+			if (left == null)
+			{
+				return null;
+			}
+
+			_reader.Next(TokenType.Space, false);
+
+			var symbol = ParseOperator();
+			if (symbol == null)
+			{
+				return left;
+			}
+
+			_reader.Next(TokenType.Space, false);
+
+
+			IExpression right;
+			try
+			{
+				right = ParseAtomic(true);
+			}
+			catch (SyntaxException)
+			{
+				if (new StringExpressionParser(_reader, _lineNumber, false).ParseBinary() != null)
+				{
+					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
+				}
+				else
+				{
+					throw;
+				}
+			}
+
+			try
+			{
+				if (symbol.Text == "=")
+				{
+					return new EqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<>")
+				{
+					return new NotEqualsExpression(left, right);
+				}
+				else if (symbol.Text == "<")
+				{
+					return new LessThanExpression(left, right);
+				}
+				else if (symbol.Text == "<=")
+				{
+					return new LessThanOrEqualExpression(left, right);
+				}
+				else if (symbol.Text == ">")
+				{
+					return new GreaterThanExpression(left, right);
+				}
+				else if (symbol.Text == ">=")
+				{
+					return new GreaterThanOrEqualExpression(left, right);
+				}
+				else if (symbol.Text == "+")
+				{
+					return new AdditionExpression(left, right);
+				}
+				else if (symbol.Text == "-")
+				{
+					return new SubtractionExpression(left, right);
+				}
+				else
+				{
+					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+				}
+			}
+			catch (SyntaxException ex)
+			{
+				throw new SyntaxException(ex, _lineNumber);
+			}
+		}
+
+		private IExpression ParseAtomic(bool throwOnError)
+		{
+			var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
+
 			var expr = ParseLiteral() ?? ParseVariable();
-			if ((expr == null) && _throwOnError)
+			if ((expr == null) && throwOnError)
 			{
 				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
 			}
+
+			if (unaryMinusToken != null)
+			{
+				if (expr is NumberExpression)
+				{
+					expr = (expr as NumberExpression).Negate();
+				}
+				else
+				{
+					expr = new NegationExpression(expr);
+				}
+			}
+
 			return expr;
 		}
 
