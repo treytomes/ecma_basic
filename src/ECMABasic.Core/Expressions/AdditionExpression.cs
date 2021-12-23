@@ -18,7 +18,7 @@ namespace ECMABasic.Core.Expressions
 
 		public override string ToListing()
 		{
-			return string.Concat(Left.ToListing(), " + ", Right.ToListing());
+			return string.Concat(Left.ToListing(), "+", Right.ToListing());
 		}
 	}
 }

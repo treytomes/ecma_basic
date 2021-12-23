@@ -60,6 +60,7 @@ namespace ECMABasic55
                     if (statement != null)
 					{
                         statement.Execute(_env, true);
+                        Console.WriteLine();
                         Console.WriteLine("OK");
                     }
                 }
