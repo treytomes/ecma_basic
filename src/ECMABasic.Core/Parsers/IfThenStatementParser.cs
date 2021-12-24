@@ -17,7 +17,7 @@ namespace ECMABasic.Core.Parsers
 			var conditionExpr = ParseExpression(reader, lineNumber, true);
 			if (conditionExpr == null)
 			{
-				throw new SyntaxException("EXPECTED AN EXPRESSION");
+				throw new SyntaxException("EXPECTED A CONDITIONAL EXPRESSION", lineNumber);
 			}
 
 			ProcessSpace(reader, true);
@@ -29,7 +29,7 @@ namespace ECMABasic.Core.Parsers
 			var lineNumberExpr = ParseExpression(reader, lineNumber, true);
 			if (lineNumberExpr == null)
 			{
-				throw new SyntaxException("EXPECTED AN EXPRESSION");
+				throw new SyntaxException("EXPECTED A NUMERICAL EXPRESSION", lineNumber);
 			}
 
 			return new IfThenStatement(conditionExpr, lineNumberExpr);

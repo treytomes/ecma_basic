@@ -1,4 +1,5 @@
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core.Exceptions;
+using ECMABasic.Core.Statements;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -23,6 +24,11 @@ namespace ECMABasic.Core.Parsers
 			ProcessSpace(reader, true);
 
 			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (lineNumberExpr.Type != ExpressionType.Number)
+			{
+				throw new SyntaxException("EXPECTED A LINE NUMBER");
+			}
+
 			return new GotoStatement(lineNumberExpr);
 		}
 	}

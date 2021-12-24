@@ -7,6 +7,10 @@ namespace ECMABasic.Core.Statements
 	{
 		public GotoStatement(IExpression lineNumber)
 		{
+			if (lineNumber.Type != ExpressionType.Number)
+			{
+				throw new SyntaxException("EXPECTED A NUMERICAL EXPRESSION");
+			}
 			LineNumber = lineNumber;
 		}
 

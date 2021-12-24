@@ -85,6 +85,7 @@ namespace ECMABasic.Core
                 if (disposing)
                 {
                     _reader.Dispose();
+                    _stream.Close();
                     _stream.Dispose();
                 }
 
