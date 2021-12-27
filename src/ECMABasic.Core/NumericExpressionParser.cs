@@ -80,6 +80,18 @@ namespace ECMABasic.Core
 				{
 					return new SubtractionExpression(left, right);
 				}
+				else if (symbol.Text == "*")
+				{
+					return new MultiplicationExpression(left, right);
+				}
+				else if (symbol.Text == "/")
+				{
+					return new DivisionExpression(left, right);
+				}
+				else if (symbol.Text == "^")
+				{
+					return new InvolutionExpression(left, right);
+				}
 				else
 				{
 					throw new UnexpectedTokenException(TokenType.Symbol, symbol);

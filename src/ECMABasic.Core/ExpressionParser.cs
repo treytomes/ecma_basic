@@ -15,7 +15,7 @@
 
 		protected Token ParseOperator()
 		{
-			var symbol = _reader.Next(TokenType.Symbol, false, @"\=|\<|\>|\+|\-"); //\>");
+			var symbol = _reader.Next(TokenType.Symbol, false, @"\=|\<|\>|\+|\-|\*|\/|\^"); //\>");
 			if (symbol == null)
 			{
 				return null;
