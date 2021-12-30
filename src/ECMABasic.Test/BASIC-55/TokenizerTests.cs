@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace ECMABasic.Test.Basic55
+namespace ECMABasic.Test.BASIC_55
 {
 	public class TokenizerTests
 	{
