@@ -143,17 +143,12 @@ namespace ECMABasic.Core
 
 				var right = ParseProducts();
 
-				switch (symbol.Text)
+				expr = symbol.Text switch
 				{
-					case "+":
-						expr = new AdditionExpression(expr, right);
-						break;
-					case "-":
-						expr = new SubtractionExpression(expr, right);
-						break;
-					default:
-						throw new InvalidOperationException();
-				}
+					"+" => new AdditionExpression(expr, right),
+					"-" => new SubtractionExpression(expr, right),
+					_ => throw new InvalidOperationException(),
+				};
 			}
 		}
 
@@ -183,17 +178,12 @@ namespace ECMABasic.Core
 
 				var right = ParseUnary();
 
-				switch (symbol.Text)
+				expr = symbol.Text switch
 				{
-					case "*":
-						expr = new MultiplicationExpression(expr, right);
-						break;
-					case "/":
-						expr = new DivisionExpression(expr, right);
-						break;
-					default:
-						throw new InvalidOperationException();
-				}
+					"*" => new MultiplicationExpression(expr, right),
+					"/" => new DivisionExpression(expr, right),
+					_ => throw new InvalidOperationException(),
+				};
 			}
 		}
 

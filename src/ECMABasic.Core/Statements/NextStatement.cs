@@ -19,8 +19,7 @@ namespace ECMABasic.Core.Statements
 
 		public void Execute(IEnvironment env, bool isImmediate)
 		{
-			var context = env.PopCallStack() as ForStackContext;
-			if (context is null)
+			if (env.PopCallStack() is not ForStackContext context)
 			{
 				throw new RuntimeException("NEXT WITHOUT FOR");
 			}
