@@ -37,6 +37,7 @@ namespace ECMABasic.Core
 				new IfThenStatementParser(),
 				new ForStatementParser(),
 				new NextStatementParser(),
+				new OnGotoStatementParser(),
 			};
 		}
 
