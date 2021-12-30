@@ -31,10 +31,10 @@ namespace ECMABasic.Core
 
 		protected static IExpression ParseBinaryExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			var expr = new StringExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
+			var expr = new StringExpressionParser(reader, lineNumber, throwOnError).Parse();
 			if (expr == null)
 			{
-				expr = new NumericExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
+				expr = new NumericExpressionParser(reader, lineNumber, throwOnError).Parse();
 			}
 			return expr;
 		}
@@ -74,12 +74,12 @@ namespace ECMABasic.Core
 
 		protected static IExpression ParseNumericExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			return new NumericExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
+			return new NumericExpressionParser(reader, lineNumber, throwOnError).Parse();
 		}
 
 		protected static IExpression ParseStringExpression(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
 		{
-			return new StringExpressionParser(reader, lineNumber, throwOnError).ParseBinary();
+			return new StringExpressionParser(reader, lineNumber, throwOnError).Parse();
 		}
 	}
 }

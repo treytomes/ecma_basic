@@ -80,16 +80,16 @@
 		bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false);
 
 		/// <summary>
-		/// Push a line number onto the call stack for RETURN-ing from a GOSUB.
+		/// Push a context onto the call stack for RETURN-ing from a GOSUB or resetting a loop.
 		/// </summary>
-		/// <param name="lineNumber">The line number to save for later.</param>
-		void PushCallStack(int lineNumber);
+		/// <param name="context">The context to use on the next iteration of whatever.</param>
+		void PushCallStack(ICallStackContext context);
 
 		/// <summary>
-		/// Pop a line number off of the call stack for RETURN-ing from a GOSUB.
+		/// Pop a context off of the call stack for RETURN-ing from a GOSUB or resetting a loop.
 		/// </summary>
-		/// <returns>The line number to RETURN to.</returns>
-		int PopCallStack();
+		/// <returns>The context we're currently working in.</returns>
+		ICallStackContext PopCallStack();
 
 		/// <summary>
 		/// Used by the Program evaluator to see if a stop has been requested.

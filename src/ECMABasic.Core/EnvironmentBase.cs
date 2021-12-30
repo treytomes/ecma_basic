@@ -9,7 +9,7 @@ namespace ECMABasic.Core
 	{
 		private readonly Dictionary<string, string> _stringVariables = new();
 		private readonly Dictionary<string, double> _numericVariables = new();
-		private readonly Stack<int> _callStack = new();
+		private readonly Stack<ICallStackContext> _callStack = new();
 
 		private readonly IBasicConfiguration _config;
 
@@ -103,12 +103,12 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public void PushCallStack(int lineNumber)
+		public void PushCallStack(ICallStackContext context)
 		{
-			_callStack.Push(lineNumber);
+			_callStack.Push(context);
 		}
 
-		public int PopCallStack()
+		public ICallStackContext PopCallStack()
 		{
 			return _callStack.Pop();
 		}

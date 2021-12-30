@@ -320,5 +320,14 @@ namespace ECMABasic.Core
 			}
 			return _tokens[_tokenIndex];
 		}
+
+		public void Rewind()
+		{
+			if (_tokenIndex == 0)
+			{
+				return;
+			}
+			_tokenIndex--;
+		}
 	}
 }

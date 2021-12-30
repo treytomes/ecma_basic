@@ -1,6 +1,6 @@
 ﻿namespace ECMABasic.Core
 {
-	public class ExpressionParser
+	public abstract class ExpressionParser
 	{
 		protected readonly ComplexTokenReader _reader;
 		protected readonly int? _lineNumber;
@@ -13,9 +13,11 @@
 			_throwOnError = throwOnError;
 		}
 
-		protected Token ParseOperator()
+		public abstract IExpression Parse();
+
+		protected Token ParseBooleanOperator()
 		{
-			var symbol = _reader.Next(TokenType.Symbol, false, @"\=|\<|\>|\+|\-|\*|\/|\^"); //\>");
+			var symbol = _reader.Next(TokenType.Symbol, false, @"\=|\<|\>");
 			if (symbol == null)
 			{
 				return null;

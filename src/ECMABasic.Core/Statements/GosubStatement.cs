@@ -21,7 +21,7 @@ namespace ECMABasic.Core.Statements
 			}
 
 			var returnToLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);
-			env.PushCallStack(returnToLineNumber);
+			env.PushCallStack(new GosubStackContext(returnToLineNumber));
 			env.CurrentLineNumber = lineNumber;
 		}
 

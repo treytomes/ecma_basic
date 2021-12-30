@@ -10,7 +10,7 @@ namespace ECMABasic.Core
 		{
 		}
 
-		public IExpression ParseBinary()
+		public override IExpression Parse()
 		{
 			var left = ParseAtomic(false);
 			if (left == null)
@@ -20,7 +20,7 @@ namespace ECMABasic.Core
 
 			_reader.Next(TokenType.Space, false);
 
-			var symbol = ParseOperator();
+			var symbol = ParseBooleanOperator();
 			if (symbol == null)
 			{
 				return left;
@@ -35,7 +35,7 @@ namespace ECMABasic.Core
 			}
 			catch (SyntaxException)
 			{
-				if (new NumericExpressionParser(_reader, _lineNumber, false).ParseBinary() != null)
+				if (new NumericExpressionParser(_reader, _lineNumber, false).Parse() != null)
 				{
 					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
 				}

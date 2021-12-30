@@ -15,7 +15,15 @@ namespace ECMABasic.Core.Statements
 		{
 			try
 			{
-				env.CurrentLineNumber = env.PopCallStack();
+				while (true)
+				{
+					var context = env.PopCallStack();
+					if (context is GosubStackContext)
+					{
+						env.CurrentLineNumber = (context as GosubStackContext).LineNumber;
+						break;
+					}
+				}
 			}
 			catch (InvalidOperationException)
 			{

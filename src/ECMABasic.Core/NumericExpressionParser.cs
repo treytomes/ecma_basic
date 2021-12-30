@@ -1,5 +1,6 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
+using System;
 
 namespace ECMABasic.Core
 {
@@ -10,19 +11,52 @@ namespace ECMABasic.Core
 		{
 		}
 
-		public IExpression ParseBinary()
+		// TODO: Boolean expressions need to be their own parser.
+		public override IExpression Parse()
 		{
-			var left = ParseAtomic(false);
+			//var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
+			//if (unaryMinusToken == null)
+			//{
+			//	// Read the unary plus if it's there, but don't do anything with it.
+			//	_reader.Next(TokenType.Symbol, false, @"\+");
+			//}
+			
+			//var space = _reader.Next(TokenType.Space, false);
+
+			var expr = ParseBoolean();
+			//if (expr == null)
+			//{
+			//	if (space != null)
+			//	{
+			//		_reader.Rewind();  // Rewind over the space.
+			//	}
+			//	return null;
+			//}
+
+			//if (unaryMinusToken != null)
+			//{
+			//	expr = new NegationExpression(expr);
+			//}
+			return expr;
+		}
+
+		private IExpression ParseBoolean()
+		{
+			var left = ParseSums();
 			if (left == null)
 			{
 				return null;
 			}
 
-			_reader.Next(TokenType.Space, false);
+			var space = _reader.Next(TokenType.Space, false);
 
-			var symbol = ParseOperator();
+			var symbol = ParseBooleanOperator();
 			if (symbol == null)
 			{
+				if (space != null)
+				{
+					_reader.Rewind();
+				}
 				return left;
 			}
 
@@ -32,11 +66,11 @@ namespace ECMABasic.Core
 			IExpression right;
 			try
 			{
-				right = ParseAtomic(true);
+				right = ParseSums();
 			}
 			catch (SyntaxException)
 			{
-				if (new StringExpressionParser(_reader, _lineNumber, false).ParseBinary() != null)
+				if (new StringExpressionParser(_reader, _lineNumber, false).Parse() != null)
 				{
 					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
 				}
@@ -72,26 +106,6 @@ namespace ECMABasic.Core
 				{
 					return new GreaterThanOrEqualExpression(left, right);
 				}
-				else if (symbol.Text == "+")
-				{
-					return new AdditionExpression(left, right);
-				}
-				else if (symbol.Text == "-")
-				{
-					return new SubtractionExpression(left, right);
-				}
-				else if (symbol.Text == "*")
-				{
-					return new MultiplicationExpression(left, right);
-				}
-				else if (symbol.Text == "/")
-				{
-					return new DivisionExpression(left, right);
-				}
-				else if (symbol.Text == "^")
-				{
-					return new InvolutionExpression(left, right);
-				}
 				else
 				{
 					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
@@ -103,29 +117,187 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseAtomic(bool throwOnError)
+		private IExpression ParseSums()
 		{
-			var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
-
-			var expr = ParseLiteral() ?? ParseVariable();
-			if ((expr == null) && throwOnError)
+			var expr = ParseProducts();
+			if (expr == null)
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
+				return expr;
 			}
 
+			while (true)
+			{
+				var space = _reader.Next(TokenType.Space, false);
+
+				var symbol = _reader.Next(TokenType.Symbol, false, @"\+|\-");
+				if (symbol == null)
+				{
+					if (space != null)
+					{
+						_reader.Rewind();
+					}
+					return expr;
+				}
+
+				_reader.Next(TokenType.Space, false);
+
+				var right = ParseProducts();
+
+				switch (symbol.Text)
+				{
+					case "+":
+						expr = new AdditionExpression(expr, right);
+						break;
+					case "-":
+						expr = new SubtractionExpression(expr, right);
+						break;
+					default:
+						throw new InvalidOperationException();
+				}
+			}
+		}
+
+		private IExpression ParseProducts()
+		{
+			var expr = ParseUnary();
+			if (expr == null)
+			{
+				return expr;
+			}
+
+			while (true)
+			{
+				var space = _reader.Next(TokenType.Space, false);
+
+				var symbol = _reader.Next(TokenType.Symbol, false, @"\*|\/");
+				if (symbol == null)
+				{
+					if (space != null)
+					{
+						_reader.Rewind();
+					}
+					return expr;
+				}
+
+				_reader.Next(TokenType.Space, false);
+
+				var right = ParseUnary();
+
+				switch (symbol.Text)
+				{
+					case "*":
+						expr = new MultiplicationExpression(expr, right);
+						break;
+					case "/":
+						expr = new DivisionExpression(expr, right);
+						break;
+					default:
+						throw new InvalidOperationException();
+				}
+			}
+		}
+
+		private IExpression ParseUnary()
+		{
+			var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
+			if (unaryMinusToken == null)
+			{
+				// Read the unary plus if it's there, but don't do anything with it.
+				_reader.Next(TokenType.Symbol, false, @"\+");
+			}
+
+			_reader.Next(TokenType.Space, false);
+
+			var expr = ParseInvolution();
 			if (unaryMinusToken != null)
 			{
-				if (expr is NumberExpression)
-				{
-					expr = (expr as NumberExpression).Negate();
-				}
-				else
-				{
-					expr = new NegationExpression(expr);
-				}
+				expr = new NegationExpression(expr);
 			}
 
 			return expr;
+		}
+
+		private IExpression ParseInvolution()
+		{
+			var expr = ParseAtomic(false);
+			if (expr == null)
+			{
+				return expr;
+			}
+
+			while (true)
+			{
+				var space = _reader.Next(TokenType.Space, false);
+
+				var symbol = _reader.Next(TokenType.Symbol, false, @"\^");
+				if (symbol == null)
+				{
+					if (space != null)
+					{
+						_reader.Rewind();
+					}
+					return expr;
+				}
+
+				_reader.Next(TokenType.Space, false);
+
+				var right = ParseAtomic(true);
+
+				expr = new InvolutionExpression(expr, right);
+			}
+		}
+
+		private IExpression ParseAtomic(bool throwOnError)
+		{
+			//var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
+			//if (unaryMinusToken == null)
+			//{
+			//	// Read the unary plus if it's there, but don't do anything with it.
+			//	_reader.Next(TokenType.Symbol, false, @"\+");
+			//}
+			//_reader.Next(TokenType.Space, false);
+
+			var openParenthesis = _reader.Next(TokenType.OpenParenthesis, false);
+			if (openParenthesis != null)
+			{
+				var expr = Parse();
+				_reader.Next(TokenType.CloseParenthesis);
+
+				//if (unaryMinusToken != null)
+				//{
+				//	expr = new NegationExpression(expr);
+				//}
+				return expr;
+			}
+			else
+			{
+				var expr = ParseLiteral() ?? ParseVariable();
+				if (expr == null)
+				{
+					if (throwOnError)
+					{
+						throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
+					}
+					else
+					{
+						return expr;
+					}
+				}
+
+				//if (unaryMinusToken != null)
+				//{
+				//	if (expr is NumberExpression)
+				//	{
+				//		expr = (expr as NumberExpression).Negate();
+				//	}
+				//	else
+				//	{
+				//		expr = new NegationExpression(expr);
+				//	}
+				//}
+
+				return expr;
+			}
 		}
 
 		public IExpression ParseVariable()

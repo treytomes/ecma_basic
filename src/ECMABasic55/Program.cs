@@ -12,9 +12,8 @@ namespace ECMABasic55
 
         public static int Main(string[] args)
         {
-            Console.WriteLine("ECMA Basic 55 Runtime Environment");
-            Console.WriteLine("Usage: ecmabasic55 {optional file path}");
-            Console.WriteLine();
+            _env.PrintLine(RuntimeConfiguration.Instance.Preamble);
+            _env.PrintLine();
 
             if (args.Length == 1)
 			{
