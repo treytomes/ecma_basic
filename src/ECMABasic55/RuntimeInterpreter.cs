@@ -24,6 +24,7 @@ namespace ECMABasic55
 				new ContinueStatementParser(),
 				new LoadStatementParser(),
 				new ListStatementParser(),
+				new SaveStatementParser(),
 			};
 		}
 

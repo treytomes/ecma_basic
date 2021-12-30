@@ -16,7 +16,9 @@
 
 		public override string ToListing()
 		{
-			return string.Concat(Left.ToListing(), "=", Right.ToListing());
+			var left = (Left is BinaryExpression) ? string.Concat("(", Left.ToListing(), ")") : Left.ToListing();
+			var right = (Right is BinaryExpression) ? string.Concat("(", Right.ToListing(), ")") : Right.ToListing();
+			return string.Concat(left, "<>", right);
 		}
 	}
 }

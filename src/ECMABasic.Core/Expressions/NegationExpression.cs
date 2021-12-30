@@ -26,7 +26,8 @@ namespace ECMABasic.Core.Expressions
 
 		public string ToListing()
 		{
-			return string.Concat("-", Root.ToListing());
+			var root = (Root is BinaryExpression) ? string.Concat("(", Root.ToListing(), ")") : Root.ToListing();
+			return string.Concat("-", root);
 		}
 	}
 }
