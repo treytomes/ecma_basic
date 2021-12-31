@@ -1,6 +1,7 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
 using System;
+using System.Collections.Generic;
 
 namespace ECMABasic.Core
 {
@@ -20,7 +21,7 @@ namespace ECMABasic.Core
 			//	// Read the unary plus if it's there, but don't do anything with it.
 			//	_reader.Next(TokenType.Symbol, false, @"\+");
 			//}
-			
+
 			//var space = _reader.Next(TokenType.Space, false);
 
 			var expr = ParseBoolean();
@@ -261,7 +262,7 @@ namespace ECMABasic.Core
 			}
 			else
 			{
-				var expr = ParseLiteral() ?? ParseVariable();
+				var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction();
 				if (expr == null)
 				{
 					if (throwOnError)
@@ -309,6 +310,43 @@ namespace ECMABasic.Core
 				return null;
 			}
 			return new NumberExpression(nextValue.Value);
+		}
+
+		// TODO: Built-in functions: ABS, ATN, EXP, INT, LOG, RND, SGN, SIN, SQR, TAN
+		// DONE: Built-in functions: COS
+
+		public IExpression ParseFunction()
+		{
+			var nameToken = _reader.Next(TokenType.Word, false);
+			if (nameToken == null)
+			{
+				return null;
+			}
+
+			_reader.Next(TokenType.OpenParenthesis);
+
+			var args = new List<IExpression>();
+			while (true)
+			{
+				args.Add(Parse());
+
+				var comma = _reader.Next(TokenType.Comma, false);
+				if (comma == null)
+				{
+					break;
+				}
+			}
+
+			_reader.Next(TokenType.CloseParenthesis);
+
+			if (nameToken.Text == "COS")
+			{
+				return new CosExpression(args);
+			}
+			else
+			{
+				throw new SyntaxException("UNDEFINED FUNCTION");
+			}
 		}
 	}
 }
