@@ -240,24 +240,11 @@ namespace ECMABasic.Core
 
 		private IExpression ParseAtomic(bool throwOnError)
 		{
-			//var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
-			//if (unaryMinusToken == null)
-			//{
-			//	// Read the unary plus if it's there, but don't do anything with it.
-			//	_reader.Next(TokenType.Symbol, false, @"\+");
-			//}
-			//_reader.Next(TokenType.Space, false);
-
 			var openParenthesis = _reader.Next(TokenType.OpenParenthesis, false);
 			if (openParenthesis != null)
 			{
 				var expr = Parse();
 				_reader.Next(TokenType.CloseParenthesis);
-
-				//if (unaryMinusToken != null)
-				//{
-				//	expr = new NegationExpression(expr);
-				//}
 				return expr;
 			}
 			else
@@ -274,18 +261,6 @@ namespace ECMABasic.Core
 						return expr;
 					}
 				}
-
-				//if (unaryMinusToken != null)
-				//{
-				//	if (expr is NumberExpression)
-				//	{
-				//		expr = (expr as NumberExpression).Negate();
-				//	}
-				//	else
-				//	{
-				//		expr = new NegationExpression(expr);
-				//	}
-				//}
 
 				return expr;
 			}
@@ -311,9 +286,6 @@ namespace ECMABasic.Core
 			}
 			return new NumberExpression(nextValue.Value);
 		}
-
-		// TODO: Built-in functions: ABS, ATN, EXP, INT, LOG, RND, SGN, SIN, SQR, TAN
-		// DONE: Built-in functions: COS
 
 		public IExpression ParseFunction()
 		{

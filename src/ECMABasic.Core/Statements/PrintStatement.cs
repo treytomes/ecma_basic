@@ -40,17 +40,12 @@ namespace ECMABasic.Core.Statements
 				return;
 			}
 
-			//if (env.CurrentLineNumber == 240)
-			//{
-			//	var a = 0;
-			//}
-
 			foreach (var expr in PrintItems)
 			{
 				var value = expr.Evaluate(env);
 				string text = value switch
 				{
-					int => PrintNumber((double)value),
+					int => PrintNumber((int)value),
 					double => PrintNumber((double)value),
 					_ => Convert.ToString(value),
 				};
