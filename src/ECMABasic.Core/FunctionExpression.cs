@@ -1,22 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ECMABasic.Core
 {
-	public abstract class FunctionExpression : IExpression
+	public class FunctionExpression : IExpression
 	{
-		public FunctionExpression(IEnumerable<IExpression> args)
+		public FunctionExpression(string name, Func<List<object>, object> fn, IEnumerable<IExpression> args)
 		{
+			Name = name;
+
+			if (Name.EndsWith("$"))
+			{
+				Type = ExpressionType.String;
+			}
+			else
+			{
+				Type = ExpressionType.Number;
+			}
+
+			Function = fn;
+
 			Arguments = new List<IExpression>(args);
 		}
 
-		public abstract string Name { get; }
+		public string Name { get; }
 
-		public abstract ExpressionType Type { get; }
+		public Func<List<object>, object> Function { get; }
+
+		public ExpressionType Type { get; }
 
 		public List<IExpression> Arguments { get; }
 
-		public abstract object Evaluate(IEnvironment env);
+		public object Evaluate(IEnvironment env)
+		{
+			return Function(Arguments.Select(x => x.Evaluate(env)).ToList());
+		}
 
 		public string ToListing()
 		{

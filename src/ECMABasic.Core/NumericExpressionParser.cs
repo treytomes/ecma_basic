@@ -339,13 +339,14 @@ namespace ECMABasic.Core
 
 			_reader.Next(TokenType.CloseParenthesis);
 
-			if (nameToken.Text == "COS")
+			var fndef = FunctionFactory.Instance.Get(nameToken.Text);
+			if (fndef == null)
 			{
-				return new CosExpression(args);
+				throw new SyntaxException("UNDEFINED FUNCTION");
 			}
 			else
 			{
-				throw new SyntaxException("UNDEFINED FUNCTION");
+				return fndef.Instantiate(args);
 			}
 		}
 	}
