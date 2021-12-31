@@ -24,6 +24,11 @@ namespace ECMABasic.Core.Statements
 				throw new RuntimeException("NEXT WITHOUT FOR");
 			}
 
+			if (context.LoopVar.Name != LoopVar.Name)
+			{
+				throw new RuntimeException("NEXT WITHOUT FOR");
+			}
+
 			var loopVar = Convert.ToDouble(context.LoopVar.Evaluate(env));
 			var to = Convert.ToDouble(context.To.Evaluate(env));
 			var step = Convert.ToDouble(context.Step.Evaluate(env));

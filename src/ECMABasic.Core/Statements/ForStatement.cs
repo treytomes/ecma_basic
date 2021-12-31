@@ -25,6 +25,11 @@ namespace ECMABasic.Core.Statements
 
 		public void Execute(IEnvironment env, bool isImmediate)
 		{
+			if (isImmediate)
+			{
+				throw new SyntaxException("ONLY ALLOWED IN PROGRAM");
+			}
+
 			var from = Convert.ToDouble(From.Evaluate(env));
 			env.SetNumericVariableValue(LoopVar.Name, from);
 
