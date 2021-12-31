@@ -31,6 +31,9 @@
 		<None Update="PI3.BAS">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+		<None Update="PLOT.BAS">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="SAMPLE.BAS">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
