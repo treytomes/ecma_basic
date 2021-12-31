@@ -130,6 +130,7 @@ namespace ECMABasic.Core
 			{
 				var space = _reader.Next(TokenType.Space, false);
 
+				var preSymbolIndex = _reader.TokenIndex;
 				var symbol = _reader.Next(TokenType.Symbol, false, @"\+|\-");
 				if (symbol == null)
 				{
@@ -143,6 +144,11 @@ namespace ECMABasic.Core
 				_reader.Next(TokenType.Space, false);
 
 				var right = ParseProducts();
+				if (right == null)
+				{
+					_reader.Seek(preSymbolIndex);
+					return expr;
+				}
 
 				expr = symbol.Text switch
 				{
@@ -165,6 +171,7 @@ namespace ECMABasic.Core
 			{
 				var space = _reader.Next(TokenType.Space, false);
 
+				var preSymbolIndex = _reader.TokenIndex;
 				var symbol = _reader.Next(TokenType.Symbol, false, @"\*|\/");
 				if (symbol == null)
 				{
@@ -178,6 +185,11 @@ namespace ECMABasic.Core
 				_reader.Next(TokenType.Space, false);
 
 				var right = ParseUnary();
+				if (right == null)
+				{
+					_reader.Seek(preSymbolIndex);
+					return expr;
+				}
 
 				expr = symbol.Text switch
 				{
@@ -220,6 +232,7 @@ namespace ECMABasic.Core
 			{
 				var space = _reader.Next(TokenType.Space, false);
 
+				var preSymbolIndex = _reader.TokenIndex;
 				var symbol = _reader.Next(TokenType.Symbol, false, @"\^");
 				if (symbol == null)
 				{
@@ -233,6 +246,11 @@ namespace ECMABasic.Core
 				_reader.Next(TokenType.Space, false);
 
 				var right = ParseAtomic(true);
+				if (right == null)
+				{
+					_reader.Seek(preSymbolIndex);
+					return expr;
+				}
 
 				expr = new InvolutionExpression(expr, right);
 			}

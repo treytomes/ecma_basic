@@ -6,6 +6,11 @@
 	public interface IEnvironment : IErrorReporter
 	{
 		/// <summary>
+		/// The active interpreter.
+		/// </summary>
+		public Interpreter Interpreter { get; }
+
+		/// <summary>
 		/// The full program, ready to execute.
 		/// </summary>
 		public Program Program { get; }
@@ -95,5 +100,11 @@
 		/// Used by the Program evaluator to see if a stop has been requested.
 		/// </summary>
 		public void CheckForStopRequest();
+
+		/// <summary>
+		/// Load and interpret a file.
+		/// </summary>
+		/// <param name="filename">The file to load.</param>
+		public bool LoadFile(string filename);
 	}
 }

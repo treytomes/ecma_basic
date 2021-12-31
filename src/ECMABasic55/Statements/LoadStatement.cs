@@ -28,8 +28,7 @@ namespace ECMABasic55.Statements
 				return;
 			}
 
-			env.Program.Clear();
-			Interpreter.FromFile(path, env);
+			env.LoadFile(path);
 		}
 
 		public string ToListing()

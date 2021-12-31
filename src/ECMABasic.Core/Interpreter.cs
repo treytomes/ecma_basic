@@ -17,11 +17,9 @@ namespace ECMABasic.Core
 
 		protected ComplexTokenReader _reader;
 		private readonly IBasicConfiguration _config;
-		protected readonly IEnvironment _env;
 
-		public Interpreter(IEnvironment env, IBasicConfiguration config = null)
+		public Interpreter(IBasicConfiguration config = null)
 		{
-			_env = env;
 			_config = config ?? MinimalBasicConfiguration.Instance;
 
 			_lineStatements = new List<StatementParser>()
@@ -49,8 +47,8 @@ namespace ECMABasic.Core
 		/// <returns>Was the input interpreted successfully?</returns>
 		public static bool FromText(string text, IEnvironment env, IBasicConfiguration config = null)
 		{
-			var interpreter = new Interpreter(env, config);
-			return interpreter.InterpretProgramFromText(text);
+			var interpreter = new Interpreter(config);
+			return interpreter.InterpretProgramFromText(env, text);
 		}
 
 		/// <summary>
@@ -61,8 +59,17 @@ namespace ECMABasic.Core
 		/// <returns>Was the input interpreted successfully?</returns>
 		public static bool FromFile(string path, IEnvironment env, IBasicConfiguration config = null)
 		{
-			var interpreter = new Interpreter(env, config);
-			return interpreter.InterpretProgramFromFile(path);
+			var interpreter = new Interpreter(config);
+			return interpreter.InterpretProgramFromFile(env, path);
+		}
+
+		/// <summary>
+		/// Allow interpretation of additional statements.
+		/// </summary>
+		/// <param name="additionalStatements">The statements to add to the interpreter.</param>
+		public void InjectStatements(IEnumerable<StatementParser> additionalStatements)
+		{
+			_lineStatements.AddRange(additionalStatements);
 		}
 
 		/// <summary>
@@ -71,10 +78,10 @@ namespace ECMABasic.Core
 		/// <param name="path">The path to the file to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
-		public bool InterpretProgramFromFile(string path)
+		public bool InterpretProgramFromFile(IEnvironment env, string path)
 		{
 			_reader = ComplexTokenReader.FromFile(path);
-			return InterpretProgram();
+			return InterpretProgram(env);
 		}
 
 		/// <summary>
@@ -83,13 +90,13 @@ namespace ECMABasic.Core
 		/// <param name="text">The text to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
-		public bool InterpretProgramFromText(string text)
+		public bool InterpretProgramFromText(IEnvironment env, string text)
 		{
 			_reader = ComplexTokenReader.FromText(text);
-			return InterpretProgram();
+			return InterpretProgram(env);
 		}
 
-		private bool InterpretProgram()
+		private bool InterpretProgram(IEnvironment env)
 		{
 			try
 			{
@@ -102,7 +109,7 @@ namespace ECMABasic.Core
 					}
 					else
 					{
-						_env.Program.Insert(line);
+						env.Program.Insert(line);
 					}
 				}
 
@@ -115,7 +122,7 @@ namespace ECMABasic.Core
 			}
 			catch (SyntaxException e)
 			{
-				_env.ReportError(e.Message);
+				env.ReportError(e.Message);
 				return false;
 			}
 		}

@@ -1,5 +1,7 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -7,8 +9,11 @@ namespace ECMABasic55.Statements
 {
 	public class ListStatement : IStatement
 	{
-		public ListStatement(IExpression from, IExpression to)
+		private readonly IBasicConfiguration _config;
+
+		public ListStatement(IExpression from, IExpression to, IBasicConfiguration config = null)
 		{
+			_config = config ?? MinimalBasicConfiguration.Instance;
 			From = from;
 			To = to;
 		}
@@ -28,7 +33,11 @@ namespace ECMABasic55.Statements
 				return;
 			}
 
-			var fromLineNumber = (int)((From == null) ? env.Program.First().LineNumber : From.Evaluate(env));
+			var fromLineNumber = (int)((From == null) ? env.Program.First().LineNumber : Convert.ToInt32(From.Evaluate(env)));
+			if (fromLineNumber < 0)
+			{
+				throw new RuntimeException("LINE NUMBER OUT OF RANGE");
+			}
 
 			if ((From != null) && (To == null))
 			{
@@ -37,7 +46,11 @@ namespace ECMABasic55.Statements
 				return;
 			}
 
-			var toLineNumber = (int)((To == null) ? env.Program.Last().LineNumber : To.Evaluate(env));
+			var toLineNumber = (To == null) ? env.Program.Last().LineNumber : Convert.ToInt32(To.Evaluate(env));
+			if ((toLineNumber < fromLineNumber) || (toLineNumber > _config.MaxLineNumber))
+			{
+				throw new RuntimeException("LINE NUMBER OUT OF RANGE");
+			}
 
 			foreach (var line in env.Program)
 			{

@@ -1,12 +1,17 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
 using System;
 
 namespace ECMABasic55
 {
-	class ConsoleEnvironment : EnvironmentBase
+	public class ConsoleEnvironment : EnvironmentBase
 	{
+		public ConsoleEnvironment(Interpreter interpreter = null, IBasicConfiguration config = null)
+			: base(interpreter, config)
+		{
+		}
+
 		public override int TerminalRow
 		{
 			get

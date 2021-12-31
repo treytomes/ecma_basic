@@ -76,18 +76,13 @@ namespace ECMABasic.Core
 
 		private static IPrintItem ProcessPrintItem(ComplexTokenReader reader, int? lineNumber = null)
 		{
-			//if (lineNumber == 680)
-			//{
-			//	var a = 0;
-			//}
-
-			IPrintItem expr = ParseExpression(reader, lineNumber, false);
+			var expr = ProcessTabExpression(reader, lineNumber);
 			if (expr != null)
 			{
 				return expr;
 			}
 
-			expr = ProcessTabExpression(reader, lineNumber);
+			expr = ParseExpression(reader, lineNumber, false);
 			if (expr != null)
 			{
 				return expr;

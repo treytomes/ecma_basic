@@ -14,8 +14,8 @@ namespace ECMABasic55
 	{
 		private readonly List<StatementParser> _immediateStatements;
 
-		public RuntimeInterpreter(IEnvironment env, IBasicConfiguration config = null)
-			: base(env, config)
+		public RuntimeInterpreter(IBasicConfiguration config = null)
+			: base(config)
 		{
 			_immediateStatements = new List<StatementParser>()
 			{
@@ -28,7 +28,7 @@ namespace ECMABasic55
 			};
 		}
 
-		public IStatement ProcessImmediate(string text)
+		public IStatement ProcessImmediate(IEnvironment env, string text)
 		{
 			try
 			{
@@ -39,11 +39,11 @@ namespace ECMABasic55
 				{
 					if (line.Statement != null)
 					{
-						_env.Program.Insert(line);
+						env.Program.Insert(line);
 					}
 					else
 					{
-						_env.Program.Delete(line.LineNumber);
+						env.Program.Delete(line.LineNumber);
 					}
 					return null;
 				}

@@ -13,11 +13,14 @@ namespace ECMABasic.Core
 
 		private readonly IBasicConfiguration _config;
 
-		public EnvironmentBase(IBasicConfiguration config = null)
+		public EnvironmentBase(Interpreter interpreter = null, IBasicConfiguration config = null)
 		{
+			Interpreter = interpreter ?? new Interpreter();
 			_config = config ?? MinimalBasicConfiguration.Instance;
 			Program = new Program();
 		}
+
+		public Interpreter Interpreter { get; }
 
 		/// <summary>
 		/// The line number currently being executed.
@@ -114,5 +117,11 @@ namespace ECMABasic.Core
 		}
 
 		public abstract void CheckForStopRequest();
+
+		public bool LoadFile(string filename)
+		{
+			Program.Clear();
+			return Interpreter.InterpretProgramFromFile(this, filename);
+		}
 	}
 }

@@ -1,20 +1,20 @@
 ﻿using ECMABasic.Core;
+using ECMABasic55.Parsers;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ECMABasic55
 {
-    // TODO: Implement SAVE.
-
     public static class Program
     {
-        private static readonly IEnvironment _env = new ConsoleEnvironment();
+        private static readonly List<StatementParser> _additionalStatements = new()
+        {
+            new SleepStatementParser(),
+        };
 
         public static int Main(string[] args)
         {
-            _env.PrintLine(RuntimeConfiguration.Instance.Preamble);
-            _env.PrintLine();
-
             if (args.Length == 1)
 			{
                 return RunBatch(args[0]);
@@ -27,14 +27,19 @@ namespace ECMABasic55
 
         private static int RunBatch(string path)
 		{
+			IEnvironment env = new ConsoleEnvironment();
+            env.Interpreter.InjectStatements(_additionalStatements);
+            env.PrintLine(RuntimeConfiguration.Instance.Preamble);
+            env.PrintLine();
+
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException(null, path);
             }
 
-            if (Interpreter.FromFile(path, _env))
+            if (env.LoadFile(path))
             {
-                _env.Program.Execute(_env);
+                env.Program.Execute(env);
                 return 0;
             }
             else
@@ -45,7 +50,11 @@ namespace ECMABasic55
 
         private static int RunREPL()
 		{
-            var interpreter = new RuntimeInterpreter(_env);
+            IEnvironment env = new ConsoleEnvironment(new RuntimeInterpreter());
+            env.Interpreter.InjectStatements(_additionalStatements);
+            env.PrintLine(RuntimeConfiguration.Instance.Preamble);
+            env.PrintLine();
+
             var isRunning = true;
             Console.WriteLine("OK");
 
@@ -55,10 +64,10 @@ namespace ECMABasic55
 
 				try
 				{
-                    var statement = interpreter.ProcessImmediate(line);
+                    var statement = (env.Interpreter as RuntimeInterpreter).ProcessImmediate(env, line);
                     if (statement != null)
 					{
-                        statement.Execute(_env, true);
+                        statement.Execute(env, true);
                         Console.WriteLine();
                         Console.WriteLine("OK");
                     }

@@ -16,10 +16,6 @@ namespace ECMABasic.Core
 	/// </remarks>
 	public class ComplexTokenReader
 	{
-		/// <summary>
-		/// The index into _tokens.
-		/// </summary>
-		private int _tokenIndex;
 		private readonly List<Token> _tokens;
 
 		private ComplexTokenReader(SimpleTokenReader reader)
@@ -33,7 +29,12 @@ namespace ECMABasic.Core
 			reader.Dispose();
 		}
 
-		public bool IsAtEnd => _tokenIndex >= _tokens.Count;
+		/// <summary>
+		/// The index into _tokens.
+		/// </summary>
+		public int TokenIndex { get; private set; }
+
+		public bool IsAtEnd => TokenIndex >= _tokens.Count;
 
 		public static ComplexTokenReader FromFile(string filename)
 		{
@@ -158,7 +159,7 @@ namespace ECMABasic.Core
 		/// <exception cref="UnexpectedTokenException">Throws an exception if the token type doesn't match what was expected.</exception>
 		public Token Next(TokenType type, bool throwOnError = true, string pattern = null)
 		{
-			var startPosition = _tokenIndex;
+			var startPosition = TokenIndex;
 			var token = Next();
 			if ((token == null) || (token.Type != type) || ((pattern != null) && !Regex.IsMatch(token.Text, @"^" + pattern + @"$", RegexOptions.Singleline)))
 			{
@@ -168,7 +169,7 @@ namespace ECMABasic.Core
 				}
 				else
 				{
-					_tokenIndex = startPosition;
+					TokenIndex = startPosition;
 					return null;
 				}
 			}
@@ -274,7 +275,7 @@ namespace ECMABasic.Core
 
 		private Token ReadRestOfString(Token start)
 		{
-			var startIndex = _tokenIndex;
+			var startIndex = TokenIndex;
 			List<Token> stringTokens = new() { start };
 
 			while (true)
@@ -283,7 +284,7 @@ namespace ECMABasic.Core
 				if ((token == null) || (token.Type == TokenType.EndOfLine))
 				{
 					// Rewind.
-					_tokenIndex = startIndex;
+					TokenIndex = startIndex;
 					return null;
 				}
 
@@ -307,8 +308,8 @@ namespace ECMABasic.Core
 				return null;
 			}
 
-			var token = _tokens[_tokenIndex];
-			_tokenIndex++;
+			var token = _tokens[TokenIndex];
+			TokenIndex++;
 			return token;
 		}
 
@@ -318,16 +319,21 @@ namespace ECMABasic.Core
 			{
 				return null;
 			}
-			return _tokens[_tokenIndex];
+			return _tokens[TokenIndex];
+		}
+
+		public void Seek(int index)
+		{
+			TokenIndex = index;
 		}
 
 		public void Rewind()
 		{
-			if (_tokenIndex == 0)
+			if (TokenIndex == 0)
 			{
 				return;
 			}
-			_tokenIndex--;
+			TokenIndex--;
 		}
 	}
 }
