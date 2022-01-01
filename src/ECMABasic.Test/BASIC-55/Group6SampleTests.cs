@@ -94,12 +94,36 @@ namespace ECMABasic.Test.BASIC_55
 			RunSample("P034");
 		}
 
-		[Fact(DisplayName = "P035:Exception - Overflow and underflow within sub-expressions.")]
+		[Fact(DisplayName = "P035: Exception - Overflow and underflow within sub-expressions.")]
 		[Trait("Feature Set", "BASIC-55")]
 		[Trait("Category", "Exceptions")]
 		public void P035()
 		{
 			RunSample("P035");
+		}
+
+		[Fact(DisplayName = "P036: Error - Unmatched parenthesis in numeric expressions.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Errors")]
+		public void P036()
+		{
+			RunSample("P036");
+		}
+
+		[Fact(DisplayName = "P037: Error - Use of '**' as operator.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Errors")]
+		public void P037()
+		{
+			RunSample("P037");
+		}
+
+		[Fact(DisplayName = "P038: Error - Use of adjacent operators.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Errors")]
+		public void P038()
+		{
+			RunSample("P038");
 		}
 	}
 }

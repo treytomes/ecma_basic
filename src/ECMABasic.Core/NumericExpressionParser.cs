@@ -12,32 +12,9 @@ namespace ECMABasic.Core
 		{
 		}
 
-		// TODO: Boolean expressions need to be their own parser.
 		public override IExpression Parse()
 		{
-			//var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
-			//if (unaryMinusToken == null)
-			//{
-			//	// Read the unary plus if it's there, but don't do anything with it.
-			//	_reader.Next(TokenType.Symbol, false, @"\+");
-			//}
-
-			//var space = _reader.Next(TokenType.Space, false);
-
 			var expr = ParseBoolean();
-			//if (expr == null)
-			//{
-			//	if (space != null)
-			//	{
-			//		_reader.Rewind();  // Rewind over the space.
-			//	}
-			//	return null;
-			//}
-
-			//if (unaryMinusToken != null)
-			//{
-			//	expr = new NegationExpression(expr);
-			//}
 			return expr;
 		}
 
@@ -62,7 +39,6 @@ namespace ECMABasic.Core
 			}
 
 			_reader.Next(TokenType.Space, false);
-
 
 			IExpression right;
 			try
@@ -109,7 +85,7 @@ namespace ECMABasic.Core
 				}
 				else
 				{
-					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
+					throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber);
 				}
 			}
 			catch (SyntaxException ex)
@@ -154,7 +130,7 @@ namespace ECMABasic.Core
 				{
 					"+" => new AdditionExpression(expr, right),
 					"-" => new SubtractionExpression(expr, right),
-					_ => throw new InvalidOperationException(),
+					_ => throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber),
 				};
 			}
 		}
@@ -195,7 +171,7 @@ namespace ECMABasic.Core
 				{
 					"*" => new MultiplicationExpression(expr, right),
 					"/" => new DivisionExpression(expr, right),
-					_ => throw new InvalidOperationException(),
+					_ => throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber),
 				};
 			}
 		}
@@ -233,7 +209,7 @@ namespace ECMABasic.Core
 				var space = _reader.Next(TokenType.Space, false);
 
 				var preSymbolIndex = _reader.TokenIndex;
-				var symbol = _reader.Next(TokenType.Symbol, false, @"\^");
+				var symbol = _reader.Next(TokenType.Symbol, false, @"\^|\*");
 				if (symbol == null)
 				{
 					if (space != null)
@@ -241,6 +217,19 @@ namespace ECMABasic.Core
 						_reader.Rewind();
 					}
 					return expr;
+				}
+				else if (symbol.Text == "*")
+				{
+					var next = _reader.Next(TokenType.Symbol, false, @"\*");
+					if (next == null)
+					{
+						_reader.Rewind();
+						return expr;
+					}
+					else
+					{
+						symbol = new Token(TokenType.Symbol, new[] { symbol, next });
+					}
 				}
 
 				_reader.Next(TokenType.Space, false);
@@ -262,7 +251,14 @@ namespace ECMABasic.Core
 			if (openParenthesis != null)
 			{
 				var expr = Parse();
-				_reader.Next(TokenType.CloseParenthesis);
+				try
+				{
+					_reader.Next(TokenType.CloseParenthesis);
+				}
+				catch (UnexpectedTokenException)
+				{
+					throw new SyntaxException("ILLEGAL FORMULA", _lineNumber);
+				}
 				return expr;
 			}
 			else
