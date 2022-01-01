@@ -13,6 +13,21 @@ namespace ECMABasic.Core.Expressions
 		{
 			var left = Convert.ToDouble(Left.Evaluate(env));
 			var right = Convert.ToDouble(Right.Evaluate(env));
+			if (right == 0)
+			{
+				if (left < 0)
+				{
+					return double.NegativeInfinity;
+				}
+				else if (left == 0)
+				{
+					return double.NaN;
+				}
+				else
+				{
+					return double.PositiveInfinity;
+				}
+			}
 			return left / right;
 		}
 

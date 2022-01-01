@@ -70,6 +70,19 @@ namespace ECMABasic.Core.Statements
 				return " 0 ";
 			}
 
+			if (value == double.PositiveInfinity)
+			{
+				return " INF ";
+			}
+			else if (value == double.NegativeInfinity)
+			{
+				return "-INF ";
+			}
+			else if (value.Equals(double.NaN))
+			{
+				return " NAN ";
+			}
+
 			var numDigits = Math.Floor(Math.Log10(Math.Abs(value)));
 			var scale = (double)Math.Pow(10, numDigits + 1);  // Calculate the scale of the number.
 			var newValue = (double)(scale * Math.Round((double)value / scale, _config.SignificanceWidth));  // Reduce the significant digit width.
