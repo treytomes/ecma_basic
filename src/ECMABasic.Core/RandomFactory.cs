@@ -13,6 +13,11 @@ namespace ECMABasic.Core
 	{
 		private Random _random = new();
 
+		static RandomFactory()
+		{
+			Instance = new();
+		}
+
 		private RandomFactory()
 		{
 		}
