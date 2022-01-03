@@ -10,10 +10,11 @@ namespace ECMABasic.Core.Statements
 	{
 		public DataStatement(IEnumerable<IExpression> datums)
 		{
-			if (!datums.All(x => (x is NumberExpression) || (x is StringExpression)))
-			{
-				throw new SyntaxException("DATUMS MUST BE STRING OR NUMERIC CONSTANTS");
-			}
+			// TODO: Implement .IsReducible on IExpression, to tell if an expression can be reduced to a constant.
+			//if (!datums.All(x => (x is NumberExpression) || (x is StringExpression)))
+			//{
+			//	throw new SyntaxException("DATUMS MUST BE STRING OR NUMERIC CONSTANTS");
+			//}
 
 			Datums = new List<IExpression>(datums);
 		}
