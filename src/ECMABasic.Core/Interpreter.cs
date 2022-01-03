@@ -36,6 +36,9 @@ namespace ECMABasic.Core
 				new ForStatementParser(),
 				new NextStatementParser(),
 				new OnGotoStatementParser(),
+				new RestoreStatementParser(),
+				new ReadStatementParser(),
+				new DataStatementParser(),
 			};
 		}
 

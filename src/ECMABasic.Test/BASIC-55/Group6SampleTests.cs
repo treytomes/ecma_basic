@@ -125,5 +125,45 @@ namespace ECMABasic.Test.BASIC_55
 		{
 			RunSample("P038");
 		}
+
+		[Fact(DisplayName = "P039: Accuracty of addition.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Accuracy Tests - Informative")]
+		public void P039()
+		{
+			RunSample("P039");
+		}
+
+		[Fact(DisplayName = "P040: Accuracy of subtraction.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Accuracy Tests - Informative")]
+		public void P040()
+		{
+			RunSample("P040");
+		}
+
+		[Fact(DisplayName = "P041: Accuracy of multiplication.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Accuracy Tests - Informative")]
+		public void P041()
+		{
+			RunSample("P041");
+		}
+
+		[Fact(DisplayName = "P042: Accuracy of division.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Accuracy Tests - Informative")]
+		public void P042()
+		{
+			RunSample("P042");
+		}
+
+		[Fact(DisplayName = "P043: Accuracy of involution.")]
+		[Trait("Feature Set", "BASIC-55")]
+		[Trait("Category", "Accuracy Tests - Informative")]
+		public void P043()
+		{
+			RunSample("P043");
+		}
 	}
 }

@@ -10,6 +10,7 @@ namespace ECMABasic.Core
 		private readonly Dictionary<string, string> _stringVariables = new();
 		private readonly Dictionary<string, double> _numericVariables = new();
 		private readonly Stack<ICallStackContext> _callStack = new();
+		private readonly DataPointer _dataPointer = new();
 
 		private readonly IBasicConfiguration _config;
 
@@ -122,6 +123,29 @@ namespace ECMABasic.Core
 		{
 			Program.Clear();
 			return Interpreter.InterpretProgramFromFile(this, filename);
+		}
+
+		public IExpression ReadData()
+		{
+			var data = Program.GetDataLine(_dataPointer.LineIndex);
+			if (data == null)
+			{
+				throw new RuntimeException("OUT OF DATA", CurrentLineNumber);
+			}
+			var datum = data.Datums[_dataPointer.DatumIndex];
+			_dataPointer.DatumIndex++;
+			if (_dataPointer.DatumIndex >= data.Datums.Count)
+			{
+				_dataPointer.DatumIndex = 0;
+				_dataPointer.LineIndex++;
+			}
+			return datum;
+		}
+
+		public void ResetDataPointer()
+		{
+			_dataPointer.LineIndex = 0;
+			_dataPointer.DatumIndex = 0;
 		}
 	}
 }

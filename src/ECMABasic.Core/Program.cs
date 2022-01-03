@@ -11,16 +11,14 @@ namespace ECMABasic.Core
 	/// </summary>
 	public class Program : IEnumerable<ProgramLine>, IListable
 	{
-		private readonly Dictionary<int, ProgramLine> _lines;
-		private readonly List<ProgramLine> _sortedLines;
-		private readonly Dictionary<int, int> _lineNumberToIndex;
+		private readonly Dictionary<int, ProgramLine> _lines = new();
+		private readonly List<ProgramLine> _sortedLines = new();
+		private readonly Dictionary<int, int> _lineNumberToIndex = new();
 
-		public Program()
-		{
-			_lines = new Dictionary<int, ProgramLine>();
-			_sortedLines = new List<ProgramLine>();
-			_lineNumberToIndex = new Dictionary<int, int>();
-		}
+		/// <summary>
+		/// Maintain a list of line indices that contain DATA statements.
+		/// </summary>
+		private readonly List<int> _datas = new();
 
 		public ProgramLine this[int lineNumber]
 		{
@@ -141,16 +139,46 @@ namespace ECMABasic.Core
 			}
 		}
 
+		/// <summary>
+		/// Retrieve a data line.
+		/// </summary>
+		/// <param name="n">The data index (which is not the line number).</param>
+		/// <returns>The DATA statement, or null if out of range.</returns>
+		/// <exception cref="RuntimeException">Thrown if the line number doesn't contain a DATA statement.</exception>
+		public DataStatement GetDataLine(int n)
+		{
+			if (n >= _datas.Count)
+			{
+				return null;
+			}
+
+			var line = _sortedLines[_datas[n]];
+			var stmt = line.Statement;
+			if (stmt is DataStatement)
+			{
+				return stmt as DataStatement;
+			}
+			else
+			{
+				throw new RuntimeException("EXPECTED A DATA STATEMENT", line.LineNumber);
+			}
+		}
+
 		private void RebuildIndex()
 		{
 			_sortedLines.Clear();
 			_lineNumberToIndex.Clear();
+			_datas.Clear();
 
 			var n = 0;
 			foreach (var l in _lines.OrderBy(x => x.Value.LineNumber).Select(x => x.Value))
 			{
 				_sortedLines.Add(l);
 				_lineNumberToIndex[l.LineNumber] = n;
+				if (l.Statement is DataStatement)
+				{
+					_datas.Add(n);
+				}
 				n++;
 			}
 		}

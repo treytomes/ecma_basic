@@ -106,5 +106,16 @@
 		/// </summary>
 		/// <param name="filename">The file to load.</param>
 		public bool LoadFile(string filename);
+
+		/// <summary>
+		/// Read the next datum and increment the index.
+		/// </summary>
+		/// <returns>The next piece of data.</returns>
+		public IExpression ReadData();
+
+		/// <summary>
+		/// Reset the data pointer to the first datum.
+		/// </summary>
+		public void ResetDataPointer();
 	}
 }

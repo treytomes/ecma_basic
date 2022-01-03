@@ -226,10 +226,7 @@ namespace ECMABasic.Core
 						_reader.Rewind();
 						return expr;
 					}
-					else
-					{
-						symbol = new Token(TokenType.Symbol, new[] { symbol, next });
-					}
+					// At this point we've read the "**" operator.
 				}
 
 				_reader.Next(TokenType.Space, false);
