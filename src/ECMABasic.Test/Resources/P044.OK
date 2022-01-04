@@ -12,16 +12,16 @@ THE CORRECT NUMBER OF TIMES.
                BEGIN TEST.
 
 
-LOOP IS: FOR I1= .0987789  TO  .09878  STEP  .0000003 
+LOOP IS: FOR I1= .098779  TO  .09878  STEP  3.E-7 
 
 CONTROL VARIABLE:
 SHOULD BE       ACTUAL          RESULT
- .0987789        .0987789         OK  
- .0987792        .0987792         OK  
- .0987795        .0987795         OK  
- .0987798        .0987798         OK  
+ .098779         .098779          OK  
+ .098779         .098779          OK  
+ .09878          .09878           OK  
+ .09878          .09878           OK  
 LOOP EXITED
- .0987801        .0987801         OK  
+ .09878          .09878           OK  
 
 NO. TIMES THROUGH LOOP:
 SHOULD BE:  4      ACTUAL:  4    RESULT:   OK  
