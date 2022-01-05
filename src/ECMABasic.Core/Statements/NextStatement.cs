@@ -43,7 +43,7 @@ namespace ECMABasic.Core.Statements
 			else
 			{
 				// Goto loop start.
-				env.CurrentLineNumber = context.LineNumber;
+				env.CurrentLineNumber = context.BlockStartLineNumber;
 				env.PushCallStack(context);  // We're still in the FOR-NEXT context.
 			}
 		}

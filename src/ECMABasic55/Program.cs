@@ -1,18 +1,12 @@
 ﻿using ECMABasic.Core;
 using ECMABasic55.Parsers;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace ECMABasic55
 {
     public static class Program
     {
-        private static readonly List<StatementParser> _additionalStatements = new()
-        {
-            new SleepStatementParser(),
-        };
-
         public static int Main(string[] args)
         {
             if (args.Length == 1)
@@ -25,10 +19,19 @@ namespace ECMABasic55
 			}
         }
 
+        private static void InjectSpecials(IEnvironment env)
+		{
+            env.Interpreter.InjectStatements(new[] {
+                new SleepStatementParser(),
+            });
+
+            FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()[0]);
+        }
+
         private static int RunBatch(string path)
 		{
 			IEnvironment env = new ConsoleEnvironment();
-            env.Interpreter.InjectStatements(_additionalStatements);
+            InjectSpecials(env);
             env.PrintLine(RuntimeConfiguration.Instance.Preamble);
             env.PrintLine();
 
@@ -51,7 +54,7 @@ namespace ECMABasic55
         private static int RunREPL()
 		{
             IEnvironment env = new ConsoleEnvironment(new RuntimeInterpreter());
-            env.Interpreter.InjectStatements(_additionalStatements);
+            InjectSpecials(env);
             env.PrintLine(RuntimeConfiguration.Instance.Preamble);
             env.PrintLine();
 

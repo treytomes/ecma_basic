@@ -300,6 +300,8 @@ namespace ECMABasic.Core
 
 		public IExpression ParseFunction()
 		{
+			var stringParser = new StringExpressionParser(_reader, _lineNumber, false);
+
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
 			{
@@ -311,7 +313,17 @@ namespace ECMABasic.Core
 			var args = new List<IExpression>();
 			while (true)
 			{
-				args.Add(Parse());
+				var argExpr = Parse();
+				if (argExpr == null)
+				{
+					argExpr = stringParser.Parse();
+					if (argExpr == null)
+					{
+						break;
+					}
+				}
+
+				args.Add(argExpr);
 
 				var comma = _reader.Next(TokenType.Comma, false);
 				if (comma == null)
