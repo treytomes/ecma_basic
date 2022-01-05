@@ -4,7 +4,7 @@ namespace ECMABasic.Core
 {
 	public class ForStackContext : ICallStackContext
 	{
-		public ForStackContext(VariableExpression loopVar, IExpression to, IExpression step, int returnToLineNumber)
+		public ForStackContext(VariableExpression loopVar, double to, double step, int returnToLineNumber)
 		{
 			if (!loopVar.IsNumeric)
 			{
@@ -18,8 +18,8 @@ namespace ECMABasic.Core
 		}
 
 		public VariableExpression LoopVar { get; }
-		public IExpression To { get; }
-		public IExpression Step { get; }
+		public double To { get; }
+		public double Step { get; }
 
 		/// <summary>
 		/// Return to this line number when the NEXT is hit.
@@ -29,6 +29,6 @@ namespace ECMABasic.Core
 		/// <summary>
 		/// The line is one past the closing NEXT block, and isn't defined until NEXT is hit the first time.
 		/// </summary>
-		public int? BlockEndLineNumber { get; }
+		public int? BlockEndLineNumber { get; set; }
 	}
 }

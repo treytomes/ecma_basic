@@ -20,7 +20,7 @@ namespace ECMABasic.Core.Statements
 
 		public VariableExpression LoopVar { get; }
 		public IExpression From { get; }
-		public IExpression To { get; }
+		public IExpression To { get;}
 		public IExpression Step { get; }
 
 		public void Execute(IEnvironment env, bool isImmediate)
@@ -30,11 +30,70 @@ namespace ECMABasic.Core.Statements
 				throw ExceptionFactory.OnlyAllowedInProgram();
 			}
 
-			var from = Convert.ToDouble(From.Evaluate(env));
-			env.SetNumericVariableValue(LoopVar.Name, from);
+			var context = env.PopCallStack();
 
-			var returnToLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);
-			env.PushCallStack(new ForStackContext(LoopVar, To, Step, returnToLineNumber));
+			var forContext = context as ForStackContext;
+			if (forContext == null)
+			{
+				env.PushCallStack(context);
+			}
+
+			if (forContext == null)
+			{
+				// This is the first time, so we need to build the context.
+				var from = Convert.ToDouble(From.Evaluate(env));
+				var to = Convert.ToDouble(To.Evaluate(env));
+				var step = Convert.ToDouble(Step.Evaluate(env));
+				env.SetNumericVariableValue(LoopVar.Name, from);
+
+				// Come back here when the loop is done (NEXT) to reevaluate the exit parameters.
+				var returnToLineNumber = env.CurrentLineNumber; // env.Program.GetNextLineNumber(env.CurrentLineNumber);
+				forContext = new ForStackContext(LoopVar, to, step, returnToLineNumber);
+			}
+			else
+			{
+				if (forContext?.LoopVar?.Name == LoopVar.Name)
+				{
+					// After the first time through the loop, we increment the control variable.
+					env.SetNumericVariableValue(LoopVar.Name, Convert.ToDouble(LoopVar.Evaluate(env)) + forContext.Step);
+				}
+				else
+				{
+					throw new InvalidOperationException();
+				}
+			}
+
+			// We've already been through this loop once.
+			var own1 = forContext.To;
+			var own2 = forContext.Step;
+			var v = Convert.ToDouble(LoopVar.Evaluate(env));
+
+			if ((v - own1) * Math.Sign(own2) > 0)
+			{
+				// Leave the for-block.
+
+				// Either get the block end line number, or search for it.
+				if (forContext.BlockEndLineNumber.HasValue)
+				{
+					env.CurrentLineNumber = forContext.BlockEndLineNumber.Value;
+				}
+				else
+				{
+					// Scan for NEXT.
+					while (!(env.Program.MoveToNextLine(env)?.Statement is NextStatement)) ;
+					// It'll stop incrementing when the NEXT is found.
+
+					// Move to the line *just after* the NEXT to continue running.
+					env.Program.MoveToNextLine(env);
+				}
+			}
+			else
+			{
+				// We should be able to just enter the loop.
+
+				// Push the call stack so we're ready to do this again.
+				env.PushCallStack(forContext);
+			}
 		}
 
 		public string ToListing()

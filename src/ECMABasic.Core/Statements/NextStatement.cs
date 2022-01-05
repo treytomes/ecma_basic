@@ -1,5 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
+﻿using ECMABasic.Core.Expressions;
 using System;
 
 namespace ECMABasic.Core.Statements
@@ -28,24 +27,33 @@ namespace ECMABasic.Core.Statements
 			{
 				throw ExceptionFactory.NextWithoutFor(env.CurrentLineNumber);
 			}
-
-			var loopVar = Convert.ToDouble(context.LoopVar.Evaluate(env));
-			var to = Convert.ToDouble(context.To.Evaluate(env));
-			var step = Convert.ToDouble(context.Step.Evaluate(env));
-
-			loopVar += step;
-			env.SetNumericVariableValue(LoopVar.Name, loopVar);
-
-			if (((step < 0) && (loopVar < to)) || ((step > 0) && (loopVar > to)))
+			 
+			if (!context.BlockEndLineNumber.HasValue)
 			{
-				// We're done.
+				var blockEndLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);
+				context.BlockEndLineNumber = blockEndLineNumber;
 			}
-			else
-			{
-				// Goto loop start.
-				env.CurrentLineNumber = context.BlockStartLineNumber;
-				env.PushCallStack(context);  // We're still in the FOR-NEXT context.
-			}
+
+			env.CurrentLineNumber = context.BlockStartLineNumber;
+			env.PushCallStack(context);  // We'll stay in the FOR-NEXT context until the FOR statement says we're done.
+
+			//var loopVar = Convert.ToDouble(context.LoopVar.Evaluate(env));
+			//var to = Convert.ToDouble(context.To.Evaluate(env));
+			//var step = Convert.ToDouble(context.Step.Evaluate(env));
+
+			//loopVar += step;
+			//env.SetNumericVariableValue(LoopVar.Name, loopVar);
+
+			//if (((step < 0) && (loopVar < to)) || ((step > 0) && (loopVar > to)))
+			//{
+			//	// We're done.
+			//}
+			//else
+			//{
+			//	// Goto loop start.
+			//	env.CurrentLineNumber = context.BlockStartLineNumber;
+			//	env.PushCallStack(context);  // We're still in the FOR-NEXT context.
+			//}
 		}
 
 		public string ToListing()
