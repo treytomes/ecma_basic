@@ -11,6 +11,8 @@
 
 		public ExpressionType Type => ExpressionType.Number;
 
+		public bool IsReducible => true;
+
 		/// <summary>
 		/// Get a new expression that negates this one.
 		/// </summary>

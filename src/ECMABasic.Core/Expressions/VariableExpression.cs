@@ -42,6 +42,8 @@ namespace ECMABasic.Core.Expressions
 			}
 		}
 
+		public bool IsReducible => false;
+
 		public object Evaluate(IEnvironment env)
 		{
 			if (IsString)

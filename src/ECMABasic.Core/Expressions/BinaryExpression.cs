@@ -1,6 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-
-namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions
 {
 	public abstract class BinaryExpression : IExpression
 	{
@@ -19,6 +17,8 @@ namespace ECMABasic.Core.Expressions
 		public IExpression Right { get; }
 
 		public ExpressionType Type => Left.Type;
+		
+		public bool IsReducible => Left.IsReducible && Right.IsReducible;
 
 		public abstract object Evaluate(IEnvironment env);
 		public abstract string ToListing();

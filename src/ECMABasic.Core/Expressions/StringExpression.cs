@@ -12,6 +12,8 @@
 
 		public ExpressionType Type => ExpressionType.String;
 
+		public bool IsReducible => true;
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Text;

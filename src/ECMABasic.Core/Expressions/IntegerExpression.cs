@@ -11,6 +11,8 @@
 
 		public ExpressionType Type => ExpressionType.Number;
 
+		public bool IsReducible => true;
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Value;

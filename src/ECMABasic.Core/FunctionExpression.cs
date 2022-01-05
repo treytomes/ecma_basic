@@ -32,6 +32,8 @@ namespace ECMABasic.Core
 
 		public List<IExpression> Arguments { get; }
 
+		public bool IsReducible => Arguments.All(x => x.IsReducible);
+
 		public object Evaluate(IEnvironment env)
 		{
 			return Function(Arguments.Select(x => x.Evaluate(env)).ToList());

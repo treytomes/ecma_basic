@@ -18,6 +18,8 @@ namespace ECMABasic.Core.Expressions
 
 		public ExpressionType Type => ExpressionType.Number;
 
+		public bool IsReducible => Root.IsReducible;
+
 		public object Evaluate(IEnvironment env)
 		{
 			var root = Convert.ToDouble(Root.Evaluate(env));
