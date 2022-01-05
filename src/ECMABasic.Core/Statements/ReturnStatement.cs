@@ -23,6 +23,10 @@ namespace ECMABasic.Core.Statements
 				while (true)
 				{
 					var context = env.PopCallStack();
+					if (context is null)
+					{
+						throw ExceptionFactory.ReturnWithoutGosub(env.CurrentLineNumber);
+					}
 					if (context is GosubStackContext)
 					{
 						env.CurrentLineNumber = (context as GosubStackContext).LineNumber;
