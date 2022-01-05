@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace ECMABasic.Core
 {
+	// TODO: This really needs to be part of the environment rather than a global singleton.
+
 	public class FunctionFactory
 	{
 		private readonly Dictionary<string, FunctionDefinition> _functions = new();
