@@ -36,6 +36,7 @@ namespace ECMABasic.Test
 		{
 			Print(text);
 			_sb.AppendLine();
+			Debug.WriteLine(string.Empty);
 			TerminalRow++;
 			TerminalColumn = 0;
 		}
@@ -43,6 +44,7 @@ namespace ECMABasic.Test
 		public override void Print(string text)
 		{
 			_sb.Append(text);
+			Debug.Write(text);
 			TerminalColumn += text.Length;
 		}
 
