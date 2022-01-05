@@ -57,7 +57,7 @@ namespace ECMABasic.Core
 
 		public static Exception UndefinedLineNumber(int testLineNumber, int? lineNumber = null)
 		{
-			return new RuntimeException($"LINE NUMBER {testLineNumber} NOT DEFINED", lineNumber);
+			return new RuntimeException($"UNDEFINED LINE NUMBER {testLineNumber}", lineNumber);
 		}
 
 		public static Exception LineNumberOutOfRange(int testLineNumber, int? lineNumber = null)
