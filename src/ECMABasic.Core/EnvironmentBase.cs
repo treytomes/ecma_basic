@@ -114,6 +114,10 @@ namespace ECMABasic.Core
 
 		public ICallStackContext PopCallStack()
 		{
+			if (_callStack.Count == 0)
+			{
+				return null;
+			}
 			return _callStack.Pop();
 		}
 
