@@ -119,9 +119,10 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public void MoveToNextLine(IEnvironment env)
+		public ProgramLine MoveToNextLine(IEnvironment env)
 		{
 			env.CurrentLineNumber = GetNextLineNumber(env.CurrentLineNumber);
+			return this[env.CurrentLineNumber];
 		}
 
 		public void Insert(ProgramLine line)
