@@ -18,17 +18,17 @@ namespace ECMABasic.Core
 			_fn = fn;
 		}
 
-		public FunctionExpression Instantiate(IEnumerable<IExpression> args)
+		public FunctionExpression Instantiate(IEnumerable<IExpression> args, int? lineNumber = null)
 		{
 			if (args.Count() != _arguments.Count)
 			{
-				throw new SyntaxException("ARGUMENT COUNT MISMATCH");
+				throw ExceptionFactory.ArgumentCountMismatch(lineNumber);
 			}
 			for (var n = 0; n < _arguments.Count; n++)
 			{
 				if (args.ElementAt(n).Type != _arguments[n])
 				{
-					throw new SyntaxException("ARGUMENT TYPE MISMATCH");
+					throw ExceptionFactory.ArgumentTypeMismatch(lineNumber);
 				}
 			}
 			return new FunctionExpression(_name, _fn, args);

@@ -18,7 +18,7 @@ namespace ECMABasic.Core
 			var targetExpr = ParseVariableExpression(reader);
 			if (targetExpr == null)
 			{
-				throw new SyntaxException("EXPECTED A VARIABLE NAME", lineNumber);
+				throw ExceptionFactory.ExpectedVariable(lineNumber);
 			}
 
 			ProcessSpace(reader, false);

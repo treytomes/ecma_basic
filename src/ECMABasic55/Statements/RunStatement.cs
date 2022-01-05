@@ -21,7 +21,7 @@ namespace ECMABasic55.Statements
 		{
 			if (!isImmediate)
 			{
-				throw new SyntaxException("NOT ALLOWED IN PROGRAM");
+				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 			}
 
 			if (LineNumber != null)
@@ -29,7 +29,7 @@ namespace ECMABasic55.Statements
 				var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 				if (!env.Program.Any(x => x.LineNumber == lineNumber))
 				{
-					throw new RuntimeException($"% LINE NUMBER {lineNumber} IS NOT DEFINED");
+					throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 				}
 				env.CurrentLineNumber = lineNumber;
 			}

@@ -15,7 +15,7 @@ namespace ECMABasic55.Statements
 		{
 			if (!isImmediate)
 			{
-				throw new SyntaxException("NOT ALLOWED IN PROGRAM");
+				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 			}
 
 			if (env.Program[env.CurrentLineNumber].Statement is StopStatement)

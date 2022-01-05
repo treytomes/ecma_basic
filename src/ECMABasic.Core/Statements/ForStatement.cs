@@ -10,7 +10,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if (!loopVar.IsNumeric)
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC VARIABLE");
+				throw ExceptionFactory.ExpectedNumericVariable();
 			}
 			LoopVar = loopVar;
 			From = from;
@@ -27,7 +27,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if (isImmediate)
 			{
-				throw new SyntaxException("ONLY ALLOWED IN PROGRAM");
+				throw ExceptionFactory.OnlyAllowedInProgram();
 			}
 
 			var from = Convert.ToDouble(From.Evaluate(env));

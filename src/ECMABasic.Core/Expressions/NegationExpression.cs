@@ -9,7 +9,7 @@ namespace ECMABasic.Core.Expressions
 		{
 			if (root.Type != ExpressionType.Number)
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
+				throw ExceptionFactory.ExpectedNumericExpression();
 			}
 			Root = root;
 		}

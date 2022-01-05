@@ -11,7 +11,7 @@ namespace ECMABasic.Core.Expressions
 
 			if (Left.Type != Right.Type)
 			{
-				throw new SyntaxException("MIXED STRINGS AND NUMBERS");
+				throw ExceptionFactory.MixedStringsAndNumbers();
 			}
 		}
 

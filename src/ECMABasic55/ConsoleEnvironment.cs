@@ -60,7 +60,7 @@ namespace ECMABasic55
 				var key = Console.ReadKey(true);
 				if (key.Key == ConsoleKey.Escape)
 				{
-					throw new ProgramStopException(CurrentLineNumber);
+					throw ExceptionFactory.ProgramStop(CurrentLineNumber);
 				}
 			}
 		}

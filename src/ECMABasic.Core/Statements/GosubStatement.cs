@@ -14,10 +14,15 @@ namespace ECMABasic.Core.Statements
 
 		public void Execute(IEnvironment env, bool isImmediate)
 		{
+			if (isImmediate)
+			{
+				throw ExceptionFactory.OnlyAllowedInProgram();
+			}
+
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!env.ValidateLineNumber(lineNumber, false))
 			{
-				throw new RuntimeException($"UNDEFINED LINE NUMBER {lineNumber}", isImmediate ? null : env.CurrentLineNumber);
+				throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
 
 			var returnToLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);

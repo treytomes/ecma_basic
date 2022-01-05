@@ -13,6 +13,11 @@ namespace ECMABasic.Core.Statements
 
 		public void Execute(IEnvironment env, bool isImmediate)
 		{
+			if (isImmediate)
+			{
+				throw ExceptionFactory.OnlyAllowedInProgram();
+			}
+
 			try
 			{
 				while (true)
@@ -27,7 +32,7 @@ namespace ECMABasic.Core.Statements
 			}
 			catch (InvalidOperationException)
 			{
-				throw new RuntimeException("RETURN WITHOUT GOSUB", isImmediate ? null : env.CurrentLineNumber);
+				throw ExceptionFactory.ReturnWithoutGosub(env.CurrentLineNumber);
 			}
 		}
 

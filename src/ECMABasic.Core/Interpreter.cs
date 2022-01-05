@@ -119,7 +119,7 @@ namespace ECMABasic.Core
 				var token = _reader.Next();
 				if (token != null)
 				{
-					throw new InvalidOperationException("Expected end-of-record.");
+					throw new InvalidOperationException("EXPECTED END-OF-RECORD");
 				}
 				return true;
 			}

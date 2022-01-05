@@ -67,7 +67,7 @@ namespace ECMABasic55
 			}
 			catch (Exception)
 			{
-				throw new SyntaxException("SYNTAX ERROR");
+				throw ExceptionFactory.Syntax();
 			}
 		}
 

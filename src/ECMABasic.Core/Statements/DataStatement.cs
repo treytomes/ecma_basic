@@ -1,7 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace ECMABasic.Core.Statements
@@ -25,7 +22,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if (isImmediate)
 			{
-				throw new SyntaxException("MUST BE IN A PROGRAM");
+				throw ExceptionFactory.OnlyAllowedInProgram();
 			}
 		}
 

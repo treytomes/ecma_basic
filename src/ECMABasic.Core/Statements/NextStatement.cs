@@ -10,7 +10,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if (!loopVar.IsNumeric)
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC VARIABLE");
+				throw ExceptionFactory.ExpectedNumericVariable();
 			}
 			LoopVar = loopVar;
 		}
@@ -21,12 +21,12 @@ namespace ECMABasic.Core.Statements
 		{
 			if (env.PopCallStack() is not ForStackContext context)
 			{
-				throw new RuntimeException("NEXT WITHOUT FOR");
+				throw ExceptionFactory.NextWithoutFor(env.CurrentLineNumber);
 			}
 
 			if (context.LoopVar.Name != LoopVar.Name)
 			{
-				throw new RuntimeException("NEXT WITHOUT FOR");
+				throw ExceptionFactory.NextWithoutFor(env.CurrentLineNumber);
 			}
 
 			var loopVar = Convert.ToDouble(context.LoopVar.Evaluate(env));

@@ -23,7 +23,7 @@ namespace ECMABasic.Core.Statements
 
 				if (datum.Type != v.Type)
 				{
-					throw new SyntaxException("MIXED STRINGS AND NUMBERS");
+					throw ExceptionFactory.MixedStringsAndNumbers(env.CurrentLineNumber);
 				}
 
 				var datumValue = datum.Evaluate(env);

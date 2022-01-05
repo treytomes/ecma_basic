@@ -49,7 +49,7 @@ namespace ECMABasic.Core
 			{
 				if (new StringExpressionParser(_reader, _lineNumber, false).Parse() != null)
 				{
-					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
+					throw ExceptionFactory.MixedStringsAndNumbers(_lineNumber);
 				}
 				else
 				{
@@ -85,7 +85,7 @@ namespace ECMABasic.Core
 				}
 				else
 				{
-					throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber);
+					throw ExceptionFactory.IllegalOperator(_lineNumber);
 				}
 			}
 			catch (SyntaxException ex)
@@ -130,7 +130,7 @@ namespace ECMABasic.Core
 				{
 					"+" => new AdditionExpression(expr, right),
 					"-" => new SubtractionExpression(expr, right),
-					_ => throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber),
+					_ => throw ExceptionFactory.IllegalOperator(_lineNumber),
 				};
 			}
 		}
@@ -171,7 +171,7 @@ namespace ECMABasic.Core
 				{
 					"*" => new MultiplicationExpression(expr, right),
 					"/" => new DivisionExpression(expr, right),
-					_ => throw new SyntaxException("ILLEGAL OPERATOR", _lineNumber),
+					_ => throw ExceptionFactory.IllegalOperator(_lineNumber),
 				};
 			}
 		}
@@ -254,7 +254,7 @@ namespace ECMABasic.Core
 				}
 				catch (UnexpectedTokenException)
 				{
-					throw new SyntaxException("ILLEGAL FORMULA", _lineNumber);
+					throw ExceptionFactory.IllegalFormula(_lineNumber);
 				}
 				return expr;
 			}
@@ -265,7 +265,7 @@ namespace ECMABasic.Core
 				{
 					if (throwOnError)
 					{
-						throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION", _lineNumber);
+						throw ExceptionFactory.ExpectedNumericExpression(_lineNumber);
 					}
 					else
 					{
@@ -325,11 +325,11 @@ namespace ECMABasic.Core
 			var fndef = FunctionFactory.Instance.Get(nameToken.Text);
 			if (fndef == null)
 			{
-				throw new SyntaxException("UNDEFINED FUNCTION");
+				throw ExceptionFactory.UndefinedFunction(_lineNumber);
 			}
 			else
 			{
-				return fndef.Instantiate(args);
+				return fndef.Instantiate(args, _lineNumber);
 			}
 		}
 	}

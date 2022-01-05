@@ -88,7 +88,7 @@ namespace ECMABasic.Core
 
 					if (lineIndex >= Length)
 					{
-						throw new ProgramEndException();
+						throw ExceptionFactory.ProgramEnd(env.CurrentLineNumber);
 					}
 				}
 			}
@@ -160,7 +160,7 @@ namespace ECMABasic.Core
 			}
 			else
 			{
-				throw new RuntimeException("EXPECTED A DATA STATEMENT", line.LineNumber);
+				throw ExceptionFactory.ExpectedData(line.LineNumber);
 			}
 		}
 
@@ -212,13 +212,13 @@ namespace ECMABasic.Core
 			var ENDs = this.Where(x => x.Statement is EndStatement);
 			if (!ENDs.Any())
 			{
-				throw new NoEndInstructionException();
+				throw ExceptionFactory.NoEndInstruction();
 			}
 
 			var lastLineNumber = this.Max(x => x.LineNumber);
 			if (ENDs.First().LineNumber != lastLineNumber)
 			{
-				throw new SyntaxException("END IS NOT LAST", ENDs.First().LineNumber);
+				throw ExceptionFactory.EndIsNotLast(ENDs.First().LineNumber);
 			}
 		}
 	}

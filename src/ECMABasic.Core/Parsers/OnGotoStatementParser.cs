@@ -60,7 +60,7 @@ namespace ECMABasic.Core.Parsers
 
 			if (branches.Count == 0)
 			{
-				throw new SyntaxException("EXPECTED A LINE NUMBER");
+				throw ExceptionFactory.LineNumberExpected();
 			}
 
 

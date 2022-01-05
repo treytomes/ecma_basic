@@ -8,9 +8,9 @@ namespace ECMABasic.Core.Statements
 		{
 			if (isImmediate)
 			{
-				throw new SyntaxException("ONLY ALLOWED IN PROGRAM");
+				throw ExceptionFactory.OnlyAllowedInProgram();
 			}
-			throw new ProgramEndException();
+			throw ExceptionFactory.ProgramEnd(env.CurrentLineNumber);
 		}
 
 		public string ToListing()

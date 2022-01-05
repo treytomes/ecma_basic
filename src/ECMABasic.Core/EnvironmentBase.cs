@@ -57,7 +57,7 @@ namespace ECMABasic.Core
 			// TODO: Validate variable name?
 			if (value.Length > _config.MaxStringLength)
 			{
-				throw new RuntimeException("STRING OVERFLOW", CurrentLineNumber);
+				throw ExceptionFactory.StringOverflow(CurrentLineNumber);
 			}
 			_stringVariables[variableName] = value;
 		}
@@ -94,7 +94,7 @@ namespace ECMABasic.Core
 			{
 				if (throwsIfMissing)
 				{
-					throw new RuntimeException($"LINE NUMBER {lineNumber} IS NOT DEFINED");
+					throw ExceptionFactory.UndefinedLineNumber(lineNumber, CurrentLineNumber);
 				}
 				else
 				{
@@ -130,7 +130,7 @@ namespace ECMABasic.Core
 			var data = Program.GetDataLine(_dataPointer.LineIndex);
 			if (data == null)
 			{
-				throw new RuntimeException("OUT OF DATA", CurrentLineNumber);
+				throw ExceptionFactory.OutOfData(CurrentLineNumber);
 			}
 			var datum = data.Datums[_dataPointer.DatumIndex];
 			_dataPointer.DatumIndex++;

@@ -18,7 +18,7 @@ namespace ECMABasic55.Statements
 		{
 			if (!isImmediate)
 			{
-				throw new SyntaxException("NOT ALLOWED IN PROGRAM");
+				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 			}
 
 			var path = Convert.ToString(Path.Evaluate(env));

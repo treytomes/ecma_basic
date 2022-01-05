@@ -11,7 +11,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if ((value.Type != ExpressionType.Number) || branches.Any(x => x.Type != ExpressionType.Number))
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC EXPRESSION");
+				throw ExceptionFactory.ExpectedNumericExpression();
 			}
 			Value = value;
 			Branches = new List<IExpression>(branches);
@@ -26,7 +26,7 @@ namespace ECMABasic.Core.Statements
 			var value = Convert.ToInt32(Value.Evaluate(env)) - 1;
 			if ((value < 0) || (value >= Branches.Count))
 			{
-				throw new RuntimeException("INDEX OUT OF RANGE", env.CurrentLineNumber);
+				throw ExceptionFactory.IndexOutOfRange(env.CurrentLineNumber);
 			}
 
 			var lineNumber = Convert.ToInt32(Branches[value].Evaluate(env));

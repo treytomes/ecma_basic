@@ -9,7 +9,7 @@ namespace ECMABasic.Core
 		{
 			if (!loopVar.IsNumeric)
 			{
-				throw new SyntaxException("EXPECTED A NUMERIC VARIABLE");
+				throw ExceptionFactory.ExpectedNumericVariable();
 			}
 			LoopVar = loopVar;
 			To = to;

@@ -6,7 +6,7 @@ namespace ECMABasic.Core.Statements
 	{
 		public void Execute(IEnvironment env, bool isImmediate)
 		{
-			throw new ProgramStopException(env.CurrentLineNumber);
+			throw ExceptionFactory.ProgramStop(env.CurrentLineNumber);
 		}
 
 		// TODO: Centralize keyword strings to make them easier to change?

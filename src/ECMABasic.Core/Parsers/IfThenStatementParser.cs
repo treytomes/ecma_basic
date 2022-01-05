@@ -1,5 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Core.Statements;
 
 namespace ECMABasic.Core.Parsers
 {
@@ -17,7 +16,7 @@ namespace ECMABasic.Core.Parsers
 			var conditionExpr = ParseExpression(reader, lineNumber, true);
 			if (conditionExpr == null)
 			{
-				throw new SyntaxException("EXPECTED A CONDITIONAL EXPRESSION", lineNumber);
+				throw ExceptionFactory.ExpectedConditionalExpression(lineNumber);
 			}
 
 			ProcessSpace(reader, true);
@@ -29,7 +28,7 @@ namespace ECMABasic.Core.Parsers
 			var lineNumberExpr = ParseExpression(reader, lineNumber, true);
 			if (lineNumberExpr == null)
 			{
-				throw new SyntaxException("EXPECTED A NUMERICAL EXPRESSION", lineNumber);
+				throw ExceptionFactory.ExpectedNumericExpression(lineNumber);
 			}
 
 			return new IfThenStatement(conditionExpr, lineNumberExpr);

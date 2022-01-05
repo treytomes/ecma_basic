@@ -37,7 +37,7 @@ namespace ECMABasic.Core
 			{
 				if (new NumericExpressionParser(_reader, _lineNumber, false).Parse() != null)
 				{
-					throw new SyntaxException("MIXED STRINGS AND NUMBERS", _lineNumber);
+					throw ExceptionFactory.MixedStringsAndNumbers(_lineNumber);
 				}
 				else
 				{
@@ -47,34 +47,16 @@ namespace ECMABasic.Core
 
 			try
 			{
-				if (symbol.Text == "=")
+				return symbol.Text switch
 				{
-					return new EqualsExpression(left, right);
-				}
-				else if (symbol.Text == "<>")
-				{
-					return new NotEqualsExpression(left, right);
-				}
-				else if (symbol.Text == "<")
-				{
-					return new LessThanExpression(left, right);
-				}
-				else if (symbol.Text == "<=")
-				{
-					return new LessThanOrEqualExpression(left, right);
-				}
-				else if (symbol.Text == ">")
-				{
-					return new GreaterThanExpression(left, right);
-				}
-				else if (symbol.Text == ">=")
-				{
-					return new GreaterThanOrEqualExpression(left, right);
-				}
-				else
-				{
-					throw new UnexpectedTokenException(TokenType.Symbol, symbol);
-				}
+					"=" => new EqualsExpression(left, right),
+					"<>" => new NotEqualsExpression(left, right),
+					"<" => new LessThanExpression(left, right),
+					"<=" => new LessThanOrEqualExpression(left, right),
+					">" => new GreaterThanExpression(left, right),
+					">=" => new GreaterThanOrEqualExpression(left, right),
+					_ => throw ExceptionFactory.IllegalOperator(_lineNumber),
+				};
 			}
 			catch (SyntaxException ex)
 			{
@@ -87,7 +69,7 @@ namespace ECMABasic.Core
 			var expr = ParseLiteral() ?? ParseVariable();
 			if ((expr == null) && throwOnError)
 			{
-				throw new SyntaxException("EXPECTED A STRING EXPRESSION", _lineNumber);
+				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
 			}
 			return expr;
 		}

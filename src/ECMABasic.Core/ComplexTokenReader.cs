@@ -70,7 +70,7 @@ namespace ECMABasic.Core
 
 			if ((maxDigits > 1) && (token.Text.Length > maxDigits))
 			{
-				throw new SyntaxException($"({token.Line}:{token.Column}) Integer is too long.");
+				throw new SyntaxException($"({token.Line}:{token.Column}) INTEGER OVERFLOW");
 			}
 
 			int value = int.Parse(token.Text);
@@ -269,8 +269,6 @@ namespace ECMABasic.Core
 			{
 				return token;
 			}
-
-			//throw new UnexpectedTokenException(token);
 		}
 
 		private Token ReadRestOfString(Token start)

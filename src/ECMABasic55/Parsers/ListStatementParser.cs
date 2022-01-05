@@ -66,43 +66,8 @@ namespace ECMABasic55.Parsers
 			}
 			else
 			{
-				throw new SyntaxException("EXPECTED A LINE NUMBER");
+				throw ExceptionFactory.LineNumberExpected();
 			}
-
-			//var endToken = reader.Next(TokenType.Symbol, false, @"\-");
-			//if (endToken != null)
-			//{
-			//	var onlyToExpr = ParseNumericExpression(reader, lineNumber, true) as NumberExpression;
-			//	if (onlyToExpr.Value < 0)
-			//	{
-			//		throw new Exception("LINE NUMBER MUST BE > 0");
-			//	}
-			//	return new ListStatement(null, new IntegerExpression((int)onlyToExpr.Value));
-			//}
-
-			////var fromExpr = ParseNumericExpression(reader, lineNumber, false) as NumberExpression;
-			//var fromExpr = new NumericExpressionParser(reader, lineNumber, false).ParseLiteral();
-			//if (fromExpr.Text) < 0)
-			//{
-			//	throw new Exception("LINE NUMBER MUST BE > 0");
-			//}
-
-			//endToken = reader.Next(TokenType.Symbol, false, @"\-");
-			//if (endToken == null)
-			//{
-			//	return new ListStatement(new IntegerExpression((int)fromExpr.Value), null);
-			//}
-
-			//if (ParseNumericExpression(reader, lineNumber, false) is not NumberExpression toExpr)
-			//{
-			//	toExpr = new NumberExpression(_config.MaxLineNumber);
-			//}
-			//else if (toExpr.Value < 0)
-			//{
-			//	throw new Exception("LINE NUMBER MUST BE > 0");
-			//}
-
-			//return new ListStatement(new IntegerExpression((int)fromExpr.Value), new IntegerExpression((int)toExpr.Value));
 		}
 	}
 }

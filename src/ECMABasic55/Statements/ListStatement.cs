@@ -25,7 +25,7 @@ namespace ECMABasic55.Statements
 		{
 			if (!isImmediate)
 			{
-				throw new SyntaxException("NOT ALLOWED IN PROGRAM");
+				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 			}
 
 			if (env.Program.Length == 0)
@@ -36,7 +36,7 @@ namespace ECMABasic55.Statements
 			var fromLineNumber = (int)((From == null) ? env.Program.First().LineNumber : Convert.ToInt32(From.Evaluate(env)));
 			if (fromLineNumber < 0)
 			{
-				throw new RuntimeException("LINE NUMBER OUT OF RANGE");
+				throw ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 			}
 
 			if ((From != null) && (To == null))
@@ -49,7 +49,7 @@ namespace ECMABasic55.Statements
 			var toLineNumber = (To == null) ? env.Program.Last().LineNumber : Convert.ToInt32(To.Evaluate(env));
 			if ((toLineNumber < fromLineNumber) || (toLineNumber > _config.MaxLineNumber))
 			{
-				throw new RuntimeException("LINE NUMBER OUT OF RANGE");
+				throw ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 			}
 
 			foreach (var line in env.Program)

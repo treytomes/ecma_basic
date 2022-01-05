@@ -9,7 +9,7 @@ namespace ECMABasic.Core.Statements
 		{
 			if (lineNumber.Type != ExpressionType.Number)
 			{
-				throw new SyntaxException("EXPECTED A NUMERICAL EXPRESSION");
+				throw ExceptionFactory.ExpectedNumericExpression();
 			}
 			LineNumber = lineNumber;
 		}
@@ -18,10 +18,15 @@ namespace ECMABasic.Core.Statements
 
 		public virtual void Execute(IEnvironment env, bool isImmediate)
 		{
+			if (isImmediate)
+			{
+				throw ExceptionFactory.OnlyAllowedInProgram();
+			}
+
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!env.ValidateLineNumber(lineNumber, false))
 			{
-				throw new RuntimeException($"UNDEFINED LINE NUMBER {lineNumber}", isImmediate ? null : env.CurrentLineNumber);
+				throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
 			env.CurrentLineNumber = lineNumber;
 		}
