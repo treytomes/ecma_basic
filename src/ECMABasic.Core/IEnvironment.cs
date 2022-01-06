@@ -37,6 +37,12 @@
 		void Clear();
 
 		/// <summary>
+		/// Read a line from the input stream.
+		/// </summary>
+		/// <returns>The line that was read.</returns>
+		string ReadLine();
+
+		/// <summary>
 		/// Print a string to the output stream, followed by a new-line.
 		/// </summary>
 		/// <param name="text">The text to print.</param>

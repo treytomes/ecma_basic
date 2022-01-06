@@ -36,6 +36,11 @@ namespace ECMABasic55
 			}
 		}
 
+		public override string ReadLine()
+		{
+			return Console.ReadLine();
+		}
+
 		public override void PrintLine(string text)
 		{
 			Print(text);

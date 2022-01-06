@@ -1,16 +1,14 @@
 ﻿using ECMABasic.Core;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ECMABasic.Test
 {
 	class TestEnvironment : EnvironmentBase
 	{
 		private readonly StringBuilder _sb = new();
+		private readonly Queue<string> _inputLines = new();
 
 		public override int TerminalRow { get; set; } = 0;
 
@@ -30,6 +28,20 @@ namespace ECMABasic.Test
 			{
 				return Text.Split('\n');
 			}
+		}
+		
+		public void AddInputLine(string text)
+		{
+			_inputLines.Enqueue(text);
+		}
+
+		public override string ReadLine()
+		{
+			if (_inputLines.Count > 0)
+			{
+				return _inputLines.Dequeue();
+			}
+			return null;
 		}
 
 		public override void PrintLine(string text)

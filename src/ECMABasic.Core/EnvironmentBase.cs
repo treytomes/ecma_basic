@@ -34,6 +34,8 @@ namespace ECMABasic.Core
 
 		public Program Program { get; private set; }
 
+		public abstract string ReadLine();
+
 		public abstract void Print(string text);
 
 		public abstract void PrintLine(string text = "");
@@ -59,6 +61,10 @@ namespace ECMABasic.Core
 			{
 				throw ExceptionFactory.StringOverflow(CurrentLineNumber);
 			}
+			if (!variableName.EndsWith("$"))
+			{
+				throw ExceptionFactory.MixedStringsAndNumbers(CurrentLineNumber);
+			}
 			_stringVariables[variableName] = value;
 		}
 
@@ -77,6 +83,10 @@ namespace ECMABasic.Core
 		public void SetNumericVariableValue(string variableName, double value)
 		{
 			// TODO: Validate variable name?
+			if (variableName.EndsWith("$"))
+			{
+				throw ExceptionFactory.MixedStringsAndNumbers(CurrentLineNumber);
+			}
 			_numericVariables[variableName] = value;
 		}
 

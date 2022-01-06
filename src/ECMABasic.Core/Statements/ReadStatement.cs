@@ -1,5 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
+﻿using ECMABasic.Core.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
