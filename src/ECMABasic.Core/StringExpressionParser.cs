@@ -1,5 +1,6 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
+using System.Collections.Generic;
 
 namespace ECMABasic.Core
 {
@@ -66,7 +67,7 @@ namespace ECMABasic.Core
 
 		private IExpression ParseAtomic(bool throwOnError)
 		{
-			var expr = ParseLiteral() ?? ParseVariable();
+			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction();
 			if ((expr == null) && throwOnError)
 			{
 				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
@@ -98,6 +99,59 @@ namespace ECMABasic.Core
 				var text = valueToken.Text[1..^1];
 				return new StringExpression(text);
 			}
+		}
+
+		public IExpression ParseFunction()
+		{
+			var numberParser = new NumericExpressionParser(_reader, _lineNumber, false);
+
+			var nameToken = _reader.Next(TokenType.Word, false);
+			if (nameToken == null)
+			{
+				return null;
+			}
+
+			var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
+			if (dollar == null)
+			{
+				return null;
+			}
+			nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
+
+			_reader.Next(TokenType.OpenParenthesis);
+
+			var args = new List<IExpression>();
+			while (true)
+			{
+				var argExpr = Parse();
+				if (argExpr == null)
+				{
+					argExpr = numberParser.Parse();
+					if (argExpr == null)
+					{
+						break;
+					}
+				}
+
+				args.Add(argExpr);
+
+				var comma = _reader.Next(TokenType.Comma, false);
+				if (comma == null)
+				{
+					break;
+				}
+			}
+
+			_reader.Next(TokenType.CloseParenthesis);
+
+			foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
+			{
+				if (fndef.CanInstantiate(args))
+				{
+					return fndef.Instantiate(args, _lineNumber);
+				}
+			}
+			throw ExceptionFactory.UndefinedFunction(_lineNumber);
 		}
 	}
 }

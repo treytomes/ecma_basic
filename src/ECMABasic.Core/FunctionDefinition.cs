@@ -18,6 +18,21 @@ namespace ECMABasic.Core
 
 		public string Name { get; }
 
+		public ExpressionType Type
+		{
+			get
+			{
+				if (Name.EndsWith("$"))
+				{
+					return ExpressionType.String;
+				}
+				else
+				{
+					return ExpressionType.Number;
+				}
+			}
+		}
+
 		public bool CanInstantiate(IEnumerable<IExpression> args)
 		{
 			if (args.Count() != _arguments.Count)

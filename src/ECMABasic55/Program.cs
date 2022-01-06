@@ -27,6 +27,22 @@ namespace ECMABasic55
 
             FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()[0]);
 
+            FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number, ExpressionType.Number }, args =>
+            {
+                var source = Convert.ToString(args[0]);
+                var startIndex = Convert.ToInt32(args[1]);
+                var length = Convert.ToInt32(args[2]);
+                return source.Substring(startIndex - 1, length);
+            });
+
+            FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number }, args =>
+            {
+                var source = Convert.ToString(args[0]);
+                var startIndex = Convert.ToInt32(args[1]);
+                var length = Convert.ToInt32(args[2]);
+                return source.Substring(startIndex - 1);
+            });
+
             FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String, ExpressionType.Number }, args =>
             {
                 var source = Convert.ToString(args[0]);
