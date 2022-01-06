@@ -1,5 +1,4 @@
-﻿using ECMABasic.Core.Exceptions;
-using System;
+﻿using System;
 
 namespace ECMABasic.Core.Statements
 {

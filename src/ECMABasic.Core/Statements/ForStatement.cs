@@ -33,9 +33,17 @@ namespace ECMABasic.Core.Statements
 			var context = env.PopCallStack();
 
 			var forContext = context as ForStackContext;
-			if (forContext == null)
+			if ((forContext == null) || (forContext?.LoopVar?.Name != LoopVar.Name))
 			{
-				env.PushCallStack(context);
+				// Either there's no FOR-context, or it's the wrong FOR-context.
+				if (context != null)
+				{
+					// It's not ours, so put it back.
+					env.PushCallStack(context);
+				}
+
+				// Null it out so we know to make a new one.
+				forContext = null;
 			}
 
 			if (forContext == null)
