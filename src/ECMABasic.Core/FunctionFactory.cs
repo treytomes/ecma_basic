@@ -7,7 +7,7 @@ namespace ECMABasic.Core
 
 	public class FunctionFactory
 	{
-		private readonly Dictionary<string, FunctionDefinition> _functions = new();
+		private readonly List<FunctionDefinition> _functions = new();
 
 		static FunctionFactory()
 		{
@@ -34,16 +34,24 @@ namespace ECMABasic.Core
 
 		public void Define(string name, IEnumerable<ExpressionType> args, Func<List<object>, object> fn)
 		{
-			_functions[name] = new FunctionDefinition(name, args, fn);
+			_functions.Add(new FunctionDefinition(name, args, fn));
 		}
 
-		public FunctionDefinition Get(string name)
+		/// <summary>
+		/// Get all functions with the given name.
+		/// </summary>
+		/// <param name="name">The function name to look for.</param>
+		/// <returns>A list of functions with the given name.</returns>
+		public IEnumerable<FunctionDefinition> Get(string name)
 		{
-			if (_functions.ContainsKey(name))
+			foreach (var fn in _functions)
 			{
-				return _functions[name];
+				if (fn.Name == name)
+				{
+					yield return fn;
+				}
 			}
-			return null;
+
 		}
 	}
 }

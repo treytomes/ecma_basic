@@ -334,15 +334,14 @@ namespace ECMABasic.Core
 
 			_reader.Next(TokenType.CloseParenthesis);
 
-			var fndef = FunctionFactory.Instance.Get(nameToken.Text);
-			if (fndef == null)
+			foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
 			{
-				throw ExceptionFactory.UndefinedFunction(_lineNumber);
+				if (fndef.CanInstantiate(args))
+				{
+					return fndef.Instantiate(args, _lineNumber);
+				}
 			}
-			else
-			{
-				return fndef.Instantiate(args, _lineNumber);
-			}
+			throw ExceptionFactory.UndefinedFunction(_lineNumber);
 		}
 	}
 }

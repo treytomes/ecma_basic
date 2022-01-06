@@ -26,6 +26,21 @@ namespace ECMABasic55
             });
 
             FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()[0]);
+
+            FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String, ExpressionType.Number }, args =>
+            {
+                var source = Convert.ToString(args[0]);
+                var value = Convert.ToString(args[1]);
+                var index = Convert.ToInt32(args[2]);
+                return source.IndexOf(value, index - 1) + 1;
+            });
+
+            FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String }, args =>
+            {
+                var source = Convert.ToString(args[0]);
+                var value = Convert.ToString(args[1]);
+                return source.IndexOf(value) + 1;
+            });
         }
 
         private static int RunBatch(string path)
