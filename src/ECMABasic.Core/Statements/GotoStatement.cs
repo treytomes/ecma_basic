@@ -29,6 +29,27 @@ namespace ECMABasic.Core.Statements
 				throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
 			env.CurrentLineNumber = lineNumber;
+
+			var context = env.PopCallStack();
+			if (context is ForStackContext)
+			{
+				var forContext = context as ForStackContext;
+				if ((env.CurrentLineNumber < forContext.BlockStartLineNumber) || (env.CurrentLineNumber >= forContext.BlockEndLineNumber))
+				{
+					// We just jumped out of the FOR-block, so we can dispose of the context.
+				}
+				else
+				{
+					env.PushCallStack(context);
+				}
+			}
+			else
+			{
+				if (context != null)
+				{
+					env.PushCallStack(context);
+				}
+			}
 		}
 
 		public virtual string ToListing()
