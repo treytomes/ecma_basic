@@ -6,6 +6,7 @@ using System.IO;
 namespace ECMABasic55
 {
     // TODO: Better error checking around INPUT.
+    // TODO: DATA string datums shouldn't require quotes.
 
     public static class Program
     {
