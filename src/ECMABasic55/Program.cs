@@ -5,6 +5,8 @@ using System.IO;
 
 namespace ECMABasic55
 {
+    // TODO: Better error checking around INPUT.
+
     public static class Program
     {
         public static int Main(string[] args)
