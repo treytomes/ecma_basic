@@ -260,7 +260,7 @@ namespace ECMABasic.Core
 			}
 			else
 			{
-				var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction();
+				var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
 				if (expr == null)
 				{
 					if (throwOnError)
@@ -298,20 +298,13 @@ namespace ECMABasic.Core
 			return new NumberExpression(nextValue.Value);
 		}
 
-		public IExpression ParseFunction()
+		public IExpression ParseFunction(bool throwOnError)
 		{
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
 			{
 				return null;
 			}
-
-			//var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
-			//if (dollar == null)
-			//{
-			//	return null;
-			//}
-			//nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
 
 			_reader.Next(TokenType.OpenParenthesis);
 
@@ -346,7 +339,15 @@ namespace ECMABasic.Core
 					return fndef.Instantiate(args, _lineNumber);
 				}
 			}
-			throw ExceptionFactory.UndefinedFunction(_lineNumber);
+
+			if (throwOnError)
+			{
+				throw ExceptionFactory.UndefinedFunction(_lineNumber);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }

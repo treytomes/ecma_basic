@@ -71,7 +71,7 @@ namespace ECMABasic.Core
 
 		private IExpression ParseAtomic(bool throwOnError)
 		{
-			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction();
+			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
 			if ((expr == null) && throwOnError)
 			{
 				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
@@ -105,7 +105,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public IExpression ParseFunction()
+		public IExpression ParseFunction(bool throwOnError)
 		{
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
@@ -154,7 +154,15 @@ namespace ECMABasic.Core
 					return fndef.Instantiate(args, _lineNumber);
 				}
 			}
-			throw ExceptionFactory.UndefinedFunction(_lineNumber);
+
+			if (throwOnError)
+			{
+				throw ExceptionFactory.UndefinedFunction(_lineNumber);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }
