@@ -19,11 +19,15 @@ namespace ECMABasic.Core
 				return null;
 			}
 
-			_reader.Next(TokenType.Space, false);
+			var space = _reader.Next(TokenType.Space, false);
 
 			var symbol = ParseBooleanOperator();
 			if (symbol == null)
 			{
+				if (space != null)
+				{
+					_reader.Rewind();
+				}
 				return left;
 			}
 
@@ -103,8 +107,6 @@ namespace ECMABasic.Core
 
 		public IExpression ParseFunction()
 		{
-			var numberParser = new NumericExpressionParser(_reader, _lineNumber, false);
-
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
 			{
@@ -114,6 +116,7 @@ namespace ECMABasic.Core
 			var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
 			if (dollar == null)
 			{
+				_reader.Rewind();
 				return null;
 			}
 			nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
@@ -126,7 +129,7 @@ namespace ECMABasic.Core
 				var argExpr = Parse();
 				if (argExpr == null)
 				{
-					argExpr = numberParser.Parse();
+					argExpr = new NumericExpressionParser(_reader, _lineNumber, false).Parse();
 					if (argExpr == null)
 					{
 						break;
@@ -135,7 +138,7 @@ namespace ECMABasic.Core
 
 				args.Add(argExpr);
 
-				var comma = _reader.Next(TokenType.Comma, false);
+				var comma = _reader.Next(TokenType.Comma, false, ",");
 				if (comma == null)
 				{
 					break;

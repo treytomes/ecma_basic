@@ -2,6 +2,7 @@
 
 namespace ECMABasic.Core.Statements
 {
+	// TODO: # GOTO # needs to start an infinite loop.
 	public class GotoStatement : IStatement
 	{
 		public GotoStatement(IExpression lineNumber)

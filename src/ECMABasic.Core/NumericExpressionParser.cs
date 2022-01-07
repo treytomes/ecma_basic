@@ -300,23 +300,28 @@ namespace ECMABasic.Core
 
 		public IExpression ParseFunction()
 		{
-			var stringParser = new StringExpressionParser(_reader, _lineNumber, false);
-
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
 			{
 				return null;
 			}
 
+			//var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
+			//if (dollar == null)
+			//{
+			//	return null;
+			//}
+			//nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
+
 			_reader.Next(TokenType.OpenParenthesis);
 
 			var args = new List<IExpression>();
 			while (true)
 			{
-				var argExpr = Parse();
+				var argExpr = new StringExpressionParser(_reader, _lineNumber, false).Parse();
 				if (argExpr == null)
 				{
-					argExpr = stringParser.Parse();
+					argExpr = Parse();
 					if (argExpr == null)
 					{
 						break;
