@@ -107,6 +107,7 @@ namespace ECMABasic.Core
 
 		public IExpression ParseFunction(bool throwOnError)
 		{
+			var startIndex = _reader.TokenIndex;
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
 			{
@@ -116,7 +117,7 @@ namespace ECMABasic.Core
 			var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
 			if (dollar == null)
 			{
-				_reader.Rewind();
+				_reader.Seek(startIndex);
 				return null;
 			}
 			nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });

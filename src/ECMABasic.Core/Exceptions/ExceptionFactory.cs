@@ -65,9 +65,24 @@ namespace ECMABasic.Core
 			return new RuntimeException($"LINE NUMBER {testLineNumber} OUT OF RANGE", lineNumber);
 		}
 
+		public static Exception ForWithoutNext(int? lineNumber = null)
+		{
+			return new SyntaxException("FOR WITHOUT NEXT", lineNumber);
+		}
+
 		public static Exception NextWithoutFor(int? lineNumber = null)
 		{
-			return new RuntimeException("NEXT WITHOUT FOR", lineNumber);
+			return new SyntaxException("NEXT WITHOUT FOR", lineNumber);
+		}
+
+		public static Exception ForUsingPreviousControlVariable(int? lineNumber = null)
+		{
+			return new SyntaxException("FOR USING PREVIOUS CONTROL-VARIABLE", lineNumber);
+		}
+
+		public static Exception ControlTransferIntoForBlock(int? lineNumber = null)
+		{
+			return new RuntimeException("CONTROL TRANSFER INTO FOR-BLOCK", lineNumber);
 		}
 
 		public static Exception ReturnWithoutGosub(int? lineNumber = null)

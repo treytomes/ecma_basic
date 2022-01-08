@@ -1,8 +1,10 @@
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Parsers;
+using ECMABasic.Core.Statements;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ECMABasic.Core
 {
@@ -33,13 +35,12 @@ namespace ECMABasic.Core
 				new GosubStatementParser(),
 				new ReturnStatementParser(),
 				new IfThenStatementParser(),
-				new ForStatementParser(),
-				new NextStatementParser(),
 				new OnGotoStatementParser(),
 				new RestoreStatementParser(),
 				new ReadStatementParser(),
 				new DataStatementParser(),
 				new InputStatementParser(),
+				new NextStatementParser(),
 			};
 		}
 
@@ -106,14 +107,9 @@ namespace ECMABasic.Core
 			{
 				while (true)
 				{
-					var line = ProcessBlock();
-					if (line == null)
+					if (!ProcessBlock(env, null))
 					{
 						break;
-					}
-					else
-					{
-						env.Program.Insert(line);
 					}
 				}
 
@@ -135,45 +131,39 @@ namespace ECMABasic.Core
 		/// Process the next line or for-block.
 		/// </summary>
 		/// <returns></returns>
-		private ProgramLine ProcessBlock()
+		protected bool ProcessBlock(IEnvironment env, ProgramLine parent)
 		{
-			var line = ProcessLine();
-			if (line != null)
-			{
-				return line;
-			}
-
-			line = ProcessForBlock();
-			if (line != null)
-			{
-				return line;
-			}
-			else
-			{
-				return null;
-			}
+			return ProcessLine(env, parent) || ProcessForBlock(env, parent);
 		}
 
-		protected ProgramLine ProcessLine(bool throwsOnError = true)
+		private bool ProcessLine(IEnvironment env, ProgramLine parent)
 		{
+			var startIndex = _reader.TokenIndex;
 			if (_reader.IsAtEnd)
 			{
-				return null;
+				return false;
 			}
 
-			var lineNumber = ProcessLineNumber(throwsOnError);
+			var lineNumber = ProcessLineNumber(false);
 			if (!lineNumber.HasValue)
 			{
-				return null;
+				_reader.Seek(startIndex);
+				return false;
 			}
 
-			if (ProcessSpace(throwsOnError) == null)
+			if (ProcessSpace(false) == null)
 			{
 				// An empty line triggers a deletion.
-				return new ProgramLine(lineNumber.Value, null);
+				env.Program.Insert(new ProgramLine(lineNumber.Value, null, null));
+				return true;
 			}
 
-			var statement = ProcessStatement(lineNumber, throwsOnError);
+			var statement = ProcessStatement(lineNumber, false);
+			if (statement == null)
+			{
+				_reader.Seek(startIndex);
+				return false;
+			}
 
 			// Optional space.
 			ProcessSpace(false);
@@ -181,7 +171,8 @@ namespace ECMABasic.Core
 			// Require an end-of-line.
 			ProcessEndOfLine();
 
-			return new ProgramLine(lineNumber.Value, statement);
+			env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+			return true;
 		}
 
 		/// <summary>
@@ -230,6 +221,10 @@ namespace ECMABasic.Core
 				var stmt = parser.Parse(_reader, lineNumber);
 				if (stmt != null)
 				{
+					if (stmt is NextStatement)
+					{
+						throw ExceptionFactory.NextWithoutFor(lineNumber);
+					}
 					return stmt;
 				}
 			}
@@ -241,11 +236,141 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-		private ProgramLine ProcessForBlock()
+		private void ValidateNotUsingPreviousControlVariable(ProgramLine forLine, ProgramLine parent)
 		{
-			// TODO: Implement for-block processing.
-			return null;
+			if (parent == null)
+			{
+				return;
+			}
+
+			if (parent.Statement is not ForStatement stmt)
+			{
+				return;
+			}
+
+			if (stmt.LoopVar.Name == (forLine.Statement as ForStatement).LoopVar.Name)
+			{
+				throw ExceptionFactory.ForUsingPreviousControlVariable(forLine.LineNumber);
+			}
+
+			if (parent.Parent == null)
+			{
+				return;
+			}
+
+			ValidateNotUsingPreviousControlVariable(forLine, parent.Parent);
+		}
+
+		private bool ProcessForBlock(IEnvironment env, ProgramLine parent)
+		{
+			if (!ProcessForLine(env, parent))
+			{
+				return false;
+			}
+			var forLine = env.Program.Last();
+			ValidateNotUsingPreviousControlVariable(forLine, parent);
+
+			while (true)
+			{
+				if (ProcessNextLine(env, forLine))
+				{
+					break;
+				}
+				if (!ProcessBlock(env, forLine))
+				{
+					break;
+				}
+			}
+
+			if (!(env.Program.Last().Statement is NextStatement))
+			{
+				throw ExceptionFactory.ForWithoutNext(forLine.LineNumber);
+			}
+
+			return true;
+		}
+
+		protected bool ProcessForLine(IEnvironment env, ProgramLine parent)
+		{
+			var startIndex = _reader.TokenIndex;
+			if (_reader.IsAtEnd)
+			{
+				return false;
+			}
+
+			var lineNumber = ProcessLineNumber(false);
+			if (!lineNumber.HasValue)
+			{
+				_reader.Seek(startIndex);
+				return false;
+			}
+
+			if (ProcessSpace(false) == null)
+			{
+				// An empty line triggers a deletion.
+				env.Program.Delete(lineNumber.Value);
+				return true;
+			}
+
+			var statement = new ForStatementParser().Parse(_reader, lineNumber);
+			if (statement == null)
+			{
+				_reader.Seek(startIndex);
+				return false;
+			}
+
+			// Optional space.
+			ProcessSpace(false);
+
+			// Require an end-of-line.
+			ProcessEndOfLine();
+
+			env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+			return true;
+		}
+
+		protected bool ProcessNextLine(IEnvironment env, ProgramLine parent)
+		{
+			var startIndex = _reader.TokenIndex;
+			if (_reader.IsAtEnd)
+			{
+				return false;
+			}
+
+			var lineNumber = ProcessLineNumber(false);
+			if (!lineNumber.HasValue)
+			{
+				_reader.Seek(startIndex);
+				return false;
+			}
+
+			if (ProcessSpace(false) == null)
+			{
+				// An empty line triggers a deletion.
+				env.Program.Insert(new ProgramLine(lineNumber.Value, null, null));
+				return true;
+			}
+
+			var statement = new NextStatementParser().Parse(_reader, lineNumber);
+			if (statement == null)
+			{
+				_reader.Seek(startIndex);
+				return false;
+			}
+
+			if ((statement as NextStatement).LoopVar.Name != (parent.Statement as ForStatement).LoopVar.Name)
+			{
+				throw ExceptionFactory.NextWithoutFor(lineNumber);
+			}
+
+			// Optional space.
+			ProcessSpace(false);
+
+			// Require an end-of-line.
+			ProcessEndOfLine();
+
+			env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+			return true;
 		}
 	}
 }

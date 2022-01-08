@@ -322,7 +322,7 @@ namespace ECMABasic.Core
 
 		public void Seek(int index)
 		{
-			TokenIndex = index ;
+			TokenIndex = index;
 		}
 
 		public void Rewind()

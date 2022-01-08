@@ -22,6 +22,8 @@ namespace ECMABasic.Test.BASIC_55
 
 			var actualLines = env.Text.Split(Environment.NewLine);
 
+			//Assert.True(expectedLines.Length >= actualLines.Length);
+
 			for (var line = 0; line < expectedLines.Length; line++)
 			{
 				if (expectedLines[line] != actualLines[line])

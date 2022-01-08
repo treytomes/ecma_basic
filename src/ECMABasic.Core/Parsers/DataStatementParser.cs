@@ -1,7 +1,6 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
 using ECMABasic.Core.Statements;
-using System;
 using System.Collections.Generic;
 
 namespace ECMABasic.Core.Parsers
@@ -26,7 +25,7 @@ namespace ECMABasic.Core.Parsers
 				token = reader.Next(TokenType.String, false);
 				if (token != null)
 				{
-					datums.Add(new StringExpression(token.Text.Substring(1, token.Text.Length - 2)));
+					datums.Add(new StringExpression(token.Text[1..^1]));
 				}
 				else
 				{

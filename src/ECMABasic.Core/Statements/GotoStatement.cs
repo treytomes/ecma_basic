@@ -17,6 +17,32 @@ namespace ECMABasic.Core.Statements
 
 		public IExpression LineNumber { get; }
 
+		/// <summary>
+		/// The <paramref name="src"/> parent tree needs to contain the parent of <paramref name="dst"/>.
+		/// </summary>
+		/// <param name="src">The line jumping from.</param>
+		/// <param name="dst">The line jumping to.</param>
+		private void ValidateSharedAncestry(IEnvironment env, ProgramLine src, ProgramLine dst)
+		{
+			if (dst.Parent == null)
+			{
+				return;
+			}
+
+			if (src == null)
+			{
+				// We travelled all the way up without finding dst.Parent.
+				throw ExceptionFactory.ControlTransferIntoForBlock(env.CurrentLineNumber);
+			}
+
+			if (src.Parent == dst.Parent)
+			{
+				return;
+			}
+
+			ValidateSharedAncestry(env, src.Parent, dst);
+		}
+
 		public virtual void Execute(IEnvironment env, bool isImmediate)
 		{
 			if (isImmediate)
@@ -24,11 +50,16 @@ namespace ECMABasic.Core.Statements
 				throw ExceptionFactory.OnlyAllowedInProgram();
 			}
 
+			var thisLine = env.Program[env.CurrentLineNumber];
+
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!env.ValidateLineNumber(lineNumber, false))
 			{
 				throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
+
+			var newLine = env.Program[lineNumber];
+			ValidateSharedAncestry(env, thisLine, newLine);
 			env.CurrentLineNumber = lineNumber;
 
 			var context = env.PopCallStack();

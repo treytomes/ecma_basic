@@ -4,6 +4,7 @@ using ECMABasic.Core.Exceptions;
 using ECMABasic55.Parsers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ECMABasic55
 {
@@ -34,17 +35,8 @@ namespace ECMABasic55
 			{
 				_reader = ComplexTokenReader.FromText(text);
 
-				var line = ProcessLine(false);
-				if (line != null)
+				if (ProcessBlock(env, null))
 				{
-					if (line.Statement != null)
-					{
-						env.Program.Insert(line);
-					}
-					else
-					{
-						env.Program.Delete(line.LineNumber);
-					}
 					return null;
 				}
 				else

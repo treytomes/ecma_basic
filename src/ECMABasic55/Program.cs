@@ -2,6 +2,7 @@
 using ECMABasic55.Parsers;
 using System;
 using System.IO;
+using System.Text;
 
 namespace ECMABasic55
 {
@@ -43,7 +44,7 @@ namespace ECMABasic55
                 var source = Convert.ToString(args[0]);
                 var startIndex = Convert.ToInt32(args[1]);
                 var length = Convert.ToInt32(args[2]);
-                return source.Substring(startIndex - 1);
+                return source[(startIndex - 1)..];
             });
 
             FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String, ExpressionType.Number }, args =>

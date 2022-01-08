@@ -1,6 +1,7 @@
 ﻿using ECMABasic.Core.Exceptions;
 using ECMABasic.Core.Expressions;
 using System;
+using System.Collections.Generic;
 
 namespace ECMABasic.Core.Statements
 {
@@ -32,8 +33,7 @@ namespace ECMABasic.Core.Statements
 
 			var context = env.PopCallStack();
 
-			var forContext = context as ForStackContext;
-			if ((forContext == null) || (forContext?.LoopVar?.Name != LoopVar.Name))
+			if ((context is not ForStackContext forContext) || (forContext?.LoopVar?.Name != LoopVar.Name))
 			{
 				// Either there's no FOR-context, or it's the wrong FOR-context.
 				if (context != null)
