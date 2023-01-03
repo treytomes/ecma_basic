@@ -1,54 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31229.75
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic.Test", "ECMABasic.Test\ECMABasic.Test.csproj", "{00D4237D-0765-465B-8033-D29282DCA861}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Test", "ECMABasic.Test\ECMABasic.Test.csproj", "{44787BB5-2FD7-45CC-A53B-65A7D07CF4CC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6F714F94-417A-4F40-8A2A-8DB416CD6A35}"
-	ProjectSection(SolutionItems) = preProject
-		..\docs\ECMA-116, 1st edition, June 1986.pdf = ..\docs\ECMA-116, 1st edition, June 1986.pdf
-		..\docs\ECMA-55_1st_edition_january_1978.pdf = ..\docs\ECMA-55_1st_edition_january_1978.pdf
-		..\docs\ECMA-6, 7-Bit Coded Character Set.pdf = ..\docs\ECMA-6, 7-Bit Coded Character Set.pdf
-		..\LICENSE = ..\LICENSE
-		..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Documentation.pdf
-		..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf = ..\docs\NBS Minimal BASIC Test Programs - Version 2, Source Listings and Sample Output.pdf
-		..\README.md = ..\README.md
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{9CA5A424-3F63-462C-BF96-1B6D7F894607}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{0C020B93-2F51-4424-839F-07E08928184E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic55", "ECMABasic55\ECMABasic55.csproj", "{C4F46742-62BA-4989-83FC-60C3906C578D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECMABasic116", "ECMABasic116\ECMABasic116.csproj", "{C818CB4B-2972-46F2-801B-53A9E8730A0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic55", "ECMABasic55\ECMABasic55.csproj", "{F626ACC2-29F1-4C3B-956B-AC1A9B88EFA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{00D4237D-0765-465B-8033-D29282DCA861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00D4237D-0765-465B-8033-D29282DCA861}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00D4237D-0765-465B-8033-D29282DCA861}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00D4237D-0765-465B-8033-D29282DCA861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C020B93-2F51-4424-839F-07E08928184E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C020B93-2F51-4424-839F-07E08928184E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C020B93-2F51-4424-839F-07E08928184E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C020B93-2F51-4424-839F-07E08928184E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4F46742-62BA-4989-83FC-60C3906C578D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4F46742-62BA-4989-83FC-60C3906C578D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4F46742-62BA-4989-83FC-60C3906C578D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4F46742-62BA-4989-83FC-60C3906C578D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C818CB4B-2972-46F2-801B-53A9E8730A0A}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {408D8C6F-AB04-45E7-9FCB-263F483A923E}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44787BB5-2FD7-45CC-A53B-65A7D07CF4CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44787BB5-2FD7-45CC-A53B-65A7D07CF4CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44787BB5-2FD7-45CC-A53B-65A7D07CF4CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44787BB5-2FD7-45CC-A53B-65A7D07CF4CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA5A424-3F63-462C-BF96-1B6D7F894607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA5A424-3F63-462C-BF96-1B6D7F894607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA5A424-3F63-462C-BF96-1B6D7F894607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA5A424-3F63-462C-BF96-1B6D7F894607}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F626ACC2-29F1-4C3B-956B-AC1A9B88EFA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F626ACC2-29F1-4C3B-956B-AC1A9B88EFA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F626ACC2-29F1-4C3B-956B-AC1A9B88EFA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F626ACC2-29F1-4C3B-956B-AC1A9B88EFA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
