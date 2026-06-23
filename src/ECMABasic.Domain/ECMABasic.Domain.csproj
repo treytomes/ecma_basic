@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Inherits from Directory.Build.props:
+       - Nullable reference types
+       - TreatWarningsAsErrors
+       - LangVersion latest
+       - XML documentation generation
+  -->
+
+  <!-- TEMPORARY: References Core until IEnvironment dependency is inverted in Phase 3 -->
+  <ItemGroup>
+    <ProjectReference Include="..\ECMABasic.Core\ECMABasic.Core.csproj" />
+  </ItemGroup>
+
+</Project>
