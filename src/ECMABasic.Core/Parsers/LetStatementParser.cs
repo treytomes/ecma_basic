@@ -5,7 +5,7 @@ namespace ECMABasic.Core
 {
 	public class LetStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, "LET");
 			if (token == null)
@@ -27,14 +27,13 @@ namespace ECMABasic.Core
 
 			ProcessSpace(reader, false);
 
-			IExpression valueExpr;
-			if (targetExpr.IsNumeric)
+			var valueExpr = targetExpr.IsNumeric
+				? ParseNumericExpression(reader, lineNumber, true)
+				: ParseStringExpression(reader, lineNumber, true);
+
+			if (valueExpr == null)
 			{
-				valueExpr = ParseNumericExpression(reader, lineNumber, true);
-			}
-			else
-			{
-				valueExpr = ParseStringExpression(reader, lineNumber, true);
+				throw ExceptionFactory.ExpectedExpression(lineNumber);
 			}
 
 			return new LetStatement(targetExpr, valueExpr);
