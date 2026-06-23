@@ -53,7 +53,9 @@ public class GotoStatement : IStatement
 			throw ExceptionFactory.OnlyAllowedInProgram();
 		}
 
-		var thisLine = env.Program[env.CurrentLineNumber];
+		// Cast to EnvironmentBase to access Program (Application-layer concept)
+		var appEnv = (EnvironmentBase)env;
+		var thisLine = appEnv.Program[env.CurrentLineNumber];
 
 		var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 		if (!env.ValidateLineNumber(lineNumber, false))
@@ -61,7 +63,7 @@ public class GotoStatement : IStatement
 			throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 		}
 
-		var newLine = env.Program[lineNumber];
+		var newLine = appEnv.Program[lineNumber];
 		if (newLine != null)
 		{
 			ValidateSharedAncestry(env, thisLine, newLine);

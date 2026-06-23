@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
@@ -65,7 +67,7 @@ public class ConsoleEnvironment : EnvironmentBase
 			var key = Console.ReadKey(true);
 			if (key.Key == ConsoleKey.Escape)
 			{
-				throw ExceptionFactory.ProgramStop(CurrentLineNumber);
+				throw ECMABasic.Core.ExceptionFactory.ProgramStop(CurrentLineNumber);
 			}
 		}
 	}

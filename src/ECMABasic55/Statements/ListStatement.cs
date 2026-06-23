@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
@@ -25,24 +27,24 @@ public class ListStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		if (env.Program.Length == 0)
+		if (((EnvironmentBase)env).Program.Length == 0)
 		{
 			return;
 		}
 
-		var fromLineNumber = (int)((From == null) ? env.Program.First().LineNumber : Convert.ToInt32(From.Evaluate(env)));
+		var fromLineNumber = (int)((From == null) ? ((EnvironmentBase)env).Program.First().LineNumber : Convert.ToInt32(From.Evaluate(env)));
 		if (fromLineNumber < 0)
 		{
-			throw ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 		}
 
 		if ((From != null) && (To == null))
 		{
 			env.ValidateLineNumber(fromLineNumber, true);
-			var line = env.Program[fromLineNumber];
+			var line = ((EnvironmentBase)env).Program[fromLineNumber];
 			if (line != null)
 			{
 				env.Print(line.ToListing());
@@ -50,13 +52,13 @@ public class ListStatement : IStatement
 			return;
 		}
 
-		var toLineNumber = (To == null) ? env.Program.Last().LineNumber : Convert.ToInt32(To.Evaluate(env));
+		var toLineNumber = (To == null) ? ((EnvironmentBase)env).Program.Last().LineNumber : Convert.ToInt32(To.Evaluate(env));
 		if ((toLineNumber < fromLineNumber) || (toLineNumber > _config.MaxLineNumber))
 		{
-			throw ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 		}
 
-		foreach (var line in env.Program)
+		foreach (var line in ((EnvironmentBase)env).Program)
 		{
 			if (line.LineNumber < fromLineNumber)
 			{

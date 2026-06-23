@@ -27,7 +27,7 @@ internal class GosubStatement : IStatement
 			throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 		}
 
-		var returnToLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);
+		var returnToLineNumber = env.GetNextLineNumber(env.CurrentLineNumber);
 		env.PushCallStack(new GosubStackContext(returnToLineNumber));
 		env.CurrentLineNumber = lineNumber;
 	}

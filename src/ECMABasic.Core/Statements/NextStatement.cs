@@ -31,7 +31,7 @@ public class NextStatement : IStatement
 		 
 		if (!context.BlockEndLineNumber.HasValue)
 		{
-			var blockEndLineNumber = env.Program.GetNextLineNumber(env.CurrentLineNumber);
+			var blockEndLineNumber = env.GetNextLineNumber(env.CurrentLineNumber);
 			context.BlockEndLineNumber = blockEndLineNumber;
 		}
 

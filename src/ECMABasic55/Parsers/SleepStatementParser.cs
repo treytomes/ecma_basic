@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Exceptions;
 using ECMABasic55.Statements;
@@ -18,7 +20,7 @@ public class SleepStatementParser : StatementParser
 		var milliseconds = ParseNumericExpression(reader, lineNumber, true);
 		if (milliseconds == null)
 		{
-			throw ExceptionFactory.Syntax();
+			throw ECMABasic.Core.ExceptionFactory.Syntax();
 		}
 		return new SleepStatement(milliseconds);
 	}

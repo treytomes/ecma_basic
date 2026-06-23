@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Exceptions;
 
@@ -9,7 +11,7 @@ public class NewStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		env.Clear();

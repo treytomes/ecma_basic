@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 using ECMABasic.Core;
 using System;
 using System.IO;

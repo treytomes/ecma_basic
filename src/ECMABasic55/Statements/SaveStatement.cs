@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Exceptions;
 using System;
@@ -18,16 +20,16 @@ public class SaveStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		var path = Convert.ToString(Path.Evaluate(env));
 		if (string.IsNullOrEmpty(path))
 		{
-			throw ExceptionFactory.Syntax();
+			throw ECMABasic.Core.ExceptionFactory.Syntax();
 		}
 
-		var contents = env.Program.ToListing();
+		var contents = ((EnvironmentBase)env).Program.ToListing();
 		File.WriteAllText(path, contents);
 	}
 

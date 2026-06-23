@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic.Core.Exceptions;
 using System;
@@ -21,26 +23,26 @@ public class RunStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		if (LineNumber != null)
 		{
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
-			if (!env.Program.Any(x => x.LineNumber == lineNumber))
+			if (!((EnvironmentBase)env).Program.Any(x => x.LineNumber == lineNumber))
 			{
-				throw ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
+				throw ECMABasic.Core.ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
 			env.CurrentLineNumber = lineNumber;
 		}
 		else
 		{
-			if (env.Program.Length > 0)
+			if (((EnvironmentBase)env).Program.Length > 0)
 			{
-				env.CurrentLineNumber = env.Program.OrderBy(x => x.LineNumber).First().LineNumber;
+				env.CurrentLineNumber = ((EnvironmentBase)env).Program.OrderBy(x => x.LineNumber).First().LineNumber;
 			}
 		}
-		env.Program.Execute(env);
+		((EnvironmentBase)env).Program.Execute(env);
 	}
 
 	public string ToListing()

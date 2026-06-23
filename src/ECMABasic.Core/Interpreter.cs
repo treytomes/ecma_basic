@@ -142,6 +142,7 @@ public class Interpreter
 
 	private bool ProcessLine(IEnvironment env, ProgramLine? parent)
 	{
+		var program = ((EnvironmentBase)env).Program;
 		var startIndex = _reader.TokenIndex;
 		if (_reader.IsAtEnd)
 		{
@@ -158,7 +159,7 @@ public class Interpreter
 		if (ProcessSpace(false) == null)
 		{
 			// An empty line triggers a deletion.
-			env.Program.Insert(new ProgramLine(lineNumber.Value, null, null));
+			program.Insert(new ProgramLine(lineNumber.Value, null, null));
 			return true;
 		}
 
@@ -175,7 +176,7 @@ public class Interpreter
 		// Require an end-of-line.
 		ProcessEndOfLine();
 
-		env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+		program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
 		return true;
 	}
 
@@ -267,11 +268,12 @@ public class Interpreter
 
 	private bool ProcessForBlock(IEnvironment env, ProgramLine? parent)
 	{
+		var program = ((EnvironmentBase)env).Program;
 		if (!ProcessForLine(env, parent))
 		{
 			return false;
 		}
-		var forLine = env.Program.Last();
+		var forLine = program.Last();
 		ValidateNotUsingPreviousControlVariable(forLine, parent);
 
 		while (true)
@@ -286,7 +288,7 @@ public class Interpreter
 			}
 		}
 
-		if (!(env.Program.Last().Statement is NextStatement))
+		if (!(program.Last().Statement is NextStatement))
 		{
 			throw ExceptionFactory.ForWithoutNext(forLine.LineNumber);
 		}
@@ -296,6 +298,7 @@ public class Interpreter
 
 	protected bool ProcessForLine(IEnvironment env, ProgramLine? parent)
 	{
+		var program = ((EnvironmentBase)env).Program;
 		var startIndex = _reader.TokenIndex;
 		if (_reader.IsAtEnd)
 		{
@@ -312,7 +315,7 @@ public class Interpreter
 		if (ProcessSpace(false) == null)
 		{
 			// An empty line triggers a deletion.
-			env.Program.Delete(lineNumber.Value);
+			program.Delete(lineNumber.Value);
 			return true;
 		}
 
@@ -329,12 +332,13 @@ public class Interpreter
 		// Require an end-of-line.
 		ProcessEndOfLine();
 
-		env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+		program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
 		return true;
 	}
 
 	protected bool ProcessNextLine(IEnvironment env, ProgramLine? parent)
 	{
+		var program = ((EnvironmentBase)env).Program;
 		var startIndex = _reader.TokenIndex;
 		if (_reader.IsAtEnd)
 		{
@@ -351,7 +355,7 @@ public class Interpreter
 		if (ProcessSpace(false) == null)
 		{
 			// An empty line triggers a deletion.
-			env.Program.Insert(new ProgramLine(lineNumber.Value, null, null));
+			program.Insert(new ProgramLine(lineNumber.Value, null, null));
 			return true;
 		}
 
@@ -373,7 +377,7 @@ public class Interpreter
 		// Require an end-of-line.
 		ProcessEndOfLine();
 
-		env.Program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+		program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
 		return true;
 	}
 }

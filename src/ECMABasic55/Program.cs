@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core;
 using ECMABasic55.Parsers;
 using System;
@@ -25,7 +27,7 @@ public static class Program
 
     private static void InjectSpecials(IEnvironment env)
 	{
-        env.Interpreter.InjectStatements(new[] {
+        ((EnvironmentBase)env).Interpreter.InjectStatements(new[] {
             new SleepStatementParser(),
         });
 
@@ -77,7 +79,7 @@ public static class Program
 
         if (env.LoadFile(path))
         {
-            env.Program.Execute(env);
+            ((EnvironmentBase)env).Program.Execute(env);
             return 0;
         }
         else
@@ -102,7 +104,7 @@ public static class Program
 
 			try
 			{
-                var statement = (env.Interpreter as RuntimeInterpreter)?.ProcessImmediate(env, line);
+                var statement = (((EnvironmentBase)env).Interpreter as RuntimeInterpreter)?.ProcessImmediate(env, line);
                 if (statement != null)
 				{
                     statement.Execute(env, true);

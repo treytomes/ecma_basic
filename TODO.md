@@ -7,6 +7,7 @@
 * Review `https://github.com/treytomes/iron_kernel/blob/main/IronKernel/Program.cs`.
     * I use a standard pattern to bootstrap an application that includes a set of Microsoft and System packages you can see in this list: `https://github.com/treytomes/iron_kernel/blob/main/IronKernel/IronKernel.csproj`
     * We need to update `./ECMABasic55/Program.cs` to follow a similar pattern, including dependency injection, command-line parameters, and a rolling timestamp-based logger.
+* Review the duplicate `ExceptionFactory`.  Why is there a duplicate?
 
 ## Pending
 
