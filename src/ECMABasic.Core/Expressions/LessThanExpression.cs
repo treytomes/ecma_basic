@@ -13,7 +13,7 @@ namespace ECMABasic.Core.Expressions
 		{
 			var left = Left.Evaluate(env);
 			var right = Right.Evaluate(env);
-			return (left as IComparable).CompareTo(right) < 0;
+			return (left as IComparable)!.CompareTo(right) < 0;
 		}
 
 		public override string ToListing()
