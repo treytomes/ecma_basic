@@ -1,4 +1,4 @@
-﻿using ECMABasic.Domain.Configuration;
+﻿
 using ECMABasic.Domain.Exceptions;
 using System;
 using System.Text;
@@ -9,10 +9,10 @@ public class TabExpression : IPrintItem
 {
 	private readonly IBasicConfiguration _config;
 
-	public TabExpression(IExpression value, IBasicConfiguration? config = null)
+	public TabExpression(IExpression value, IBasicConfiguration config)
 	{
 		Value = value;
-		_config = config ?? MinimalBasicConfiguration.Instance;
+		_config = config;
 	}
 
 	public IExpression Value { get; }

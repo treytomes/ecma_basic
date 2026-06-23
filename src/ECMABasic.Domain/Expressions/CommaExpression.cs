@@ -1,4 +1,4 @@
-﻿using ECMABasic.Domain.Configuration;
+﻿
 
 namespace ECMABasic.Domain.Expressions;
 
@@ -9,9 +9,9 @@ public class CommaExpression : IPrintItemSeparator
 {
 	private readonly IBasicConfiguration _config;
 
-	public CommaExpression(IBasicConfiguration? config = null)
+	public CommaExpression(IBasicConfiguration config)
 	{
-		_config = config ?? MinimalBasicConfiguration.Instance;
+		_config = config;
 	}
 
 	public object Evaluate(IEnvironment env)

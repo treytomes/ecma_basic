@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ECMABasic.Domain\ECMABasic.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

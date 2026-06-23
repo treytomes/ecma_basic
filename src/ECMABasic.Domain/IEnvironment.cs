@@ -1,22 +1,11 @@
-﻿using ECMABasic.Core;
-
 namespace ECMABasic.Domain;
 
 /// <summary>
 /// The environment that a program is run in.
+/// Provides I/O operations and runtime context.
 /// </summary>
 public interface IEnvironment : IErrorReporter
 {
-	/// <summary>
-	/// The active interpreter.
-	/// </summary>
-	public Interpreter Interpreter { get; }
-
-	/// <summary>
-	/// The full program, ready to execute.
-	/// </summary>
-	public Program Program { get; }
-
 	/// <summary>
 	/// The line number currently being executed.
 	/// If the program is not running this value will be null.
@@ -57,30 +46,30 @@ public interface IEnvironment : IErrorReporter
 	public void Print(string text);
 
 	/// <summary>
-	/// Get the value of a variable.
+	/// Get the value of a string variable.
 	/// </summary>
 	/// <param name="variableName">The variable to retrieve.</param>
 	/// <returns>The value of the variable.</returns>
 	public string GetStringVariableValue(string variableName);
 
 	/// <summary>
-	/// Set the value of a variable.
+	/// Set the value of a string variable.
 	/// </summary>
-	/// <param name="variableName">The name of the value.</param>
+	/// <param name="variableName">The name of the variable.</param>
 	/// <param name="value">The value to assign.</param>
 	public void SetStringVariableValue(string variableName, string value);
 
 	/// <summary>
-	/// Get the value of a variable.
+	/// Get the value of a numeric variable.
 	/// </summary>
 	/// <param name="variableName">The variable to retrieve.</param>
 	/// <returns>The value of the variable.</returns>
 	public double GetNumericVariableValue(string variableName);
 
 	/// <summary>
-	/// Set the value of a variable.
+	/// Set the value of a numeric variable.
 	/// </summary>
-	/// <param name="variableName">The name of the value.</param>
+	/// <param name="variableName">The name of the variable.</param>
 	/// <param name="value">The value to assign.</param>
 	public void SetNumericVariableValue(string variableName, double value);
 
