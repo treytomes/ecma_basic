@@ -31,11 +31,12 @@ public class TokenizerTests
 		while (true)
 		{
 			var token = reader.Next();
-			tokens.Add(token);
 			if (token == null)
 			{
+				tokens.Add(null!);
 				break;
 			}
+			tokens.Add(token);
 		}
 
 		Assert.Equal(8, tokens.Count);
@@ -98,61 +99,76 @@ public class TokenizerTests
 		// Line 10
 
 		var token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Integer, token.Type);
 		Assert.Equal("10", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Space, token.Type);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Word, token.Type);
 		Assert.Equal("PRINT", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Space, token.Type);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.String, token.Type);
 		Assert.Equal(1, token.Line);
 		Assert.Equal(10, token.Column);
 		Assert.Equal("\"HELLO WORLD!\"", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.EndOfLine, token.Type);
 
 		// Line 15
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Integer, token.Type);
 		Assert.Equal("15", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Space, token.Type);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Word, token.Type);
 		Assert.Equal("PRINT", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Space, token.Type);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.String, token.Type);
 		Assert.Equal("\"THIS IS A TEST...?\"", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.EndOfLine, token.Type);
 
 		// Line 20
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Integer, token.Type);
 		Assert.Equal("20", token.Text);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Space, token.Type);
 
 		token = reader.Next();
+		Assert.NotNull(token);
 		Assert.Equal(TokenType.Word, token.Type);
 		Assert.Equal("END", token.Text);
 
@@ -170,18 +186,34 @@ public class TokenizerTests
 		var reader = ComplexTokenReader.FromText(input);
 
 		Assert.Equal(15, reader.NextInteger());
-		Assert.Equal(TokenType.Space, reader.Next().Type);
-		Assert.Equal(TokenType.Word, reader.Next().Type);
-		Assert.Equal(TokenType.Symbol, reader.Next().Type);
+		var spaceToken = reader.Next();
+		Assert.NotNull(spaceToken);
+		Assert.Equal(TokenType.Space, spaceToken.Type);
+		var wordToken = reader.Next();
+		Assert.NotNull(wordToken);
+		Assert.Equal(TokenType.Word, wordToken.Type);
+		var symbolToken = reader.Next();
+		Assert.NotNull(symbolToken);
+		Assert.Equal(TokenType.Symbol, symbolToken.Type);
 		Assert.Equal(5, reader.NextNumber());
-		Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
+		var eolToken = reader.Next();
+		Assert.NotNull(eolToken);
+		Assert.Equal(TokenType.EndOfLine, eolToken.Type);
 
 		Assert.Equal(16, reader.NextInteger());
-		Assert.Equal(TokenType.Space, reader.Next().Type);
-		Assert.Equal(TokenType.Word, reader.Next().Type);
-		Assert.Equal(TokenType.Symbol, reader.Next().Type);
+		spaceToken = reader.Next();
+		Assert.NotNull(spaceToken);
+		Assert.Equal(TokenType.Space, spaceToken.Type);
+		wordToken = reader.Next();
+		Assert.NotNull(wordToken);
+		Assert.Equal(TokenType.Word, wordToken.Type);
+		symbolToken = reader.Next();
+		Assert.NotNull(symbolToken);
+		Assert.Equal(TokenType.Symbol, symbolToken.Type);
 		Assert.Equal(10, reader.NextNumber());
-		Assert.Equal(TokenType.EndOfLine, reader.Next().Type);
+		eolToken = reader.Next();
+		Assert.NotNull(eolToken);
+		Assert.Equal(TokenType.EndOfLine, eolToken.Type);
 	}
 
 	[Fact]
