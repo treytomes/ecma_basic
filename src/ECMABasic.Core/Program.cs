@@ -20,7 +20,7 @@ namespace ECMABasic.Core
 		/// </summary>
 		private readonly List<int> _datas = new();
 
-		public ProgramLine this[int lineNumber]
+		public ProgramLine? this[int lineNumber]
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace ECMABasic.Core
 
 					var oldLineNumber = env.CurrentLineNumber;
 					var line = this[env.CurrentLineNumber];
-					line.Statement.Execute(env, false);
+					line!.Statement!.Execute(env, false);
 					if (oldLineNumber == env.CurrentLineNumber)
 					{
 						// The statement didn't modify the current line number, so we can simply move to the next one.
@@ -119,7 +119,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public ProgramLine MoveToNextLine(IEnvironment env)
+		public ProgramLine? MoveToNextLine(IEnvironment env)
 		{
 			env.CurrentLineNumber = GetNextLineNumber(env.CurrentLineNumber);
 			return this[env.CurrentLineNumber];
@@ -146,7 +146,7 @@ namespace ECMABasic.Core
 		/// <param name="n">The data index (which is not the line number).</param>
 		/// <returns>The DATA statement, or null if out of range.</returns>
 		/// <exception cref="RuntimeException">Thrown if the line number doesn't contain a DATA statement.</exception>
-		public DataStatement GetDataLine(int n)
+		public DataStatement? GetDataLine(int n)
 		{
 			if (n >= _datas.Count)
 			{

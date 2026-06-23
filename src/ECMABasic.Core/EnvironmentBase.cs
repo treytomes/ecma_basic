@@ -14,7 +14,7 @@ namespace ECMABasic.Core
 
 		private readonly IBasicConfiguration _config;
 
-		public EnvironmentBase(Interpreter interpreter = null, IBasicConfiguration config = null)
+		public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null)
 		{
 			Interpreter = interpreter ?? new Interpreter();
 			_config = config ?? MinimalBasicConfiguration.Instance;
@@ -122,7 +122,7 @@ namespace ECMABasic.Core
 			_callStack.Push(context);
 		}
 
-		public ICallStackContext PopCallStack()
+		public ICallStackContext? PopCallStack()
 		{
 			if (_callStack.Count == 0)
 			{

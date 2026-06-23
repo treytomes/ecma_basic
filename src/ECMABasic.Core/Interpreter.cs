@@ -17,10 +17,10 @@ namespace ECMABasic.Core
 	{
 		private readonly List<StatementParser> _lineStatements;
 
-		protected ComplexTokenReader _reader;
+		protected ComplexTokenReader _reader = null!;
 		private readonly IBasicConfiguration _config;
 
-		public Interpreter(IBasicConfiguration config = null)
+		public Interpreter(IBasicConfiguration? config = null)
 		{
 			_config = config ?? MinimalBasicConfiguration.Instance;
 
@@ -50,7 +50,7 @@ namespace ECMABasic.Core
 		/// <param name="text">The text to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
-		public static bool FromText(string text, IEnvironment env, IBasicConfiguration config = null)
+		public static bool FromText(string text, IEnvironment env, IBasicConfiguration? config = null)
 		{
 			var interpreter = new Interpreter(config);
 			return interpreter.InterpretProgramFromText(env, text);
@@ -62,7 +62,7 @@ namespace ECMABasic.Core
 		/// <param name="path">The path to the file to interpret.</param>
 		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
-		public static bool FromFile(string path, IEnvironment env, IBasicConfiguration config = null)
+		public static bool FromFile(string path, IEnvironment env, IBasicConfiguration? config = null)
 		{
 			var interpreter = new Interpreter(config);
 			return interpreter.InterpretProgramFromFile(env, path);
@@ -107,7 +107,7 @@ namespace ECMABasic.Core
 			{
 				while (true)
 				{
-					if (!ProcessBlock(env, null))
+					if (!ProcessBlock(env, null!))
 					{
 						break;
 					}
@@ -131,12 +131,12 @@ namespace ECMABasic.Core
 		/// Process the next line or for-block.
 		/// </summary>
 		/// <returns></returns>
-		protected bool ProcessBlock(IEnvironment env, ProgramLine parent)
+		protected bool ProcessBlock(IEnvironment env, ProgramLine? parent)
 		{
 			return ProcessLine(env, parent) || ProcessForBlock(env, parent);
 		}
 
-		private bool ProcessLine(IEnvironment env, ProgramLine parent)
+		private bool ProcessLine(IEnvironment env, ProgramLine? parent)
 		{
 			var startIndex = _reader.TokenIndex;
 			if (_reader.IsAtEnd)
@@ -209,12 +209,12 @@ namespace ECMABasic.Core
 		/// </summary>
 		/// <param name="throwOnError">Throw an exception if space is not found.  Default to true.</param>
 		/// <returns>The space token.</returns>
-		protected Token ProcessSpace(bool throwOnError = true)
+		protected Token? ProcessSpace(bool throwOnError = true)
 		{
 			return _reader.Next(TokenType.Space, throwOnError);
 		}
 
-		protected IStatement ProcessStatement(int? lineNumber, bool throwOnError = true)
+		protected IStatement? ProcessStatement(int? lineNumber, bool throwOnError = true)
 		{
 			foreach (var parser in _lineStatements)
 			{
@@ -236,7 +236,7 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		private void ValidateNotUsingPreviousControlVariable(ProgramLine forLine, ProgramLine parent)
+		private void ValidateNotUsingPreviousControlVariable(ProgramLine forLine, ProgramLine? parent)
 		{
 			if (parent == null)
 			{
@@ -248,7 +248,7 @@ namespace ECMABasic.Core
 				return;
 			}
 
-			if (stmt.LoopVar.Name == (forLine.Statement as ForStatement).LoopVar.Name)
+			if (stmt.LoopVar.Name == (forLine.Statement as ForStatement)!.LoopVar.Name)
 			{
 				throw ExceptionFactory.ForUsingPreviousControlVariable(forLine.LineNumber);
 			}
@@ -261,7 +261,7 @@ namespace ECMABasic.Core
 			ValidateNotUsingPreviousControlVariable(forLine, parent.Parent);
 		}
 
-		private bool ProcessForBlock(IEnvironment env, ProgramLine parent)
+		private bool ProcessForBlock(IEnvironment env, ProgramLine? parent)
 		{
 			if (!ProcessForLine(env, parent))
 			{
@@ -290,7 +290,7 @@ namespace ECMABasic.Core
 			return true;
 		}
 
-		protected bool ProcessForLine(IEnvironment env, ProgramLine parent)
+		protected bool ProcessForLine(IEnvironment env, ProgramLine? parent)
 		{
 			var startIndex = _reader.TokenIndex;
 			if (_reader.IsAtEnd)
@@ -329,7 +329,7 @@ namespace ECMABasic.Core
 			return true;
 		}
 
-		protected bool ProcessNextLine(IEnvironment env, ProgramLine parent)
+		protected bool ProcessNextLine(IEnvironment env, ProgramLine? parent)
 		{
 			var startIndex = _reader.TokenIndex;
 			if (_reader.IsAtEnd)
@@ -358,7 +358,7 @@ namespace ECMABasic.Core
 				return false;
 			}
 
-			if ((statement as NextStatement).LoopVar.Name != (parent.Statement as ForStatement).LoopVar.Name)
+			if ((statement as NextStatement)!.LoopVar.Name != (parent!.Statement as ForStatement)!.LoopVar.Name)
 			{
 				throw ExceptionFactory.NextWithoutFor(lineNumber);
 			}

@@ -100,7 +100,7 @@
 		/// Pop a context off of the call stack for RETURN-ing from a GOSUB or resetting a loop.
 		/// </summary>
 		/// <returns>The context we're currently working in.</returns>
-		ICallStackContext PopCallStack();
+		ICallStackContext? PopCallStack();
 
 		/// <summary>
 		/// Used by the Program evaluator to see if a stop has been requested.
