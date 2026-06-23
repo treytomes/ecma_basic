@@ -43,7 +43,7 @@ namespace ECMABasic.Core.Statements
 			foreach (var expr in PrintItems)
 			{
 				var value = expr.Evaluate(env);
-				string? text = value switch
+				var text = value switch
 				{
 					int => PrintNumber((int)value),
 					double => PrintNumber((double)value),
