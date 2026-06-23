@@ -17,6 +17,7 @@ namespace ECMABasic.Core
 		/// Read whitespace off of the token stream.
 		/// An exception will optionally occur if whitespace could not be found.
 		/// </summary>
+		/// <param name="reader">The token reader.</param>
 		/// <param name="throwOnError">Throw an exception if space is not found.  Default to true.</param>
 		/// <returns>The space token, or null if not found and throwOnError is false.</returns>
 		protected static Token? ProcessSpace(ComplexTokenReader reader, bool throwOnError = true)

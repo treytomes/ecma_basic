@@ -48,7 +48,8 @@ namespace ECMABasic.Core
 		/// Create an interpreter that will interpret the input text directly.
 		/// </summary>
 		/// <param name="text">The text to interpret.</param>
-		/// <param name="reporter">A receiver for error messages.</param>
+		/// <param name="env">The execution environment.</param>
+		/// <param name="config">Optional BASIC configuration settings.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
 		public static bool FromText(string text, IEnvironment env, IBasicConfiguration? config = null)
 		{
@@ -60,7 +61,8 @@ namespace ECMABasic.Core
 		/// Create an interpreter that will interpret the source text contained at the file path.
 		/// </summary>
 		/// <param name="path">The path to the file to interpret.</param>
-		/// <param name="reporter">A receiver for error messages.</param>
+		/// <param name="env">The execution environment.</param>
+		/// <param name="config">Optional BASIC configuration settings.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
 		public static bool FromFile(string path, IEnvironment env, IBasicConfiguration? config = null)
 		{
@@ -80,8 +82,8 @@ namespace ECMABasic.Core
 		/// <summary>
 		/// Interpret the source text contained at the file path.
 		/// </summary>
+		/// <param name="env">The execution environment.</param>
 		/// <param name="path">The path to the file to interpret.</param>
-		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
 		public bool InterpretProgramFromFile(IEnvironment env, string path)
 		{
@@ -92,8 +94,8 @@ namespace ECMABasic.Core
 		/// <summary>
 		/// Interpret the input text directly.
 		/// </summary>
+		/// <param name="env">The execution environment.</param>
 		/// <param name="text">The text to interpret.</param>
-		/// <param name="reporter">A receiver for error messages.</param>
 		/// <returns>Was the input interpreted successfully?</returns>
 		public bool InterpretProgramFromText(IEnvironment env, string text)
 		{
