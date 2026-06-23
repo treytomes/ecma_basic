@@ -12,7 +12,7 @@ namespace ECMABasic.Core
         /// </summary>
         /// <param name="lineNumber">The line number.</param>
         /// <param name="statement">The statement to execute on this line.</param>
-        public ProgramLine(int lineNumber, IStatement statement, ProgramLine parent)
+        public ProgramLine(int lineNumber, IStatement? statement, ProgramLine? parent)
         {
             LineNumber = lineNumber;
             Statement = statement;
@@ -27,16 +27,16 @@ namespace ECMABasic.Core
         /// <summary>
         /// The statement to execute on this line.
         /// </summary>
-        public IStatement Statement { get; }
+        public IStatement? Statement { get; }
 
         /// <summary>
         /// Is this line contained in a block?
         /// </summary>
-        public ProgramLine Parent { get; }
+        public ProgramLine? Parent { get; }
 
         public string ToListing()
 		{
-			return string.Concat(LineNumber.ToString(), " ", Statement.ToListing(), Environment.NewLine);
+			return string.Concat(LineNumber.ToString(), " ", Statement?.ToListing(), Environment.NewLine);
 		}
 	}
 }

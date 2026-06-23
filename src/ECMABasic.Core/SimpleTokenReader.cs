@@ -39,7 +39,7 @@ namespace ECMABasic.Core
         /// Pull the next token off of the stream.
         /// </summary>
         /// <returns>The token that was read, or null at the end of the stream.</returns>
-        public Token Next()
+        public Token? Next()
         {
             if (IsAtEnd)
             {

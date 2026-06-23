@@ -41,7 +41,7 @@ namespace ECMABasic.Core
         /// Create a new instance of <see cref="CharacterReader"/>.
         /// </summary>
         /// <param name="source">The source to pull the token text from.</param>
-        public CharacterReader(Stream source, IBasicConfiguration config = null)
+        public CharacterReader(Stream source, IBasicConfiguration? config = null)
         {
             _config = config ?? MinimalBasicConfiguration.Instance;
             _source = source;

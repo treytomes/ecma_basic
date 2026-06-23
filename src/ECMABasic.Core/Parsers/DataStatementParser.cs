@@ -54,7 +54,11 @@ namespace ECMABasic.Core.Parsers
 							}
 							else
 							{
-								token = new Token(TokenType.String, new[] { token, reader.Next() });
+								var nextToken = reader.Next();
+							if (nextToken != null)
+							{
+								token = new Token(TokenType.String, new[] { token, nextToken });
+							}
 							}
 						}
 
