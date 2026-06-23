@@ -128,7 +128,7 @@ namespace ECMABasic.Core
 					signText = exsignToken?.Text ?? string.Empty;
 				}
 
-				Token powerToken = null;
+				Token? powerToken = null;
 				if (!char.IsDigit(exradToken.Text.Last()))
 				{
 					powerToken = Next(TokenType.Integer, true);
@@ -157,7 +157,7 @@ namespace ECMABasic.Core
 		/// <param name="pattern">An optional regular expression pattern to match on the next token text.</param>
 		/// <returns>The token that was read.</returns>
 		/// <exception cref="UnexpectedTokenException">Throws an exception if the token type doesn't match what was expected.</exception>
-		public Token Next(TokenType type, bool throwOnError = true, string pattern = null)
+		public Token? Next(TokenType type, bool throwOnError = true, string? pattern = null)
 		{
 			var startPosition = TokenIndex;
 			var token = Next();
@@ -186,7 +186,7 @@ namespace ECMABasic.Core
 		/// No semantic analysis at this phase; that comes next.
 		/// </remarks>
 		/// <returns>The token that was read, or null at the end of the stream.</returns>
-		public Token Next()
+		public Token? Next()
 		{
 			if (IsAtEnd)
 			{
