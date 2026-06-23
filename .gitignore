@@ -452,3 +452,18 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+##
+## Claude Code - Secrets Protection
+##
+# CRITICAL: Prevent committing tokens and secrets
+.claude/settings.local.json
+.claude/**/*.secret
+.claude/**/*.key
+.env
+.env.*
+!.env.example
+
+# Allow .claude/ configuration but protect sensitive overrides
+# .claude/settings.json is COMMITTED (template only)
+# .claude/settings.local.json is IGNORED (contains secrets)

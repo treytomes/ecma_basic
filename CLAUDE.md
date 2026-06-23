@@ -30,6 +30,20 @@ Every code change requires ONE of:
 
 If asked to modify code without a spec, STOP and request either a GitHub issue or write the test first.
 
+### Security and Secrets Management
+
+**CRITICAL: Never commit secrets, tokens, or API keys to git.**
+
+- ✅ **Safe to commit**: `.claude/settings.json` (no secrets)
+- 🔒 **Never commit**: `.claude/settings.local.json` (gitignored, contains tokens)
+
+**Token Storage Options**:
+1. `.claude/settings.local.json` (recommended for development)
+2. System environment variable `GITHUB_TOKEN`
+3. GitHub CLI credential store: `gh auth token`
+
+See [`.claude/SECRETS_MANAGEMENT.md`](.claude/SECRETS_MANAGEMENT.md) for complete security guide.
+
 ### Clean Architecture
 - **Core Domain**: The `ECMABasic.Core` project contains domain logic with no external dependencies
 - **Application Layer**: `ECMABasic55` provides the console REPL, depending only on Core

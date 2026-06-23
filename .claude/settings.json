@@ -36,5 +36,10 @@
   "environment": {
     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
     "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1"
-  }
+  },
+  "notes": [
+    "GITHUB_TOKEN should be set in your system environment or .claude/settings.local.json",
+    "Never commit tokens to this file - it's tracked by git",
+    "settings.local.json is gitignored and will override values here"
+  ]
 }
