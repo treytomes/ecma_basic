@@ -1,6 +1,6 @@
 ﻿namespace ECMABasic.Core.Expressions
 {
-	class StringExpression : IExpression
+	internal class StringExpression : IExpression
 	{
 		public StringExpression(string text)
 			: base()

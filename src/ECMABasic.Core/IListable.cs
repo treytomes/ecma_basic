@@ -6,6 +6,6 @@
         /// Output a string formatted for the output of a LIST statement.
         /// </summary>
         /// <returns>The textual representation of this item.</returns>
-        string ToListing();
+        public string ToListing();
     }
 }
