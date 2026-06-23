@@ -19,7 +19,7 @@ namespace ECMABasic.Core.Statements
 			var value = Value.Evaluate(env);
 			if (Target.IsString)
 			{
-				env.SetStringVariableValue(Target.Name, Convert.ToString(value));
+				env.SetStringVariableValue(Target.Name, Convert.ToString(value) ?? string.Empty);
 			}
 			else
 			{

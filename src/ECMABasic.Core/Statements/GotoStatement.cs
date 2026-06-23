@@ -65,7 +65,7 @@ namespace ECMABasic.Core.Statements
 			var context = env.PopCallStack();
 			if (context is ForStackContext)
 			{
-				var forContext = context as ForStackContext;
+				var forContext = (context as ForStackContext)!;
 				if ((env.CurrentLineNumber < forContext.BlockStartLineNumber) || (env.CurrentLineNumber >= forContext.BlockEndLineNumber))
 				{
 					// We just jumped out of the FOR-block, so we can dispose of the context.

@@ -29,7 +29,7 @@ namespace ECMABasic.Core.Statements
 					}
 					if (context is GosubStackContext)
 					{
-						env.CurrentLineNumber = (context as GosubStackContext).LineNumber;
+						env.CurrentLineNumber = (context as GosubStackContext)!.LineNumber;
 						break;
 					}
 				}

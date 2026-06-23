@@ -12,7 +12,7 @@ namespace ECMABasic.Core.Statements
 
 		private readonly IBasicConfiguration _config;
 
-		public PrintStatement(IEnumerable<IPrintItem> expr = null, IBasicConfiguration config = null)
+		public PrintStatement(IEnumerable<IPrintItem>? expr = null, IBasicConfiguration? config = null)
 		{
 			_config = config ?? MinimalBasicConfiguration.Instance;
 			if (_scientificFormat == null)
@@ -43,13 +43,13 @@ namespace ECMABasic.Core.Statements
 			foreach (var expr in PrintItems)
 			{
 				var value = expr.Evaluate(env);
-				string text = value switch
+				string? text = value switch
 				{
 					int => PrintNumber((int)value),
 					double => PrintNumber((double)value),
 					_ => Convert.ToString(value),
 				};
-				env.Print(text);
+				env.Print(text ?? string.Empty);
 			}
 
 			if (!(PrintItems.Last() is IPrintItemSeparator))
