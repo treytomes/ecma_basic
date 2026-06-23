@@ -21,13 +21,13 @@ namespace ECMABasic.Core.Parsers
 			var sb = new StringBuilder();
 			while (true)
 			{
-				if (reader.Peek().Type == TokenType.EndOfLine)
+				if (reader.Peek()?.Type == TokenType.EndOfLine)
 				{
 					break;
 				}
 
 				// TODO: The tokenizer is getting choked up if it finds a double-quote in the text.
-				sb.Append(reader.Next().Text);
+				sb.Append(reader.Next()!.Text);
 			}
 
 			return new RemarkStatement(sb.ToString());

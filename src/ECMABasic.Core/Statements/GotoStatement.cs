@@ -22,7 +22,7 @@ namespace ECMABasic.Core.Statements
 		/// </summary>
 		/// <param name="src">The line jumping from.</param>
 		/// <param name="dst">The line jumping to.</param>
-		private void ValidateSharedAncestry(IEnvironment env, ProgramLine src, ProgramLine dst)
+		private void ValidateSharedAncestry(IEnvironment env, ProgramLine? src, ProgramLine dst)
 		{
 			if (dst.Parent == null)
 			{
@@ -59,7 +59,10 @@ namespace ECMABasic.Core.Statements
 			}
 
 			var newLine = env.Program[lineNumber];
-			ValidateSharedAncestry(env, thisLine, newLine);
+			if (newLine != null)
+			{
+				ValidateSharedAncestry(env, thisLine, newLine);
+			}
 			env.CurrentLineNumber = lineNumber;
 
 			var context = env.PopCallStack();

@@ -23,7 +23,11 @@ namespace ECMABasic.Core
 			_tokens = new List<Token>();
 			while (!reader.IsAtEnd)
 			{
-				_tokens.Add(reader.Next());
+				var token = reader.Next();
+				if (token != null)
+				{
+					_tokens.Add(token);
+				}
 			}
 
 			reader.Dispose();
@@ -195,7 +199,7 @@ namespace ECMABasic.Core
 
 			var token = Read();
 
-			if (token.Type == TokenType.Symbol)
+			if (token?.Type == TokenType.Symbol)
 			{
 				if (token.Text == "\"")
 				{
@@ -234,12 +238,12 @@ namespace ECMABasic.Core
 					return token;
 				}
 			}
-			else if (token.Type == TokenType.Word)
+			else if (token?.Type == TokenType.Word)
 			{
 				if (token.Text.Length == 1)
 				{
 					var nextToken = Peek();
-					if ((nextToken.Type == TokenType.Symbol) && (nextToken.Text == "$"))
+					if ((nextToken?.Type == TokenType.Symbol) && (nextToken.Text == "$"))
 					{
 						Read();  // Read off the $.
 						return new Token(TokenType.Word, new[] { token, nextToken });
@@ -247,7 +251,7 @@ namespace ECMABasic.Core
 					else
 					{
 						nextToken = Peek();
-						if ((nextToken.Type == TokenType.Integer) && (nextToken.Text.Length == 1))
+						if ((nextToken?.Type == TokenType.Integer) && (nextToken.Text.Length == 1))
 						{
 							Read();  // Read off the digit.
 							// It's a numeric variable with a letter followed by a digit.
@@ -271,7 +275,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private Token ReadRestOfString(Token start)
+		private Token? ReadRestOfString(Token start)
 		{
 			var startIndex = TokenIndex;
 			List<Token> stringTokens = new() { start };
@@ -299,7 +303,7 @@ namespace ECMABasic.Core
 			return new Token(TokenType.String, stringTokens);
 		}
 
-		private Token Read()
+		private Token? Read()
 		{
 			if (IsAtEnd)
 			{
@@ -311,7 +315,7 @@ namespace ECMABasic.Core
 			return token;
 		}
 
-		public Token Peek()
+		public Token? Peek()
 		{
 			if (IsAtEnd)
 			{
