@@ -25,7 +25,9 @@ public class InterpreterTests
 		Assert.NotNull(line);
 		Assert.Equal(10, line.LineNumber);
 		Assert.IsType<PrintStatement>(line.Statement);
-		Assert.Equal("HELLO, WORLD!", (line.Statement as PrintStatement).PrintItems.First().Evaluate(env));
+		var printStatement = line.Statement as PrintStatement;
+		Assert.NotNull(printStatement);
+		Assert.Equal("HELLO, WORLD!", printStatement.PrintItems.First().Evaluate(env));
 
 		line = program[20];
 		Assert.NotNull(line);

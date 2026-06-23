@@ -41,7 +41,7 @@ internal class TestEnvironment : EnvironmentBase
 		{
 			return _inputLines.Dequeue();
 		}
-		return null;
+		return string.Empty;
 	}
 
 	public override void PrintLine(string text)
