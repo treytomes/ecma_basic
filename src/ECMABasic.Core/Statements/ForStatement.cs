@@ -88,7 +88,10 @@ namespace ECMABasic.Core.Statements
 				else
 				{
 					// Scan for NEXT.
-					while (!(env.Program.MoveToNextLine(env)?.Statement is NextStatement)) ;
+					while (!(env.Program.MoveToNextLine(env)?.Statement is NextStatement))
+					{
+						;  // Continue scanning until NEXT found
+					}
 					// It'll stop incrementing when the NEXT is found.
 
 					// Move to the line *just after* the NEXT to continue running.
