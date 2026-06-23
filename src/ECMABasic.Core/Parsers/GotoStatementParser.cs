@@ -4,7 +4,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class GotoStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			if (reader.Next(TokenType.Word, false, @"GOTO") == null)
 			{

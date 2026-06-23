@@ -4,7 +4,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class NextStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, @"NEXT");
 			if (token == null)
