@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- Inherits from Directory.Build.props:
+       - Nullable reference types
+       - TreatWarningsAsErrors
+       - LangVersion latest
+       - XML documentation generation
+  -->
+
+</Project>
