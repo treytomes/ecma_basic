@@ -33,7 +33,7 @@ namespace ECMABasic.Core
 
 			_reader.Next(TokenType.Space, false);
 
-			IExpression right;
+			IExpression? right;
 			try
 			{
 				right = ParseAtomic(true);
@@ -48,6 +48,11 @@ namespace ECMABasic.Core
 				{
 					throw;
 				}
+			}
+
+			if (right == null)
+			{
+				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
 			}
 
 			try
@@ -79,7 +84,7 @@ namespace ECMABasic.Core
 			return expr;
 		}
 
-		public IExpression ParseVariable()
+		public IExpression? ParseVariable()
 		{
 			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\$");
 			if (nameToken == null)
@@ -90,7 +95,7 @@ namespace ECMABasic.Core
 			return new VariableExpression(nameToken.Text);
 		}
 
-		public IExpression ParseLiteral()
+		public IExpression? ParseLiteral()
 		{
 			var valueToken = _reader.Next(TokenType.String, false);
 			if (valueToken == null)
@@ -105,7 +110,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public IExpression ParseFunction(bool throwOnError)
+		public IExpression? ParseFunction(bool throwOnError)
 		{
 			var startIndex = _reader.TokenIndex;
 			var nameToken = _reader.Next(TokenType.Word, false);

@@ -33,7 +33,7 @@ namespace ECMABasic.Core
 
 			if (valueExpr == null)
 			{
-				throw ExceptionFactory.ExpectedExpression(lineNumber);
+				throw new Exceptions.SyntaxException("Expected expression in LET statement", lineNumber);
 			}
 
 			return new LetStatement(targetExpr, valueExpr);

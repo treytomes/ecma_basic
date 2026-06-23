@@ -40,7 +40,7 @@ namespace ECMABasic.Core
 
 			_reader.Next(TokenType.Space, false);
 
-			IExpression right;
+			IExpression? right;
 			try
 			{
 				right = ParseSums();
@@ -55,6 +55,11 @@ namespace ECMABasic.Core
 				{
 					throw;
 				}
+			}
+
+			if (right == null)
+			{
+				throw ExceptionFactory.ExpectedNumericExpression(_lineNumber);
 			}
 
 			try
@@ -190,6 +195,10 @@ namespace ECMABasic.Core
 			var expr = ParseInvolution();
 			if (unaryMinusToken != null)
 			{
+				if (expr == null)
+				{
+					throw ExceptionFactory.ExpectedNumericExpression(_lineNumber);
+				}
 				expr = new NegationExpression(expr);
 			}
 
@@ -277,7 +286,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		public IExpression ParseVariable()
+		public IExpression? ParseVariable()
 		{
 			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\d?");
 			if (nameToken == null)
@@ -288,7 +297,7 @@ namespace ECMABasic.Core
 			return new VariableExpression(nameToken.Text);
 		}
 
-		public IExpression ParseLiteral()
+		public IExpression? ParseLiteral()
 		{
 			var nextValue = _reader.NextNumber(false);
 			if (!nextValue.HasValue)
@@ -298,7 +307,7 @@ namespace ECMABasic.Core
 			return new NumberExpression(nextValue.Value);
 		}
 
-		public IExpression ParseFunction(bool throwOnError)
+		public IExpression? ParseFunction(bool throwOnError)
 		{
 			var nameToken = _reader.Next(TokenType.Word, false);
 			if (nameToken == null)
