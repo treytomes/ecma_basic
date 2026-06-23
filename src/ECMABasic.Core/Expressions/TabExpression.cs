@@ -9,7 +9,7 @@ namespace ECMABasic.Core.Expressions
 	{
 		private readonly IBasicConfiguration _config;
 
-		public TabExpression(IExpression value, IBasicConfiguration config = null)
+		public TabExpression(IExpression value, IBasicConfiguration? config = null)
 		{
 			Value = value;
 			_config = config ?? MinimalBasicConfiguration.Instance;

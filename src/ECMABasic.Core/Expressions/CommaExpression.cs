@@ -9,7 +9,7 @@ namespace ECMABasic.Core.Expressions
 	{
 		private readonly IBasicConfiguration _config;
 
-		public CommaExpression(IBasicConfiguration config = null)
+		public CommaExpression(IBasicConfiguration? config = null)
 		{
 			_config = config ?? MinimalBasicConfiguration.Instance;
 		}
