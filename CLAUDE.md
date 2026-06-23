@@ -4,19 +4,77 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A .NET 6.0 implementation of the ECMA-55 (Minimal BASIC) and ECMA-116 BASIC standards. This project provides an 80's-style BASIC interpreter with an interactive REPL environment for educational purposes.
+A .NET 10 implementation of the ECMA-55 (Minimal BASIC) and ECMA-116 BASIC standards. This project provides an 80's-style BASIC interpreter with an interactive REPL environment for educational purposes.
 
-**Repository**: https://github.com/treytomes/ecma_basic
+**Repository**: https://github.com/treytomes/ecma_basic  
+**Wiki**: https://github.com/treytomes/ecma_basic/wiki/  
+**Issues**: https://github.com/treytomes/ecma_basic/issues
+
+## Development Philosophy
+
+### Spec-Driven Development
+
+**CRITICAL: Never modify source code without a specification.**
+
+Every code change requires ONE of:
+1. **Failing test** that defines expected behavior (written first)
+2. **GitHub issue** with acceptance criteria
+3. **ECMA standard reference** with corresponding test
+4. **Pure refactoring** (no behavior change, all tests pass)
+
+#### Process
+- **Specifications are GitHub Issues**: Feature requests and bugs are tracked as issues with acceptance criteria
+- **Tests as Living Specs**: Every feature has tests that serve as executable specifications
+- **Red-Green-Refactor**: Write failing tests first, implement to pass, then refactor
+- **Documentation in Wiki**: Project notes, architecture decisions, and guides live in the GitHub wiki
+
+If asked to modify code without a spec, STOP and request either a GitHub issue or write the test first.
+
+### Clean Architecture
+- **Core Domain**: The `ECMABasic.Core` project contains domain logic with no external dependencies
+- **Application Layer**: `ECMABasic55` provides the console REPL, depending only on Core
+- **Dependency Rule**: Dependencies point inward (toward Core), never outward
+- **Interface-Driven**: Use abstractions (`IEnvironment`, `IBasicConfiguration`) for extensibility
+
+### Quality Standards
+- **80% Code Coverage Minimum**: All production code must maintain 80%+ test coverage
+- **Nullable Reference Types**: Explicit null handling throughout the codebase
+- **Modern C# Patterns**: File-scoped namespaces, target-typed new, pattern matching, var keyword, etc.
+- **Zero Warnings**: Build treats ALL warnings as errors (enforced via `Directory.Build.props`)
+  - The build WILL FAIL if any warnings exist
+  - This includes nullable warnings, code style warnings, and XML documentation warnings
+  - New projects automatically inherit this configuration
 
 ## Solution Structure
 
-The solution consists of three projects:
+The solution follows Clean Architecture principles with three projects:
 
-- **ECMABasic.Core**: Core interpreter library containing the parser, expression evaluator, and statement implementations. Includes configuration system for BASIC dialect settings.
-- **ECMABasic55**: Console application (ecmabasic55.exe) that provides the interactive REPL. Extends the core interpreter with immediate-mode commands (RUN, LIST, LOAD, SAVE, etc.).
-- **ECMABasic.Test**: xUnit test suite with sample programs in `Resources/` directory. Tests are organized by ECMA-55 standard groups (Group1-7).
+- **ECMABasic.Core**: Core domain layer containing the interpreter, parser, expression evaluator, and statement implementations. No external dependencies. Includes configuration system for BASIC dialect settings.
+- **ECMABasic55**: Application layer - console executable (ecmabasic55.exe) providing the interactive REPL. Extends the core interpreter with immediate-mode commands (RUN, LIST, LOAD, SAVE, etc.). Depends only on Core.
+- **ECMABasic.Test**: Test layer using xUnit with sample programs in `Resources/` directory. Tests organized by ECMA-55 standard groups (Group1-7). Validates specifications and maintains 80%+ coverage.
 
 ## Development Commands
+
+### Quick Start Scripts
+
+Convenience scripts are provided in the root directory for common tasks:
+
+```bash
+# Build the solution (Bash or Batch)
+./build.sh      # or build.bat on Windows
+
+# Run tests with coverage
+./test.sh       # or test.bat on Windows
+
+# Run the BASIC interpreter
+./run.sh        # or run.bat on Windows
+
+# Run with a BASIC program file
+./run.sh path/to/program.BAS
+
+# Publish for all platforms
+./publish.sh    # or publish.bat on Windows
+```
 
 ### Building and Running
 
@@ -37,6 +95,9 @@ dotnet run --project src/ECMABasic55/ECMABasic55.csproj -- path/to/program.BAS
 # Run all tests
 dotnet test src/ECMABasic.sln
 
+# Run with code coverage (minimum 80% required)
+dotnet test --collect:"XPlat Code Coverage"
+
 # Run specific test project
 dotnet test src/ECMABasic.Test/ECMABasic.Test.csproj
 
@@ -45,9 +106,25 @@ dotnet test --filter Group1SampleTests
 
 # Run a single test method
 dotnet test --filter "FullyQualifiedName~P050_Hello"
+
+# Watch mode for continuous testing during development
+dotnet watch test --project src/ECMABasic.Test
 ```
 
 Test resources (sample BASIC programs) are in `src/ECMABasic.Test/Resources/` with `.BAS` source files and `.OK` expected output files.
+
+### Code Coverage
+
+```bash
+# Generate coverage report
+dotnet tool install --global dotnet-reportgenerator-globaltool
+reportgenerator -reports:**/coverage.cobertura.xml -targetdir:coverage-report -reporttypes:Html
+
+# View report (Windows)
+start coverage-report/index.html
+```
+
+**Minimum 80% code coverage is required.** Focus on meaningful tests of business logic, parsers, and interpreters rather than trivial getters/setters.
 
 ## Architecture
 
@@ -135,19 +212,81 @@ Line-numbered statements that comprise a BASIC program:
 
 ## Testing Patterns
 
-Tests follow xUnit conventions with test classes organized by ECMA-55 standard sections:
+### Test Organization
+Tests follow xUnit conventions organized by ECMA-55 standard sections with **80% minimum code coverage requirement**:
 
 - Test methods named by test case number (e.g., `P050_Hello()`, `P055_Goodbye()`)
 - Sample programs stored in `Resources/` as `.BAS` files
 - Expected output stored as `.OK` files with matching names
 - Test resources copied to output directory via project configuration
 
-Common test pattern:
+### Common Test Pattern
 ```csharp
 [Fact]
 public void P050_Hello()
 {
+    // Arrange-Act-Assert pattern
     var result = RunProgram("P050-HELLO.BAS");
-    Assert.Equal(expectedOutput, result);
+    var expected = LoadExpectedOutput("P050-HELLO.OK");
+    
+    // Assert
+    Assert.Equal(expected, result);
 }
+```
+
+### Test-Driven Development
+Follow the Red-Green-Refactor cycle:
+1. **Red**: Write a failing test that defines desired behavior (create GitHub issue for the spec)
+2. **Green**: Implement minimum code to make the test pass
+3. **Refactor**: Improve code quality while keeping tests passing
+
+### GitHub Integration
+- **Specifications**: Document features and requirements as GitHub issues with acceptance criteria
+- **Documentation**: Architecture decisions and project notes go in the GitHub wiki
+- **Test Traceability**: Reference issue numbers in test documentation
+
+## Git Conventions
+
+### Commit Message Format
+
+All commits MUST follow [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+**Examples**:
+```
+feat(parser): add MID$ function support
+fix(interpreter): handle null in FOR statement  
+docs: update README with modernization status
+test: add coverage for nullable edge cases
+refactor(core): convert to file-scoped namespaces
+```
+
+**Rules**:
+- Use imperative mood: "add" not "added"
+- Lowercase description, no period at end
+- Subject line ≤ 72 characters
+- Body explains WHY, not WHAT
+- Always include Co-Authored-By footer for Claude commits
+
+See `.claude/rules/git-conventions.md` for complete specification.
+
+### Branch Naming
+
+```
+<type>/<issue-number>-<short-description>
+
+Examples:
+feature/1-fix-nullable-warnings
+fix/42-null-reference-in-for-statement
+refactor/3-file-scoped-namespaces
+docs/update-readme
 ```

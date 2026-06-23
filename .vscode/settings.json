@@ -3,7 +3,12 @@
         "appsettings",
         "ecmabasic",
         "exrad",
+        "frontmatter",
+        "globaltool",
         "GOSUB",
+        "reportgenerator",
+        "reporttypes",
+        "targetdir",
         "Xunit"
     ]
 }

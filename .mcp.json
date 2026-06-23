@@ -1,0 +1,33 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/mcp.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "disabled": true,
+      "description": "GitHub API access (create issues, PRs, read repos). Enable when you need programmatic GitHub access. Requires GITHUB_TOKEN environment variable."
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "disabled": true,
+      "description": "Extended filesystem operations beyond built-in tools. Enable if you need advanced file operations. Usually not needed - built-in tools are sufficient."
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "${workspaceFolder}/data"],
+      "disabled": true,
+      "description": "SQLite database access. Enable if you add a SQLite database to the project."
+    }
+  },
+  "notes": [
+    "All MCP servers are DISABLED by default to avoid overhead.",
+    "Enable only what you need for specific tasks.",
+    "GitHub server requires GITHUB_TOKEN environment variable.",
+    "Environment variables: Use ${VAR_NAME} syntax, set in .claude/settings.json or system env.",
+    "Personal MCP servers go in ~/.claude.json (user scope), not here."
+  ]
+}
