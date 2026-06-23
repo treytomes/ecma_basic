@@ -6,8 +6,12 @@
         "frontmatter",
         "globaltool",
         "GOSUB",
+        "modelcontextprotocol",
+        "nologo",
+        "OPTOUT",
         "reportgenerator",
         "reporttypes",
+        "setx",
         "targetdir",
         "Xunit"
     ]
