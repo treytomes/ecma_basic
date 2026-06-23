@@ -23,6 +23,10 @@ namespace ECMABasic.Core.Parsers
 			ProcessSpace(reader, true);
 
 			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (lineNumberExpr == null)
+			{
+				throw new Exceptions.SyntaxException("Expected line number in GOTO statement", lineNumber);
+			}
 			return new GotoStatement(lineNumberExpr);
 		}
 	}

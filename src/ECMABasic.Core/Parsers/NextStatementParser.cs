@@ -15,6 +15,10 @@ namespace ECMABasic.Core.Parsers
 			ProcessSpace(reader, true);
 
 			var loopVar = ParseVariableExpression(reader);
+			if (loopVar == null)
+			{
+				throw new Exceptions.SyntaxException("Expected variable in NEXT statement", lineNumber);
+			}
 
 			return new NextStatement(loopVar);
 		}

@@ -25,6 +25,10 @@ namespace ECMABasic.Core.Parsers
 			ProcessSpace(reader, true);
 
 			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (lineNumberExpr == null)
+			{
+				throw new Exceptions.SyntaxException("Expected line number in GOSUB statement", lineNumber);
+			}
 			return new GosubStatement(lineNumberExpr);
 		}
 	}
