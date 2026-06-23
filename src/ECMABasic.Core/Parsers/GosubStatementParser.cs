@@ -4,7 +4,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class GosubStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, @"GOSUB");
 			if (token == null)
@@ -25,6 +25,10 @@ namespace ECMABasic.Core.Parsers
 			ProcessSpace(reader, true);
 
 			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (lineNumberExpr == null)
+			{
+				throw new Exceptions.SyntaxException("Expected line number in GOSUB statement", lineNumber);
+			}
 			return new GosubStatement(lineNumberExpr);
 		}
 	}

@@ -13,9 +13,9 @@
 			_throwOnError = throwOnError;
 		}
 
-		public abstract IExpression Parse();
+		public abstract IExpression? Parse();
 
-		protected Token ParseBooleanOperator()
+		protected Token? ParseBooleanOperator()
 		{
 			var symbol = _reader.Next(TokenType.Symbol, false, @"\=|\<|\>");
 			if (symbol == null)

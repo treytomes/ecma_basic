@@ -10,7 +10,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class OnGotoStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			if (reader.Next(TokenType.Word, false, @"ON") == null)
 			{
@@ -19,6 +19,10 @@ namespace ECMABasic.Core.Parsers
 
 			ProcessSpace(reader, true);
 			var value = ParseNumericExpression(reader, lineNumber, true);
+			if (value == null)
+			{
+				throw new SyntaxException("Expected numeric expression in ON GOTO statement", lineNumber);
+			}
 			ProcessSpace(reader, true);
 
 			if (reader.Next(TokenType.Word, false, @"GOTO") == null)

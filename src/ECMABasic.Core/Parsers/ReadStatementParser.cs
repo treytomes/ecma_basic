@@ -6,7 +6,7 @@ namespace ECMABasic.Core.Parsers
 {
 	public class ReadStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, "READ");
 			if (token == null)
@@ -15,10 +15,13 @@ namespace ECMABasic.Core.Parsers
 			}
 			ProcessSpace(reader, true);
 
-			var vars = new List<VariableExpression>
+			var firstVar = ParseVariableExpression(reader);
+			if (firstVar == null)
 			{
-				ParseVariableExpression(reader)
-			};
+				throw new Exceptions.SyntaxException("Expected variable in READ statement", lineNumber);
+			}
+
+			var vars = new List<VariableExpression> { firstVar };
 
 			while (true)
 			{
@@ -27,7 +30,11 @@ namespace ECMABasic.Core.Parsers
 					break;
 				}
 				ProcessSpace(reader, false);
-				vars.Add(ParseVariableExpression(reader));
+				var nextVar = ParseVariableExpression(reader);
+				if (nextVar != null)
+				{
+					vars.Add(nextVar);
+				}
 			}
 
 			return new ReadStatement(vars);

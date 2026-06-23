@@ -6,7 +6,7 @@ namespace ECMABasic.Core
 {
 	public class PrintStatementParser : StatementParser
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, "PRINT");
 			if (token == null)
@@ -56,7 +56,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private static IPrintItemSeparator ProcessPrintSeparator(ComplexTokenReader reader)
+		private static IPrintItemSeparator? ProcessPrintSeparator(ComplexTokenReader reader)
 		{
 			var symbolToken = reader.Next(TokenType.Comma, false);
 			if (symbolToken != null)
@@ -73,7 +73,7 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		private static IPrintItem ProcessPrintItem(ComplexTokenReader reader, int? lineNumber = null)
+		private static IPrintItem? ProcessPrintItem(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var expr = ProcessTabExpression(reader, lineNumber);
 			if (expr != null)
@@ -90,7 +90,7 @@ namespace ECMABasic.Core
 			return null;
 		}
 
-		private static IPrintItem ProcessTabExpression(ComplexTokenReader reader, int? lineNumber = null)
+		private static IPrintItem? ProcessTabExpression(ComplexTokenReader reader, int? lineNumber = null)
 		{
 			var token = reader.Next(TokenType.Word, false, "TAB");
 			if (token == null)
@@ -101,6 +101,10 @@ namespace ECMABasic.Core
 			reader.Next(TokenType.OpenParenthesis);
 
 			var valueExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (valueExpr == null)
+			{
+				throw new Exceptions.SyntaxException("Expected numeric expression in TAB function", lineNumber);
+			}
 
 			reader.Next(TokenType.CloseParenthesis);
 
