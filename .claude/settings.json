@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash:**",
+      "Read:**",
+      "Write:**",
+      "Edit:**",
+      "Glob:**",
+      "Grep:**"
+    ],
+    "deny": [
+      "Bash:rm -rf /*",
+      "Bash:rm -rf ~/*",
+      "Bash:rm -rf C:/*",
+      "Bash:format *",
+      "Bash:del /s *",
+      "Bash:curl *",
+      "Bash:wget *",
+      "Bash:ssh *",
+      "Bash:ftp *",
+      "Bash:telnet *"
+    ]
+  },
+  "model": "sonnet",
+  "hooks": {
+    "afterEdit": [
+      {
+        "description": "Verify code builds after C# edits",
+        "command": "dotnet build src/ECMABasic.sln --nologo --verbosity quiet",
+        "when": {
+          "glob": "**/*.cs"
+        }
+      }
+    ]
+  },
+  "environment": {
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1"
+  }
+}
