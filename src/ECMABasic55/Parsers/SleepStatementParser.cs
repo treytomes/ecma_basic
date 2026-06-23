@@ -1,11 +1,12 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Exceptions;
 using ECMABasic55.Statements;
 
 namespace ECMABasic55.Parsers;
 
 public class SleepStatementParser : StatementParser
 {
-	public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+	public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 	{
 		if (reader.Next(TokenType.Word, false, @"SLEEP") == null)
 		{
@@ -15,6 +16,10 @@ public class SleepStatementParser : StatementParser
 		ProcessSpace(reader, true);
 
 		var milliseconds = ParseNumericExpression(reader, lineNumber, true);
+		if (milliseconds == null)
+		{
+			throw ExceptionFactory.Syntax();
+		}
 		return new SleepStatement(milliseconds);
 	}
 }

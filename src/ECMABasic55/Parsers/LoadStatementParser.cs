@@ -1,11 +1,12 @@
 ﻿using ECMABasic.Core;
+using ECMABasic.Core.Exceptions;
 using ECMABasic55.Statements;
 
 namespace ECMABasic55.Parsers;
 
 public class LoadStatementParser : StatementParser
 {
-	public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+	public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 	{
 		var token = reader.Next(TokenType.Word, false, "LOAD");
 		if (token == null)
@@ -16,6 +17,10 @@ public class LoadStatementParser : StatementParser
 		ProcessSpace(reader);
 
 		var filenameExpr = ParseStringExpression(reader, null, true);
+		if (filenameExpr == null)
+		{
+			throw ExceptionFactory.Syntax();
+		}
 
 		return new LoadStatement(filenameExpr);
 	}

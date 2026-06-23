@@ -11,15 +11,15 @@ public class ListStatement : IStatement
 {
 	private readonly IBasicConfiguration _config;
 
-	public ListStatement(IExpression from, IExpression to, IBasicConfiguration config = null)
+	public ListStatement(IExpression? from, IExpression? to, IBasicConfiguration? config = null)
 	{
 		_config = config ?? MinimalBasicConfiguration.Instance;
 		From = from;
 		To = to;
 	}
 
-	public IExpression From { get; }
-	public IExpression To { get; }
+	public IExpression? From { get; }
+	public IExpression? To { get; }
 
 	public void Execute(IEnvironment env, bool isImmediate)
 	{
@@ -42,7 +42,11 @@ public class ListStatement : IStatement
 		if ((From != null) && (To == null))
 		{
 			env.ValidateLineNumber(fromLineNumber, true);
-			env.Print(env.Program[fromLineNumber].ToListing());
+			var line = env.Program[fromLineNumber];
+			if (line != null)
+			{
+				env.Print(line.ToListing());
+			}
 			return;
 		}
 

@@ -18,7 +18,8 @@ public class ContinueStatement : IStatement
 			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		if (env.Program[env.CurrentLineNumber].Statement is StopStatement)
+		var currentLine = env.Program[env.CurrentLineNumber];
+		if (currentLine != null && currentLine.Statement is StopStatement)
 		{
 			env.Program.MoveToNextLine(env);
 		}

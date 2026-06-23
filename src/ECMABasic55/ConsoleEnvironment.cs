@@ -7,7 +7,7 @@ namespace ECMABasic55;
 
 public class ConsoleEnvironment : EnvironmentBase
 {
-	public ConsoleEnvironment(Interpreter interpreter = null, IBasicConfiguration config = null)
+	public ConsoleEnvironment(Interpreter? interpreter = null, IBasicConfiguration? config = null)
 		: base(interpreter, config)
 	{
 	}
@@ -38,7 +38,7 @@ public class ConsoleEnvironment : EnvironmentBase
 
 	public override string ReadLine()
 	{
-		return Console.ReadLine();
+		return Console.ReadLine() ?? string.Empty;
 	}
 
 	public override void PrintLine(string text)
