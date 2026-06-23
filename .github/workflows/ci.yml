@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/ECMABasic.sln
+
+    - name: Build
+      run: dotnet build src/ECMABasic.sln --no-restore --configuration Release
+
+    - name: Test
+      run: dotnet test src/ECMABasic.sln --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
+
+    - name: Generate Coverage Report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.3.11
+      with:
+        reports: '**/coverage.cobertura.xml'
+        targetdir: 'coverage-report'
+        reporttypes: 'HtmlInline;Cobertura;MarkdownSummaryGithub'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: coverage-report/SummaryGithub.md
+
+    - name: Check Code Coverage
+      shell: pwsh
+      run: |
+        [xml]$coverage = Get-Content coverage-report/Cobertura.xml
+        $lineCoverage = [math]::Round([decimal]$coverage.coverage.'line-rate' * 100, 2)
+        Write-Host "Line Coverage: $lineCoverage%"
+
+        if ($lineCoverage -lt 80) {
+          Write-Error "Code coverage ($lineCoverage%) is below the required 80% threshold"
+          exit 1
+        }
+
+        Write-Host "✓ Code coverage meets the 80% requirement"
+
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-report
+        path: coverage-report/
+        retention-days: 30
