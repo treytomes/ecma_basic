@@ -7,6 +7,11 @@ namespace ECMABasic.Domain;
 public interface IEnvironment : IErrorReporter
 {
 	/// <summary>
+	/// The configuration settings for this BASIC implementation.
+	/// </summary>
+	public IBasicConfiguration Configuration { get; }
+
+	/// <summary>
 	/// The line number currently being executed.
 	/// If the program is not running this value will be null.
 	/// </summary>
@@ -114,4 +119,25 @@ public interface IEnvironment : IErrorReporter
 	/// Reset the data pointer to the first datum.
 	/// </summary>
 	public void ResetDataPointer();
+
+	/// <summary>
+	/// Get the next line number after the given line number.
+	/// </summary>
+	/// <param name="fromLineNumber">The line number to start from.</param>
+	/// <returns>The next line number, or -1 if no more lines.</returns>
+	public int GetNextLineNumber(int fromLineNumber);
+
+	/// <summary>
+	/// Move to the next line in the program and return the statement.
+	/// Updates CurrentLineNumber.
+	/// </summary>
+	/// <returns>The statement at the next line, or null if no more lines.</returns>
+	public IStatement? MoveToNextLine();
+
+	/// <summary>
+	/// Get the statement at the given line number.
+	/// </summary>
+	/// <param name="lineNumber">The line number to retrieve.</param>
+	/// <returns>The statement at that line, or null if line doesn't exist.</returns>
+	public IStatement? GetStatementAtLine(int lineNumber);
 }

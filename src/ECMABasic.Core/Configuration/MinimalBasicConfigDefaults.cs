@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿namespace ECMABasic.Core.Configuration;
 
 internal class MinimalBasicConfigDefaults

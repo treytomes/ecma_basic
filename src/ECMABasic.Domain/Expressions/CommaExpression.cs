@@ -7,22 +7,20 @@ namespace ECMABasic.Domain.Expressions;
 /// </summary>
 public class CommaExpression : IPrintItemSeparator
 {
-	private readonly IBasicConfiguration _config;
-
-	public CommaExpression(IBasicConfiguration config)
+	public CommaExpression()
 	{
-		_config = config;
 	}
 
 	public object Evaluate(IEnvironment env)
 	{
-		var column = env.TerminalColumn / _config.TerminalColumnWidth;
+		var config = env.Configuration;
+		var column = env.TerminalColumn / config.TerminalColumnWidth;
 		var nextColumn = column + 1;
-		if (nextColumn >= _config.NumTerminalColumns)
+		if (nextColumn >= config.NumTerminalColumns)
 		{
 			return "\n";
 		}
-		var nextColumnStart = nextColumn * _config.TerminalColumnWidth;
+		var nextColumnStart = nextColumn * config.TerminalColumnWidth;
 		var numRemainingSpaces = nextColumnStart - env.TerminalColumn;
 		var text = new string(' ', numRemainingSpaces);
 		return text;

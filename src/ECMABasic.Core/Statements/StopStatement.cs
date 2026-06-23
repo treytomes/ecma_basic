@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core.Exceptions;
 
 namespace ECMABasic.Core.Statements;

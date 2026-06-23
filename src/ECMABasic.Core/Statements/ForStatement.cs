@@ -1,5 +1,6 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
 using System;
 using System.Collections.Generic;
 

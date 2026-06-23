@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿namespace ECMABasic.Core.Exceptions;
 
 internal class ProgramEndException : RuntimeException

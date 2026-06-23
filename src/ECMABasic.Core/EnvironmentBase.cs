@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Core.Configuration;
 using ECMABasic.Core.Exceptions;
 using System.Collections.Generic;
@@ -12,14 +14,14 @@ public abstract class EnvironmentBase : IEnvironment
 	private readonly Stack<ICallStackContext> _callStack = new();
 	private readonly DataPointer _dataPointer = new();
 
-	private readonly IBasicConfiguration _config;
-
 	public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null)
 	{
 		Interpreter = interpreter ?? new Interpreter();
-		_config = config ?? MinimalBasicConfiguration.Instance;
+		Configuration = config ?? MinimalBasicConfiguration.Instance;
 		Program = new Program();
 	}
+
+	public IBasicConfiguration Configuration { get; }
 
 	public Interpreter Interpreter { get; }
 
@@ -57,7 +59,7 @@ public abstract class EnvironmentBase : IEnvironment
 	public void SetStringVariableValue(string variableName, string value)
 	{
 		// TODO: Validate variable name?
-		if (value.Length > _config.MaxStringLength)
+		if (value.Length > Configuration.MaxStringLength)
 		{
 			throw ExceptionFactory.StringOverflow(CurrentLineNumber);
 		}
@@ -160,5 +162,22 @@ public abstract class EnvironmentBase : IEnvironment
 	{
 		_dataPointer.LineIndex = 0;
 		_dataPointer.DatumIndex = 0;
+	}
+
+	public int GetNextLineNumber(int fromLineNumber)
+	{
+		return Program.GetNextLineNumber(fromLineNumber);
+	}
+
+	public IStatement? MoveToNextLine()
+	{
+		var programLine = Program.MoveToNextLine(this);
+		return programLine?.Statement;
+	}
+
+	public IStatement? GetStatementAtLine(int lineNumber)
+	{
+		var programLine = Program[lineNumber];
+		return programLine?.Statement;
 	}
 }
