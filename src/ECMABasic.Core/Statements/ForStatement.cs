@@ -43,7 +43,7 @@ namespace ECMABasic.Core.Statements
 				}
 
 				// Null it out so we know to make a new one.
-				forContext = null;
+				forContext = null!;
 			}
 
 			if (forContext == null)

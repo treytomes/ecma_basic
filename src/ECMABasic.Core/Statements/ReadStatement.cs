@@ -29,7 +29,7 @@ namespace ECMABasic.Core.Statements
 
 				if (v.IsString)
 				{
-					env.SetStringVariableValue(v.Name, Convert.ToString(datumValue));
+					env.SetStringVariableValue(v.Name, Convert.ToString(datumValue) ?? string.Empty);
 				}
 				else
 				{
