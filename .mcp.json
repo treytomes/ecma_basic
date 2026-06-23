@@ -7,8 +7,8 @@
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
       },
-      "disabled": true,
-      "description": "GitHub API access (create issues, PRs, read repos). Enable when you need programmatic GitHub access. Requires GITHUB_TOKEN environment variable."
+      "disabled": false,
+      "description": "GitHub API access (create issues, PRs, read repos). ENABLED for automated issue creation and management."
     },
     "filesystem": {
       "command": "npx",
@@ -24,10 +24,12 @@
     }
   },
   "notes": [
-    "All MCP servers are DISABLED by default to avoid overhead.",
-    "Enable only what you need for specific tasks.",
-    "GitHub server requires GITHUB_TOKEN environment variable.",
-    "Environment variables: Use ${VAR_NAME} syntax, set in .claude/settings.json or system env.",
-    "Personal MCP servers go in ~/.claude.json (user scope), not here."
+    "MCP servers are loaded when Claude Code starts.",
+    "IMPORTANT: After enabling/disabling servers, RESTART Claude Code for changes to take effect.",
+    "GitHub server is currently ENABLED for automated issue creation.",
+    "GitHub server requires GITHUB_TOKEN (set in .claude/settings.local.json or system env).",
+    "Environment variables: Use ${VAR_NAME} syntax, resolved at startup.",
+    "Personal MCP servers go in ~/.claude.json (user scope), not here.",
+    "Skills will fall back to 'gh' CLI if MCP tools not available."
   ]
 }
