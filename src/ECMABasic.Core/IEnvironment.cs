@@ -19,68 +19,68 @@
 		/// The line number currently being executed.
 		/// If the program is not running this value will be null.
 		/// </summary>
-		int CurrentLineNumber { get; set; }
+		public int CurrentLineNumber { get; set; }
 
 		/// <summary>
 		/// The terminal row to write to next.
 		/// </summary>
-		int TerminalRow { get; set; }
+		public int TerminalRow { get; set; }
 
 		/// <summary>
 		/// The terminal column to write to next.
 		/// </summary>
-		int TerminalColumn { get; set; }
+		public int TerminalColumn { get; set; }
 
 		/// <summary>
 		/// Clear everything except for the screen.
 		/// </summary>
-		void Clear();
+		public void Clear();
 
 		/// <summary>
 		/// Read a line from the input stream.
 		/// </summary>
 		/// <returns>The line that was read.</returns>
-		string ReadLine();
+		public string ReadLine();
 
 		/// <summary>
 		/// Print a string to the output stream, followed by a new-line.
 		/// </summary>
 		/// <param name="text">The text to print.</param>
-		void PrintLine(string text = "");
+		public void PrintLine(string text = "");
 
 		/// <summary>
 		/// Print a string to the output stream without a new-line.
 		/// </summary>
 		/// <param name="text">The text to print.</param>
-		void Print(string text);
+		public void Print(string text);
 
 		/// <summary>
 		/// Get the value of a variable.
 		/// </summary>
 		/// <param name="variableName">The variable to retrieve.</param>
 		/// <returns>The value of the variable.</returns>
-		string GetStringVariableValue(string variableName);
+		public string GetStringVariableValue(string variableName);
 
 		/// <summary>
 		/// Set the value of a variable.
 		/// </summary>
 		/// <param name="variableName">The name of the value.</param>
 		/// <param name="value">The value to assign.</param>
-		void SetStringVariableValue(string variableName, string value);
+		public void SetStringVariableValue(string variableName, string value);
 
 		/// <summary>
 		/// Get the value of a variable.
 		/// </summary>
 		/// <param name="variableName">The variable to retrieve.</param>
 		/// <returns>The value of the variable.</returns>
-		double GetNumericVariableValue(string variableName);
+		public double GetNumericVariableValue(string variableName);
 
 		/// <summary>
 		/// Set the value of a variable.
 		/// </summary>
 		/// <param name="variableName">The name of the value.</param>
 		/// <param name="value">The value to assign.</param>
-		void SetNumericVariableValue(string variableName, double value);
+		public void SetNumericVariableValue(string variableName, double value);
 
 		/// <summary>
 		/// Is the given line number defined?
@@ -88,13 +88,13 @@
 		/// <param name="lineNumber">The line number to look for.</param>
 		/// <param name="throwsIfMissing">Should a runtime exception be thrown if the line number is not found?</param>
 		/// <returns>True or false; does the line number currently exist in the program?</returns>
-		bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false);
+		public bool ValidateLineNumber(int lineNumber, bool throwsIfMissing = false);
 
 		/// <summary>
 		/// Push a context onto the call stack for RETURN-ing from a GOSUB or resetting a loop.
 		/// </summary>
 		/// <param name="context">The context to use on the next iteration of whatever.</param>
-		void PushCallStack(ICallStackContext context);
+		public void PushCallStack(ICallStackContext context);
 
 		/// <summary>
 		/// Pop a context off of the call stack for RETURN-ing from a GOSUB or resetting a loop.

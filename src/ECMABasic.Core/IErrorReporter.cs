@@ -15,6 +15,6 @@ namespace ECMABasic.Core
 		/// Record an error for later viewing.
 		/// </summary>
 		/// <param name="message">The error message to record.</param>
-		void ReportError(string message);
+		public void ReportError(string message);
 	}
 }

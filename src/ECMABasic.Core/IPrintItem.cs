@@ -13,6 +13,6 @@
 		/// </summary>
 		/// <param name="env">The environment to evaluate against.</param>
 		/// <returns>The text representation of this expression.</returns>
-		object Evaluate(IEnvironment env);
+		public object Evaluate(IEnvironment env);
 	}
 }
