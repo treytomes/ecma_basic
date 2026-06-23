@@ -12,6 +12,7 @@ namespace ECMABasic.Core
         /// </summary>
         /// <param name="lineNumber">The line number.</param>
         /// <param name="statement">The statement to execute on this line.</param>
+        /// <param name="parent">The parent FOR block, if any.</param>
         public ProgramLine(int lineNumber, IStatement? statement, ProgramLine? parent)
         {
             LineNumber = lineNumber;
