@@ -1,15 +1,22 @@
 # Work In Progress - Issue #2 Nullable Parser Fixes
 
-**Status**: 🟡 In Progress (15% complete)  
-**Branch**: `fix/2-nullable-parsers`  
-**Issue**: https://github.com/treytomes/ecma_basic/issues/2
+**Status**: 🟢 50% Milestone Reached!  
+**Branch**: `fix/2-nullable-parsers` (pushed to remote)  
+**Issue**: https://github.com/treytomes/ecma_basic/issues/2  
+**Last Updated**: 2026-06-23
 
 ---
 
-## ✅ Completed (2/40 files)
+## 🎉 50% Milestone Achieved!
 
-### Files Fixed
-1. ✅ **StatementParser.cs** - Base class with 6 nullable annotations
+**All 20 statement parsers are now fixed with 0 nullable errors!**
+
+---
+
+## ✅ Completed (20/40 files = 50%)
+
+### Commit 1 - Base Classes (2 files)
+1. ✅ **StatementParser.cs** - Base class with 8 nullable annotations
    - `Parse()` → `IStatement?`
    - `ProcessSpace()` → `Token?`
    - `ParseExpression()` → `IExpression?`
@@ -19,11 +26,34 @@
    - `ParseNumericExpression()` → `IExpression?`
    - `ParseStringExpression()` → `IExpression?`
 
-2. ✅ **PrintStatementParser.cs** - Inherits from StatementParser
-   - `Parse()` → `IStatement?` (override)
-   - `ProcessPrintSeparator()` → `IPrintItemSeparator?`
-   - `ProcessPrintItem()` → `IPrintItem?`
-   - `ProcessTabExpression()` → `IPrintItem?`
+2. ✅ **PrintStatementParser.cs**
+
+### Commit 2 - Simple Parsers (5 files)
+3. ✅ **ReturnStatementParser.cs**
+4. ✅ **EndStatementParser.cs**
+5. ✅ **RestoreStatementParser.cs**
+6. ✅ **StopStatementParser.cs**
+7. ✅ **RemarkStatementParser.cs**
+
+### Commit 3 - Variable Parsers (3 files)
+8. ✅ **LetStatementParser.cs**
+9. ✅ **ReadStatementParser.cs**
+10. ✅ **InputStatementParser.cs**
+
+### Commit 4 - Initial Control Flow (6 files)
+11. ✅ **DataStatementParser.cs**
+12. ✅ **GotoStatementParser.cs** (partial)
+13. ✅ **GosubStatementParser.cs** (partial)
+14. ✅ **IfThenStatementParser.cs**
+15. ✅ **NextStatementParser.cs** (partial)
+16. ✅ **ForStatementParser.cs** (partial)
+
+### Commit 5 - Control Flow Null Checks (5 files)
+17. ✅ **GotoStatementParser.cs** (completed)
+18. ✅ **GosubStatementParser.cs** (completed)
+19. ✅ **NextStatementParser.cs** (completed)
+20. ✅ **ForStatementParser.cs** (completed)
+21. ✅ **OnGotoStatementParser.cs** (completed)
 
 ### Pattern Established ✅
 
