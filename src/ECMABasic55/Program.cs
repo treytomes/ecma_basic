@@ -29,11 +29,11 @@ public static class Program
             new SleepStatementParser(),
         });
 
-        FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()[0]);
+        FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()![0]);
 
         FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number, ExpressionType.Number }, args =>
         {
-            var source = Convert.ToString(args[0]);
+            var source = Convert.ToString(args[0]) ?? string.Empty;
             var startIndex = Convert.ToInt32(args[1]);
             var length = Convert.ToInt32(args[2]);
             return source.Substring(startIndex - 1, length);
@@ -41,7 +41,7 @@ public static class Program
 
         FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number }, args =>
         {
-            var source = Convert.ToString(args[0]);
+            var source = Convert.ToString(args[0]) ?? string.Empty;
             var startIndex = Convert.ToInt32(args[1]);
             var length = Convert.ToInt32(args[2]);
             return source[(startIndex - 1)..];
@@ -49,16 +49,16 @@ public static class Program
 
         FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String, ExpressionType.Number }, args =>
         {
-            var source = Convert.ToString(args[0]);
-            var value = Convert.ToString(args[1]);
+            var source = Convert.ToString(args[0]) ?? string.Empty;
+            var value = Convert.ToString(args[1]) ?? string.Empty;
             var index = Convert.ToInt32(args[2]);
             return (double)source.IndexOf(value, index - 1) + 1;
         });
 
         FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String }, args =>
         {
-            var source = Convert.ToString(args[0]);
-            var value = Convert.ToString(args[1]);
+            var source = Convert.ToString(args[0]) ?? string.Empty;
+            var value = Convert.ToString(args[1]) ?? string.Empty;
             return (double)source.IndexOf(value) + 1;
         });
     }
@@ -98,11 +98,11 @@ public static class Program
 
         while (isRunning)
 		{
-            var line = Console.ReadLine() + Environment.NewLine;
+            var line = (Console.ReadLine() ?? string.Empty) + Environment.NewLine;
 
 			try
 			{
-                var statement = (env.Interpreter as RuntimeInterpreter).ProcessImmediate(env, line);
+                var statement = (env.Interpreter as RuntimeInterpreter)?.ProcessImmediate(env, line);
                 if (statement != null)
 				{
                     statement.Execute(env, true);

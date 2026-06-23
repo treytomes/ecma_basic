@@ -10,12 +10,12 @@ namespace ECMABasic55.Statements;
 /// </summary>
 public class RunStatement : IStatement
 {
-	public RunStatement(IExpression lineNumber)
+	public RunStatement(IExpression? lineNumber)
 	{
 		LineNumber = lineNumber;
 	}
 
-	public IExpression LineNumber { get; }
+	public IExpression? LineNumber { get; }
 
 	public void Execute(IEnvironment env, bool isImmediate)
 	{

@@ -22,6 +22,10 @@ public class SaveStatement : IStatement
 		}
 
 		var path = Convert.ToString(Path.Evaluate(env));
+		if (string.IsNullOrEmpty(path))
+		{
+			throw ExceptionFactory.Syntax();
+		}
 
 		var contents = env.Program.ToListing();
 		File.WriteAllText(path, contents);

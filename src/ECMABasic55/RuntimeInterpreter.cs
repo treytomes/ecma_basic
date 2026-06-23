@@ -15,7 +15,7 @@ public class RuntimeInterpreter : Interpreter
 {
 	private readonly List<StatementParser> _immediateStatements;
 
-	public RuntimeInterpreter(IBasicConfiguration config = null)
+	public RuntimeInterpreter(IBasicConfiguration? config = null)
 		: base(config)
 	{
 		_immediateStatements = new List<StatementParser>()
@@ -29,7 +29,7 @@ public class RuntimeInterpreter : Interpreter
 		};
 	}
 
-	public IStatement ProcessImmediate(IEnvironment env, string text)
+	public IStatement? ProcessImmediate(IEnvironment env, string text)
 	{
 		try
 		{
@@ -63,7 +63,7 @@ public class RuntimeInterpreter : Interpreter
 		}
 	}
 
-	private IStatement ProcessImmediateStatement()
+	private IStatement? ProcessImmediateStatement()
 	{
 		foreach (var parser in _immediateStatements)
 		{
