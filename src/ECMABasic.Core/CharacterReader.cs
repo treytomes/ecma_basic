@@ -302,7 +302,7 @@ namespace ECMABasic.Core
 
             // Try to grab the line number.
             var lineNumberText = longLine.Split(' ').First();
-			if (!int.TryParse(lineNumberText, out int lineNumber))
+			if (!int.TryParse(lineNumberText, out var lineNumber))
 			{
                 throw ExceptionFactory.LineNumberExpected();
 			}

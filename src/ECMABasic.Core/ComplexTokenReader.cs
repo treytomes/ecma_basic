@@ -77,7 +77,7 @@ namespace ECMABasic.Core
 				throw new SyntaxException($"({token.Line}:{token.Column}) INTEGER OVERFLOW");
 			}
 
-			int value = int.Parse(token.Text);
+			var value = int.Parse(token.Text);
 			if (isNegative)
 			{
 				value = -value;
