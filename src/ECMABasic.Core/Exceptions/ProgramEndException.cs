@@ -1,10 +1,9 @@
-﻿namespace ECMABasic.Core.Exceptions
+﻿namespace ECMABasic.Core.Exceptions;
+
+internal class ProgramEndException : RuntimeException
 {
-	internal class ProgramEndException : RuntimeException
+	public ProgramEndException(int? lineNumber)
+		: base("END", lineNumber)
 	{
-		public ProgramEndException(int? lineNumber)
-			: base("END", lineNumber)
-		{
-		}
 	}
 }

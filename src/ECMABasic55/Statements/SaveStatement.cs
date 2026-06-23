@@ -3,33 +3,32 @@ using ECMABasic.Core.Exceptions;
 using System;
 using System.IO;
 
-namespace ECMABasic55.Statements
+namespace ECMABasic55.Statements;
+
+public class SaveStatement : IStatement
 {
-	public class SaveStatement : IStatement
+	public SaveStatement(IExpression path)
 	{
-		public SaveStatement(IExpression path)
+		Path = path;
+	}
+
+	public IExpression Path { get; }
+
+	public void Execute(IEnvironment env, bool isImmediate)
+	{
+		if (!isImmediate)
 		{
-			Path = path;
+			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		public IExpression Path { get; }
+		var path = Convert.ToString(Path.Evaluate(env));
 
-		public void Execute(IEnvironment env, bool isImmediate)
-		{
-			if (!isImmediate)
-			{
-				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
-			}
+		var contents = env.Program.ToListing();
+		File.WriteAllText(path, contents);
+	}
 
-			var path = Convert.ToString(Path.Evaluate(env));
-
-			var contents = env.Program.ToListing();
-			File.WriteAllText(path, contents);
-		}
-
-		public string ToListing()
-		{
-			return string.Concat("SAVE ", Path.ToListing());
-		}
+	public string ToListing()
+	{
+		return string.Concat("SAVE ", Path.ToListing());
 	}
 }

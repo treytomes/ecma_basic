@@ -1,36 +1,35 @@
 ﻿using ECMABasic.Core.Configuration;
 
-namespace ECMABasic.Core.Expressions
+namespace ECMABasic.Core.Expressions;
+
+/// <summary>
+/// Used when a comma occurs in a print list.
+/// </summary>
+public class CommaExpression : IPrintItemSeparator
 {
-	/// <summary>
-	/// Used when a comma occurs in a print list.
-	/// </summary>
-	public class CommaExpression : IPrintItemSeparator
+	private readonly IBasicConfiguration _config;
+
+	public CommaExpression(IBasicConfiguration? config = null)
 	{
-		private readonly IBasicConfiguration _config;
+		_config = config ?? MinimalBasicConfiguration.Instance;
+	}
 
-		public CommaExpression(IBasicConfiguration? config = null)
+	public object Evaluate(IEnvironment env)
+	{
+		var column = env.TerminalColumn / _config.TerminalColumnWidth;
+		var nextColumn = column + 1;
+		if (nextColumn >= _config.NumTerminalColumns)
 		{
-			_config = config ?? MinimalBasicConfiguration.Instance;
+			return "\n";
 		}
+		var nextColumnStart = nextColumn * _config.TerminalColumnWidth;
+		var numRemainingSpaces = nextColumnStart - env.TerminalColumn;
+		var text = new string(' ', numRemainingSpaces);
+		return text;
+	}
 
-		public object Evaluate(IEnvironment env)
-		{
-			var column = env.TerminalColumn / _config.TerminalColumnWidth;
-			var nextColumn = column + 1;
-			if (nextColumn >= _config.NumTerminalColumns)
-			{
-				return "\n";
-			}
-			var nextColumnStart = nextColumn * _config.TerminalColumnWidth;
-			var numRemainingSpaces = nextColumnStart - env.TerminalColumn;
-			var text = new string(' ', numRemainingSpaces);
-			return text;
-		}
-
-		public string ToListing()
-		{
-			return ",";
-		}
+	public string ToListing()
+	{
+		return ",";
 	}
 }

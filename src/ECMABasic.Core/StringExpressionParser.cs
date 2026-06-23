@@ -2,173 +2,172 @@
 using ECMABasic.Core.Expressions;
 using System.Collections.Generic;
 
-namespace ECMABasic.Core
+namespace ECMABasic.Core;
+
+public class StringExpressionParser : ExpressionParser
 {
-	public class StringExpressionParser : ExpressionParser
+	public StringExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
+		: base(reader, lineNumber, throwOnError)
 	{
-		public StringExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
-			: base(reader, lineNumber, throwOnError)
+	}
+
+	public override IExpression? Parse()
+	{
+		var left = ParseAtomic(false);
+		if (left == null)
 		{
+			return null;
 		}
 
-		public override IExpression? Parse()
+		var space = _reader.Next(TokenType.Space, false);
+
+		var symbol = ParseBooleanOperator();
+		if (symbol == null)
 		{
-			var left = ParseAtomic(false);
-			if (left == null)
+			if (space != null)
 			{
-				return null;
+				_reader.Rewind();
 			}
-
-			var space = _reader.Next(TokenType.Space, false);
-
-			var symbol = ParseBooleanOperator();
-			if (symbol == null)
-			{
-				if (space != null)
-				{
-					_reader.Rewind();
-				}
-				return left;
-			}
-
-			_reader.Next(TokenType.Space, false);
-
-			IExpression? right;
-			try
-			{
-				right = ParseAtomic(true);
-			}
-			catch (SyntaxException)
-			{
-				if (new NumericExpressionParser(_reader, _lineNumber, false).Parse() != null)
-				{
-					throw ExceptionFactory.MixedStringsAndNumbers(_lineNumber);
-				}
-				else
-				{
-					throw;
-				}
-			}
-
-			if (right == null)
-			{
-				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
-			}
-
-			try
-			{
-				return symbol.Text switch
-				{
-					"=" => new EqualsExpression(left, right),
-					"<>" => new NotEqualsExpression(left, right),
-					"<" => new LessThanExpression(left, right),
-					"<=" => new LessThanOrEqualExpression(left, right),
-					">" => new GreaterThanExpression(left, right),
-					">=" => new GreaterThanOrEqualExpression(left, right),
-					_ => throw ExceptionFactory.IllegalOperator(_lineNumber),
-				};
-			}
-			catch (SyntaxException ex)
-			{
-				throw new SyntaxException(ex, _lineNumber);
-			}
+			return left;
 		}
 
-		private IExpression? ParseAtomic(bool throwOnError)
+		_reader.Next(TokenType.Space, false);
+
+		IExpression? right;
+		try
 		{
-			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
-			if ((expr == null) && throwOnError)
-			{
-				throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
-			}
-			return expr;
+			right = ParseAtomic(true);
 		}
-
-		public IExpression? ParseVariable()
+		catch (SyntaxException)
 		{
-			var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\$");
-			if (nameToken == null)
+			if (new NumericExpressionParser(_reader, _lineNumber, false).Parse() != null)
 			{
-				return null;
-			}
-
-			return new VariableExpression(nameToken.Text);
-		}
-
-		public IExpression? ParseLiteral()
-		{
-			var valueToken = _reader.Next(TokenType.String, false);
-			if (valueToken == null)
-			{
-				return null;
+				throw ExceptionFactory.MixedStringsAndNumbers(_lineNumber);
 			}
 			else
 			{
-				// The actual string is everything between the "".
-				var text = valueToken.Text[1..^1];
-				return new StringExpression(text);
+				throw;
 			}
 		}
 
-		public IExpression? ParseFunction(bool throwOnError)
+		if (right == null)
 		{
-			var startIndex = _reader.TokenIndex;
-			var nameToken = _reader.Next(TokenType.Word, false);
-			if (nameToken == null)
-			{
-				return null;
-			}
+			throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
+		}
 
-			var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
-			if (dollar == null)
+		try
+		{
+			return symbol.Text switch
 			{
-				_reader.Seek(startIndex);
-				return null;
-			}
-			nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
+				"=" => new EqualsExpression(left, right),
+				"<>" => new NotEqualsExpression(left, right),
+				"<" => new LessThanExpression(left, right),
+				"<=" => new LessThanOrEqualExpression(left, right),
+				">" => new GreaterThanExpression(left, right),
+				">=" => new GreaterThanOrEqualExpression(left, right),
+				_ => throw ExceptionFactory.IllegalOperator(_lineNumber),
+			};
+		}
+		catch (SyntaxException ex)
+		{
+			throw new SyntaxException(ex, _lineNumber);
+		}
+	}
 
-			_reader.Next(TokenType.OpenParenthesis);
+	private IExpression? ParseAtomic(bool throwOnError)
+	{
+		var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
+		if ((expr == null) && throwOnError)
+		{
+			throw ExceptionFactory.ExpectedStringExpression(_lineNumber);
+		}
+		return expr;
+	}
 
-			var args = new List<IExpression>();
-			while (true)
+	public IExpression? ParseVariable()
+	{
+		var nameToken = _reader.Next(TokenType.Word, false, @"[A-Z]\$");
+		if (nameToken == null)
+		{
+			return null;
+		}
+
+		return new VariableExpression(nameToken.Text);
+	}
+
+	public IExpression? ParseLiteral()
+	{
+		var valueToken = _reader.Next(TokenType.String, false);
+		if (valueToken == null)
+		{
+			return null;
+		}
+		else
+		{
+			// The actual string is everything between the "".
+			var text = valueToken.Text[1..^1];
+			return new StringExpression(text);
+		}
+	}
+
+	public IExpression? ParseFunction(bool throwOnError)
+	{
+		var startIndex = _reader.TokenIndex;
+		var nameToken = _reader.Next(TokenType.Word, false);
+		if (nameToken == null)
+		{
+			return null;
+		}
+
+		var dollar = _reader.Next(TokenType.Symbol, false, @"\$");
+		if (dollar == null)
+		{
+			_reader.Seek(startIndex);
+			return null;
+		}
+		nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
+
+		_reader.Next(TokenType.OpenParenthesis);
+
+		var args = new List<IExpression>();
+		while (true)
+		{
+			var argExpr = Parse();
+			if (argExpr == null)
 			{
-				var argExpr = Parse();
+				argExpr = new NumericExpressionParser(_reader, _lineNumber, false).Parse();
 				if (argExpr == null)
-				{
-					argExpr = new NumericExpressionParser(_reader, _lineNumber, false).Parse();
-					if (argExpr == null)
-					{
-						break;
-					}
-				}
-
-				args.Add(argExpr);
-
-				var comma = _reader.Next(TokenType.Comma, false, ",");
-				if (comma == null)
 				{
 					break;
 				}
 			}
 
-			_reader.Next(TokenType.CloseParenthesis);
+			args.Add(argExpr);
 
-			foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
+			var comma = _reader.Next(TokenType.Comma, false, ",");
+			if (comma == null)
 			{
-				if (fndef.CanInstantiate(args))
-				{
-					return fndef.Instantiate(args, _lineNumber);
-				}
+				break;
 			}
+		}
 
-			if (throwOnError)
+		_reader.Next(TokenType.CloseParenthesis);
+
+		foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
+		{
+			if (fndef.CanInstantiate(args))
 			{
-				throw ExceptionFactory.UndefinedFunction(_lineNumber);
+				return fndef.Instantiate(args, _lineNumber);
 			}
-			else
-			{
-				return null;
-			}
+		}
+
+		if (throwOnError)
+		{
+			throw ExceptionFactory.UndefinedFunction(_lineNumber);
+		}
+		else
+		{
+			return null;
 		}
 	}
 }

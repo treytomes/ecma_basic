@@ -1,8 +1,7 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+public enum ExpressionType
 {
-	public enum ExpressionType
-	{
-		Number,
-		String
-	}
+	Number,
+	String
 }

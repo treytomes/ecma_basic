@@ -1,64 +1,63 @@
 ﻿using System;
 
-namespace ECMABasic.Core.Expressions
+namespace ECMABasic.Core.Expressions;
+
+public class VariableExpression : IExpression
 {
-	public class VariableExpression : IExpression
+	public VariableExpression(string name)
 	{
-		public VariableExpression(string name)
+		Name = name;
+	}
+
+	public string Name { get; }
+
+	public bool IsString
+	{
+		get
 		{
-			Name = name;
+			return Name.EndsWith('$');
 		}
+	}
 
-		public string Name { get; }
-
-		public bool IsString
+	public bool IsNumeric
+	{
+		get
 		{
-			get
-			{
-				return Name.EndsWith('$');
-			}
+			return !IsString;
 		}
+	}
 
-		public bool IsNumeric
+	public ExpressionType Type
+	{
+		get
 		{
-			get
+			if (IsNumeric)
 			{
-				return !IsString;
-			}
-		}
-
-		public ExpressionType Type
-		{
-			get
-			{
-				if (IsNumeric)
-				{
-					return ExpressionType.Number;
-				}
-				else
-				{
-					return ExpressionType.String;
-				}
-			}
-		}
-
-		public bool IsReducible => false;
-
-		public object Evaluate(IEnvironment env)
-		{
-			if (IsString)
-			{
-				return env.GetStringVariableValue(Name);
+				return ExpressionType.Number;
 			}
 			else
 			{
-				return env.GetNumericVariableValue(Name);
+				return ExpressionType.String;
 			}
 		}
+	}
 
-		public string ToListing()
+	public bool IsReducible => false;
+
+	public object Evaluate(IEnvironment env)
+	{
+		if (IsString)
 		{
-			return Name;
+			return env.GetStringVariableValue(Name);
 		}
+		else
+		{
+			return env.GetNumericVariableValue(Name);
+		}
+	}
+
+	public string ToListing()
+	{
+		return Name;
 	}
 }

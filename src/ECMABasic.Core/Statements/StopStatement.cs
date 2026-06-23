@@ -1,19 +1,18 @@
 ﻿using ECMABasic.Core.Exceptions;
 
-namespace ECMABasic.Core.Statements
+namespace ECMABasic.Core.Statements;
+
+public class StopStatement : IStatement
 {
-	public class StopStatement : IStatement
+	public void Execute(IEnvironment env, bool isImmediate)
 	{
-		public void Execute(IEnvironment env, bool isImmediate)
-		{
-			throw ExceptionFactory.ProgramStop(env.CurrentLineNumber);
-		}
+		throw ExceptionFactory.ProgramStop(env.CurrentLineNumber);
+	}
 
-		// TODO: Centralize keyword strings to make them easier to change?
+	// TODO: Centralize keyword strings to make them easier to change?
 
-		public string ToListing()
-		{
-			return "STOP";
-		}
+	public string ToListing()
+	{
+		return "STOP";
 	}
 }

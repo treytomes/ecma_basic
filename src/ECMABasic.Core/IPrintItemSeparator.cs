@@ -1,6 +1,5 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+public interface IPrintItemSeparator : IPrintItem
 {
-	public interface IPrintItemSeparator : IPrintItem
-	{
-	}
 }

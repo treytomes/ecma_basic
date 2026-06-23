@@ -1,10 +1,9 @@
-﻿namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions;
+
+public abstract class BooleanExpression : BinaryExpression
 {
-	public abstract class BooleanExpression : BinaryExpression
+	protected BooleanExpression(IExpression left, IExpression right)
+		: base(left, right)
 	{
-		protected BooleanExpression(IExpression left, IExpression right)
-			: base(left, right)
-		{
-		}
 	}
 }

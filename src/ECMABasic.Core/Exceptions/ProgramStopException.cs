@@ -1,10 +1,9 @@
-﻿namespace ECMABasic.Core.Exceptions
+﻿namespace ECMABasic.Core.Exceptions;
+
+public class ProgramStopException : RuntimeException
 {
-	public class ProgramStopException : RuntimeException
+	public ProgramStopException(int? lineNumber)
+		: base($"STOPPED", lineNumber)
 	{
-		public ProgramStopException(int? lineNumber)
-			: base($"STOPPED", lineNumber)
-		{
-		}
 	}
 }

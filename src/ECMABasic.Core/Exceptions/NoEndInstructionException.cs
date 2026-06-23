@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace ECMABasic.Core.Exceptions
+namespace ECMABasic.Core.Exceptions;
+
+internal class NoEndInstructionException : SyntaxException
 {
-	internal class NoEndInstructionException : SyntaxException
+	public NoEndInstructionException()
+		: base("NO END INSTRUCTION")
 	{
-		public NoEndInstructionException()
-			: base("NO END INSTRUCTION")
-		{
-		}
 	}
 }

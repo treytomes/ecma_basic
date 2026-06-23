@@ -1,26 +1,25 @@
-﻿namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions;
+
+public class IntegerExpression : IExpression
 {
-	public class IntegerExpression : IExpression
+	public IntegerExpression(int value)
 	{
-		public IntegerExpression(int value)
-		{
-			Value = value;
-		}
+		Value = value;
+	}
 
-		public int Value { get; }
+	public int Value { get; }
 
-		public ExpressionType Type => ExpressionType.Number;
+	public ExpressionType Type => ExpressionType.Number;
 
-		public bool IsReducible => true;
+	public bool IsReducible => true;
 
-		public object Evaluate(IEnvironment env)
-		{
-			return Value;
-		}
+	public object Evaluate(IEnvironment env)
+	{
+		return Value;
+	}
 
-		public string ToListing()
-		{
-			return Value.ToString();
-		}
+	public string ToListing()
+	{
+		return Value.ToString();
 	}
 }

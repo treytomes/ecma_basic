@@ -1,8 +1,7 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+public class DataPointer
 {
-	public class DataPointer
-	{
-		public int LineIndex { get; set; }
-		public int DatumIndex { get; set; }
-	}
+	public int LineIndex { get; set; }
+	public int DatumIndex { get; set; }
 }

@@ -2,33 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements
+namespace ECMABasic.Core.Statements;
+
+public class DataStatement : IStatement
 {
-	public class DataStatement : IStatement
+	public DataStatement(IEnumerable<IExpression> datums)
 	{
-		public DataStatement(IEnumerable<IExpression> datums)
+		if (!datums.All(x => x.IsReducible))
 		{
-			if (!datums.All(x => x.IsReducible))
-			{
-				throw new SyntaxException("DATUMS MUST BE REDUCIBLE TO STRING OR NUMERIC CONSTANTS");
-			}
-
-			Datums = new List<IExpression>(datums);
+			throw new SyntaxException("DATUMS MUST BE REDUCIBLE TO STRING OR NUMERIC CONSTANTS");
 		}
 
-		public List<IExpression> Datums { get; }
+		Datums = new List<IExpression>(datums);
+	}
 
-		public void Execute(IEnvironment env, bool isImmediate)
-		{
-			if (isImmediate)
-			{
-				throw ExceptionFactory.OnlyAllowedInProgram();
-			}
-		}
+	public List<IExpression> Datums { get; }
 
-		public string ToListing()
+	public void Execute(IEnvironment env, bool isImmediate)
+	{
+		if (isImmediate)
 		{
-			return string.Concat("DATA ", string.Join(",", Datums.Select(x => x.ToListing())));
+			throw ExceptionFactory.OnlyAllowedInProgram();
 		}
+	}
+
+	public string ToListing()
+	{
+		return string.Concat("DATA ", string.Join(",", Datums.Select(x => x.ToListing())));
 	}
 }

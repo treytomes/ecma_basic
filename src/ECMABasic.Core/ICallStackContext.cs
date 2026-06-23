@@ -1,6 +1,5 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+public class ICallStackContext
 {
-	public class ICallStackContext
-	{
-	}
 }
