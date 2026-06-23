@@ -101,6 +101,10 @@ namespace ECMABasic.Core
 			reader.Next(TokenType.OpenParenthesis);
 
 			var valueExpr = ParseNumericExpression(reader, lineNumber, true);
+			if (valueExpr == null)
+			{
+				throw new Exceptions.SyntaxException("Expected numeric expression in TAB function", lineNumber);
+			}
 
 			reader.Next(TokenType.CloseParenthesis);
 

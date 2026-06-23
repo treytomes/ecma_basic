@@ -11,7 +11,7 @@ namespace ECMABasic.Core
 		{
 		}
 
-		public override IExpression Parse()
+		public override IExpression? Parse()
 		{
 			var left = ParseAtomic(false);
 			if (left == null)
@@ -69,7 +69,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseAtomic(bool throwOnError)
+		private IExpression? ParseAtomic(bool throwOnError)
 		{
 			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
 			if ((expr == null) && throwOnError)

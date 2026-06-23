@@ -12,13 +12,13 @@ namespace ECMABasic.Core
 		{
 		}
 
-		public override IExpression Parse()
+		public override IExpression? Parse()
 		{
 			var expr = ParseBoolean();
 			return expr;
 		}
 
-		private IExpression ParseBoolean()
+		private IExpression? ParseBoolean()
 		{
 			var left = ParseSums();
 			if (left == null)
@@ -94,7 +94,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseSums()
+		private IExpression? ParseSums()
 		{
 			var expr = ParseProducts();
 			if (expr == null)
@@ -135,7 +135,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseProducts()
+		private IExpression? ParseProducts()
 		{
 			var expr = ParseUnary();
 			if (expr == null)
@@ -176,7 +176,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseUnary()
+		private IExpression? ParseUnary()
 		{
 			var unaryMinusToken = _reader.Next(TokenType.Symbol, false, @"\-");
 			if (unaryMinusToken == null)
@@ -196,7 +196,7 @@ namespace ECMABasic.Core
 			return expr;
 		}
 
-		private IExpression ParseInvolution()
+		private IExpression? ParseInvolution()
 		{
 			var expr = ParseAtomic(false);
 			if (expr == null)
@@ -242,7 +242,7 @@ namespace ECMABasic.Core
 			}
 		}
 
-		private IExpression ParseAtomic(bool throwOnError)
+		private IExpression? ParseAtomic(bool throwOnError)
 		{
 			var openParenthesis = _reader.Next(TokenType.OpenParenthesis, false);
 			if (openParenthesis != null)
