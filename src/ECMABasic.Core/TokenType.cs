@@ -1,70 +1,69 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+/// <summary>
+/// All of the token types understood by the language.
+/// </summary>
+public enum TokenType
 {
 	/// <summary>
-	/// All of the token types understood by the language.
+	/// [0-9]+
 	/// </summary>
-	public enum TokenType
-	{
-		/// <summary>
-		/// [0-9]+
-		/// </summary>
-		Integer,
+	Integer,
 
-		/// <summary>
-		/// [A-Z]+
-		/// </summary>
-		Word,
+	/// <summary>
+	/// [A-Z]+
+	/// </summary>
+	Word,
 
-		/// <summary>
-		/// Symbol characters: [!"%&amp;'()*+,-./:;&lt;=&gt;?_#$#@[\\]^`{|}~]+
-		/// </summary>
-		Symbol,
+	/// <summary>
+	/// Symbol characters: [!"%&amp;'()*+,-./:;&lt;=&gt;?_#$#@[\\]^`{|}~]+
+	/// </summary>
+	Symbol,
 
-		/// <summary>
-		/// [ \t]+
-		/// </summary>
-		Space,
+	/// <summary>
+	/// [ \t]+
+	/// </summary>
+	Space,
 
-		/// <summary>
-		/// \x0A\x0D?
-		/// </summary>
-		EndOfLine,
+	/// <summary>
+	/// \x0A\x0D?
+	/// </summary>
+	EndOfLine,
 
-		// Complex tokens start here.
+	// Complex tokens start here.
 
-		/// <summary>
-		/// Anything sitting between 2 double-quotes, inclusive.
-		/// </summary>
-		String,
+	/// <summary>
+	/// Anything sitting between 2 double-quotes, inclusive.
+	/// </summary>
+	String,
 
-		/// <summary>
-		/// The comma in a print-list.
-		/// </summary>
-		Comma,
+	/// <summary>
+	/// The comma in a print-list.
+	/// </summary>
+	Comma,
 
-		/// <summary>
-		/// The semicolon in a print-list.
-		/// </summary>
-		Semicolon,
+	/// <summary>
+	/// The semicolon in a print-list.
+	/// </summary>
+	Semicolon,
 
-		/// <summary>
-		/// Opening parenthesis to a function argument list.
-		/// </summary>
-		OpenParenthesis,
+	/// <summary>
+	/// Opening parenthesis to a function argument list.
+	/// </summary>
+	OpenParenthesis,
 
-		/// <summary>
-		/// closing parenthesis to a function argument list.
-		/// </summary>
-		CloseParenthesis,
+	/// <summary>
+	/// closing parenthesis to a function argument list.
+	/// </summary>
+	CloseParenthesis,
 
-		/// <summary>
-		/// A real number: [0-9]*\.[0-9]+
-		/// </summary>
-		Number,
+	/// <summary>
+	/// A real number: [0-9]*\.[0-9]+
+	/// </summary>
+	Number,
 
-		/// <summary>
-		/// Breaks up a number.
-		/// </summary>
-		DecimalPoint
-	}
+	/// <summary>
+	/// Breaks up a number.
+	/// </summary>
+	DecimalPoint
 }

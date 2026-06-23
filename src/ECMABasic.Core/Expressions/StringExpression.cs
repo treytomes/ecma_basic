@@ -1,27 +1,26 @@
-﻿namespace ECMABasic.Core.Expressions
+﻿namespace ECMABasic.Core.Expressions;
+
+internal class StringExpression : IExpression
 {
-	internal class StringExpression : IExpression
+	public StringExpression(string text)
+		: base()
 	{
-		public StringExpression(string text)
-			: base()
-		{
-			Text = text;
-		}
+		Text = text;
+	}
 
-		public string Text { get; }
+	public string Text { get; }
 
-		public ExpressionType Type => ExpressionType.String;
+	public ExpressionType Type => ExpressionType.String;
 
-		public bool IsReducible => true;
+	public bool IsReducible => true;
 
-		public object Evaluate(IEnvironment env)
-		{
-			return Text;
-		}
+	public object Evaluate(IEnvironment env)
+	{
+		return Text;
+	}
 
-		public string ToListing()
-		{
-			return string.Concat("\"", Text, "\"");
-		}
+	public string ToListing()
+	{
+		return string.Concat("\"", Text, "\"");
 	}
 }

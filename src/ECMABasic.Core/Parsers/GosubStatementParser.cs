@@ -1,35 +1,34 @@
 ﻿using ECMABasic.Core.Statements;
 
-namespace ECMABasic.Core.Parsers
+namespace ECMABasic.Core.Parsers;
+
+public class GosubStatementParser : StatementParser
 {
-	public class GosubStatementParser : StatementParser
+	public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 	{
-		public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
+		var token = reader.Next(TokenType.Word, false, @"GOSUB");
+		if (token == null)
 		{
-			var token = reader.Next(TokenType.Word, false, @"GOSUB");
+			// "GOSUB" might be "GO SUB".
+			token = reader.Next(TokenType.Word, false, @"GO");
 			if (token == null)
 			{
-				// "GOSUB" might be "GO SUB".
-				token = reader.Next(TokenType.Word, false, @"GO");
-				if (token == null)
-				{
-					return null;
-				}
-				else
-				{
-					ProcessSpace(reader, false);
-					reader.Next(TokenType.Word, true, @"SUB");
-				}
+				return null;
 			}
-
-			ProcessSpace(reader, true);
-
-			var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
-			if (lineNumberExpr == null)
+			else
 			{
-				throw new Exceptions.SyntaxException("Expected line number in GOSUB statement", lineNumber);
+				ProcessSpace(reader, false);
+				reader.Next(TokenType.Word, true, @"SUB");
 			}
-			return new GosubStatement(lineNumberExpr);
 		}
+
+		ProcessSpace(reader, true);
+
+		var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
+		if (lineNumberExpr == null)
+		{
+			throw new Exceptions.SyntaxException("Expected line number in GOSUB statement", lineNumber);
+		}
+		return new GosubStatement(lineNumberExpr);
 	}
 }

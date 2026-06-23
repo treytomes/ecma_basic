@@ -1,11 +1,10 @@
-﻿namespace ECMABasic.Core
+﻿namespace ECMABasic.Core;
+
+public interface IListable
 {
-	public interface IListable
-	{
-        /// <summary>
-        /// Output a string formatted for the output of a LIST statement.
-        /// </summary>
-        /// <returns>The textual representation of this item.</returns>
-        public string ToListing();
-    }
+    /// <summary>
+    /// Output a string formatted for the output of a LIST statement.
+    /// </summary>
+    /// <returns>The textual representation of this item.</returns>
+    public string ToListing();
 }

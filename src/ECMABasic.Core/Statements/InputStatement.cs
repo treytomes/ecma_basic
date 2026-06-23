@@ -4,72 +4,71 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements
+namespace ECMABasic.Core.Statements;
+
+public class InputStatement : IStatement
 {
-	public class InputStatement : IStatement
+	public InputStatement(IEnumerable<VariableExpression> variables)
 	{
-		public InputStatement(IEnumerable<VariableExpression> variables)
+		Variables = new List<VariableExpression>(variables);
+	}
+
+	public List<VariableExpression> Variables { get; }
+
+	public void Execute(IEnvironment env, bool isImmediate)
+	{
+		env.Print("? ");
+		var reply = env.ReadLine();
+
+		var reader = ComplexTokenReader.FromText(reply);
+
+		var isFirst = true;
+		foreach (var v in Variables)
 		{
-			Variables = new List<VariableExpression>(variables);
-		}
+			reader.Next(TokenType.Space, false);
 
-		public List<VariableExpression> Variables { get; }
-
-		public void Execute(IEnvironment env, bool isImmediate)
-		{
-			env.Print("? ");
-			var reply = env.ReadLine();
-
-			var reader = ComplexTokenReader.FromText(reply);
-
-			var isFirst = true;
-			foreach (var v in Variables)
+			if (!isFirst)
 			{
-				reader.Next(TokenType.Space, false);
-
-				if (!isFirst)
-				{
-					reader.Next(TokenType.Comma);
-					reader.Next(TokenType.Space, false);
-				}
-				isFirst = false;
-
-				var number = reader.NextNumber(false);
-				if (number == null)
-				{
-					var token = reader.Next();
-					if (token == null)
-					{
-						throw new RuntimeException("OUT OF INPUT", env.CurrentLineNumber);
-					}
-
-					var text = token.Text.Trim();
-					if (token.Type == TokenType.String)
-					{
-						text = text.Substring(1, text.Length - 2);
-					}
-
-					// Assign a string.
-					env.SetStringVariableValue(v.Name, text);
-				}
-				else
-				{
-					// Assign a number.
-					env.SetNumericVariableValue(v.Name, number.Value);
-				}
-
+				reader.Next(TokenType.Comma);
 				reader.Next(TokenType.Space, false);
 			}
+			isFirst = false;
 
-			if (reader.Next() != null)
+			var number = reader.NextNumber(false);
+			if (number == null)
 			{
-				throw new RuntimeException("TOO MUCH INPUT", env.CurrentLineNumber);
+				var token = reader.Next();
+				if (token == null)
+				{
+					throw new RuntimeException("OUT OF INPUT", env.CurrentLineNumber);
+				}
+
+				var text = token.Text.Trim();
+				if (token.Type == TokenType.String)
+				{
+					text = text.Substring(1, text.Length - 2);
+				}
+
+				// Assign a string.
+				env.SetStringVariableValue(v.Name, text);
 			}
+			else
+			{
+				// Assign a number.
+				env.SetNumericVariableValue(v.Name, number.Value);
+			}
+
+			reader.Next(TokenType.Space, false);
 		}
 
-		public string ToListing()
+		if (reader.Next() != null)
 		{
-			return string.Concat("INPUT ", string.Join(",", Variables.Select(x => x.ToListing())));
+			throw new RuntimeException("TOO MUCH INPUT", env.CurrentLineNumber);
 		}
+	}
+
+	public string ToListing()
+	{
+		return string.Concat("INPUT ", string.Join(",", Variables.Select(x => x.ToListing())));
 	}
 }
