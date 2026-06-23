@@ -3,7 +3,7 @@ using System;
 
 namespace ECMABasic.Core.Statements
 {
-	class GosubStatement : IStatement
+	internal class GosubStatement : IStatement
 	{
 		public GosubStatement(IExpression lineNumber)
 		{
