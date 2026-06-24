@@ -1,5 +1,4 @@
 using ECMABasic.Domain;
-using ECMABasic.Domain.Expressions;
 ﻿using System;
 using System.Collections.Generic;
 
@@ -23,13 +22,13 @@ public class FunctionFactory
 
 	private FunctionFactory()
 	{
-		Define("ABS", new[] { ExpressionType.Number }, args => Math.Abs(Convert.ToDouble(args[0])));
-		Define("COS", new[] { ExpressionType.Number }, args => Math.Cos(Convert.ToDouble(args[0])));
-		Define("INT", new[] { ExpressionType.Number }, args => Convert.ToInt32(args[0]));
-		Define("RND", new[] { ExpressionType.Number }, args => RandomFactory.Instance.Next(Convert.ToInt32(args[0])));
-		Define("SGN", new[] { ExpressionType.Number }, args => Math.Sign(Convert.ToDouble(args[0])));
-		Define("SIN", new[] { ExpressionType.Number }, args => Math.Sin(Convert.ToDouble(args[0])));
-		Define("TAN", new[] { ExpressionType.Number }, args => Math.Tan(Convert.ToDouble(args[0])));
+		Define("ABS", [ExpressionType.Number], args => Math.Abs(Convert.ToDouble(args[0])));
+		Define("COS", [ExpressionType.Number], args => Math.Cos(Convert.ToDouble(args[0])));
+		Define("INT", [ExpressionType.Number], args => Convert.ToInt32(args[0]));
+		Define("RND", [ExpressionType.Number], args => RandomFactory.Instance.Next(Convert.ToInt32(args[0])));
+		Define("SGN", [ExpressionType.Number], args => Math.Sign(Convert.ToDouble(args[0])));
+		Define("SIN", [ExpressionType.Number], args => Math.Sin(Convert.ToDouble(args[0])));
+		Define("TAN", [ExpressionType.Number], args => Math.Tan(Convert.ToDouble(args[0])));
 	}
 
 	public static FunctionFactory Instance { get; }
