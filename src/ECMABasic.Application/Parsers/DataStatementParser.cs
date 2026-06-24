@@ -1,0 +1,83 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Domain.Exceptions;
+using ECMABasic.Application.Statements;
+using System.Collections.Generic;
+
+namespace ECMABasic.Application.Parsers;
+
+public class DataStatementParser : StatementParser
+{
+	public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
+	{
+		var token = reader.Next(TokenType.Word, false, "DATA");
+		if (token == null)
+		{
+			return null;
+		}
+		ProcessSpace(reader, true);
+
+		var datums = new List<IExpression>();
+
+		while (true)
+		{
+			ProcessSpace(reader, false);
+
+			token = reader.Next(TokenType.String, false);
+			if (token != null)
+			{
+				datums.Add(new StringExpression(token.Text[1..^1]));
+			}
+			else
+			{
+				var value = reader.NextNumber(false);
+				if (value.HasValue)
+				{
+					datums.Add(new NumberExpression(value.Value));
+				}
+				else
+				{
+					// Read an unquoted string.
+
+					token = null;
+					var delimiters = new[] { TokenType.EndOfLine, TokenType.Comma };
+					while (true)
+					{
+						var next = reader.Peek();
+						if ((next == null) || (next.Type == TokenType.EndOfLine) || (next.Type == TokenType.Comma) || ((next.Type == TokenType.Symbol) && (next.Text == ",")))
+						{
+							break;
+						} 
+
+						if (token == null)
+						{
+							token = reader.Next();
+						}
+						else
+						{
+							var nextToken = reader.Next();
+						if (nextToken != null)
+						{
+							token = new Token(TokenType.String, new[] { token, nextToken });
+						}
+						}
+					}
+
+					if (token == null)
+					{
+						throw new SyntaxException("SYNTAX ERROR", lineNumber);
+					}
+					datums.Add(new StringExpression(token.Text.Trim()));
+				}
+			}
+
+			ProcessSpace(reader, false);
+			if (reader.Next(TokenType.Comma, false) == null)
+			{
+				break;
+			}
+		}
+
+		return new DataStatement(datums);
+	}
+}

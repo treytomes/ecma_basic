@@ -1,0 +1,81 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+
+namespace ECMABasic.Application.Configuration;
+
+/// <summary>
+/// Contains global configuration settings to control everything.
+/// </summary>
+public class MinimalBasicConfiguration : IBasicConfiguration
+{
+	/// <summary>
+	/// Creates a new MinimalBasicConfiguration.
+	/// </summary>
+	/// <param name="configuration">Optional IConfiguration to load settings from. If null, loads from appsettings.json.</param>
+	public MinimalBasicConfiguration(IConfiguration? configuration = null)
+	{
+		var config = configuration ?? new ConfigurationBuilder()
+			.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+			.Build();
+
+		MaxLineLength = GetValueOrDefault(config, "maxLineLength", MinimalBasicConfigDefaults.MAX_LINE_LENGTH);
+		MaxStringLength = GetValueOrDefault(config, "maxStringLength", MinimalBasicConfigDefaults.MAX_STRING_LENGTH);
+		TerminalWidth = GetValueOrDefault(config, "terminalWidth", MinimalBasicConfigDefaults.TERMINAL_WIDTH);
+		NumTerminalColumns = GetValueOrDefault(config, "numTerminalColumns", MinimalBasicConfigDefaults.NUM_TERMINAL_COLUMNS);
+		MaxLineNumberDigits = GetValueOrDefault(config, "maxLineNumberDigits", MinimalBasicConfigDefaults.MAX_LINE_NUMBER_DIGITS);
+		SignificanceWidth = GetValueOrDefault(config, "significanceWidth", MinimalBasicConfigDefaults.SIGNIFICANCE_WIDTH);
+		ExradWidth = GetValueOrDefault(config, "exradWidth", MinimalBasicConfigDefaults.EXRAD_WIDTH);
+	}
+
+	/// <summary>
+	/// Singleton instance for backward compatibility.
+	/// Loads configuration from appsettings.json.
+	/// </summary>
+	public static IBasicConfiguration Instance { get; } = new MinimalBasicConfiguration();
+
+	public int MaxLineLength { get; }
+
+	public int MaxStringLength { get; }
+
+	public int TerminalWidth { get; }
+
+	public int NumTerminalColumns { get; }
+
+	public int TerminalColumnWidth
+	{
+		get
+		{
+			return TerminalWidth / NumTerminalColumns;
+		}
+	}
+
+	public int MaxLineNumberDigits { get; }
+
+	public int SignificanceWidth { get; }
+
+	public int ExradWidth { get; }
+
+	public int MaxLineNumber
+	{
+		get
+		{
+			return (int)(Math.Pow(10, MaxLineNumberDigits) - 1);
+		}
+	}
+
+	private T GetValueOrDefault<T>(IConfiguration config, string key, T defaultValue)
+	{
+		var section = config.GetSection(key);
+		var value = section.Value;
+		if (value == null)
+		{
+			return defaultValue;
+		}
+		else
+		{
+			return (T)Convert.ChangeType(value, typeof(T));
+		}
+	}
+}

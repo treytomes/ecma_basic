@@ -1,0 +1,16 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿namespace ECMABasic.Application.Statements;
+
+public class RestoreStatement : IStatement
+{
+	public void Execute(IEnvironment env, bool isImmediate)
+	{
+		env.ResetDataPointer();
+	}
+
+	public string ToListing()
+	{
+		return "RESTORE";
+	}
+}

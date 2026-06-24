@@ -1,33 +1,36 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+using ECMABasic.Infrastructure;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Domain.Exceptions;
+using ECMABasic.Application.Statements;
 
-namespace ECMABasic55.Statements
+namespace ECMABasic55.Statements;
+
+/// <summary>
+/// Continue after a program has been stopped.
+/// </summary>
+public class ContinueStatement : IStatement
 {
-	/// <summary>
-	/// Continue after a program has been stopped.
-	/// </summary>
-	public class ContinueStatement : IStatement
+	// TODO: ?CN ERROR if there if the program wasn't STOPped.
+
+	public void Execute(IEnvironment env, bool isImmediate)
 	{
-		// TODO: ?CN ERROR if there if the program wasn't STOPped.
-
-		public void Execute(IEnvironment env, bool isImmediate)
+		if (!isImmediate)
 		{
-			if (!isImmediate)
-			{
-				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
-			}
-
-			if (env.Program[env.CurrentLineNumber].Statement is StopStatement)
-			{
-				env.Program.MoveToNextLine(env);
-			}
-			env.Program.Execute(env);
+			throw ECMABasic.Domain.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		public string ToListing()
+		var currentLine = ((EnvironmentBase)env).Program[env.CurrentLineNumber];
+		if (currentLine != null && currentLine.Statement is StopStatement)
 		{
-			return "CONT";
+			((EnvironmentBase)env).Program.MoveToNextLine(env);
 		}
+		((EnvironmentBase)env).Program.Execute(env);
+	}
+
+	public string ToListing()
+	{
+		return "CONT";
 	}
 }

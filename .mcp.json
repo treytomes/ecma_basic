@@ -1,0 +1,35 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/mcp.json",
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "disabled": false,
+      "description": "GitHub API access (create issues, PRs, read repos). ENABLED for automated issue creation and management."
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "disabled": true,
+      "description": "Extended filesystem operations beyond built-in tools. Enable if you need advanced file operations. Usually not needed - built-in tools are sufficient."
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "${workspaceFolder}/data"],
+      "disabled": true,
+      "description": "SQLite database access. Enable if you add a SQLite database to the project."
+    }
+  },
+  "notes": [
+    "MCP servers are loaded when Claude Code starts.",
+    "IMPORTANT: After enabling/disabling servers, RESTART Claude Code for changes to take effect.",
+    "GitHub server is currently ENABLED for automated issue creation.",
+    "GitHub server requires GITHUB_TOKEN (set in .claude/settings.local.json or system env).",
+    "Environment variables: Use ${VAR_NAME} syntax, resolved at startup.",
+    "Personal MCP servers go in ~/.claude.json (user scope), not here.",
+    "Skills will fall back to 'gh' CLI if MCP tools not available."
+  ]
+}

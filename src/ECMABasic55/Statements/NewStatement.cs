@@ -1,23 +1,25 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+using ECMABasic.Infrastructure;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Domain.Exceptions;
 
-namespace ECMABasic55.Statements
+namespace ECMABasic55.Statements;
+
+public class NewStatement : IStatement
 {
-	public class NewStatement : IStatement
+	public void Execute(IEnvironment env, bool isImmediate)
 	{
-		public void Execute(IEnvironment env, bool isImmediate)
+		if (!isImmediate)
 		{
-			if (!isImmediate)
-			{
-				throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
-			}
-
-			env.Clear();
+			throw ECMABasic.Domain.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		public string ToListing()
-		{
-			return "NEW";
-		}
+		env.Clear();
+	}
+
+	public string ToListing()
+	{
+		return "NEW";
 	}
 }

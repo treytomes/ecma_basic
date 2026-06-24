@@ -1,22 +1,23 @@
-﻿using ECMABasic.Core;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
 using ECMABasic55.Statements;
 
-namespace ECMABasic55.Parsers
+namespace ECMABasic55.Parsers;
+
+public class ContinueStatementParser : StatementParser
 {
-	public class ContinueStatementParser : StatementParser
+	public override IStatement? Parse(ComplexTokenReader reader, int? lineNumber = null)
 	{
-		public override IStatement Parse(ComplexTokenReader reader, int? lineNumber = null)
+		var token = reader.Next(TokenType.Word, false, "CONTINUE");
+		if (token == null)
 		{
-			var token = reader.Next(TokenType.Word, false, "CONTINUE");
+			token = reader.Next(TokenType.Word, false, "CONT");
 			if (token == null)
 			{
-				token = reader.Next(TokenType.Word, false, "CONT");
-				if (token == null)
-				{
-					return null;
-				}
+				return null;
 			}
-			return new ContinueStatement();
 		}
+		return new ContinueStatement();
 	}
 }

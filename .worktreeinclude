@@ -1,0 +1,31 @@
+# .worktreeinclude
+#
+# Lists gitignored files to copy into new git worktrees.
+# Useful for environment configs, secrets, and local settings.
+#
+# Worktrees are used when running agents in isolation (prevents conflicts
+# when multiple agents edit files simultaneously).
+
+# Environment configuration (if you create one)
+# .env
+# .env.local
+
+# Local settings that shouldn't be committed
+# .claude/settings.local.json
+
+# Test coverage reports (if you want them in worktrees)
+# coverage-report/
+
+# Build artifacts (usually don't need these)
+# bin/
+# obj/
+
+# IDE-specific settings that help but shouldn't be committed
+# .vs/
+# .vscode/settings.json
+
+# Currently, this project doesn't have gitignored config files that
+# need to be copied to worktrees. Add entries here if you create:
+# - .env files with API keys
+# - Local configuration files
+# - Test data that's too large to commit

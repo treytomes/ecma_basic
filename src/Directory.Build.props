@@ -1,0 +1,35 @@
+<Project>
+  <!--
+    Global MSBuild properties for all projects in this solution.
+    These settings apply to any .csproj file in this directory or subdirectories.
+  -->
+
+  <PropertyGroup>
+    <!-- Quality Standards -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+
+    <!-- Output Configuration -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn> <!-- Disable "Missing XML comment" warnings -->
+
+    <!-- Assembly Information -->
+    <Company>Trey Tomes</Company>
+    <Product>ECMA BASIC</Product>
+    <Copyright>Copyright © 2022-2026 Trey Tomes</Copyright>
+
+    <!-- Source Control -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Deterministic Builds -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <!-- Analyzer Configuration -->
+  <!-- Note: .editorconfig is automatically discovered by MSBuild, no need to explicitly include -->
+
+</Project>
