@@ -1,8 +1,16 @@
 using ECMABasic.Application;
+using ECMABasic.Application.Configuration;
 using ECMABasic.Domain;
 using ECMABasic.Infrastructure;
+using ECMABasic55.Logging;
 using ECMABasic55.Parsers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.IO;
 using System.Threading.Tasks;
@@ -40,17 +48,97 @@ public static class Program
 		root.AddOption(configOption);
 		root.AddOption(debugOption);
 
-		root.SetHandler((file, config, debug) =>
+		root.SetHandler(async (file, config, debug) =>
 		{
-			// TODO: Use config and debug parameters in future DI setup
-			_ = config;
-			_ = debug;
+			var props = new CommandLineProps
+			{
+				FilePath = file,
+				ConfigFile = config,
+				Debug = debug
+			};
 
-			var exitCode = file != null ? RunBatch(file) : RunREPL();
+			using var host = CreateHostBuilder(props).Build();
+			var env = host.Services.GetRequiredService<IEnvironment>();
+			var runtimeConfig = host.Services.GetRequiredService<RuntimeConfiguration>();
+
+			var exitCode = props.FilePath != null
+				? RunBatch(env, runtimeConfig, props.FilePath)
+				: RunREPL(env, runtimeConfig);
+
 			Environment.Exit(exitCode);
 		}, fileArgument, configOption, debugOption);
 
 		return root;
+	}
+
+	private static IHostBuilder CreateHostBuilder(CommandLineProps props)
+	{
+		return Host.CreateDefaultBuilder()
+			.ConfigureAppConfiguration((ctx, config) => ConfigureAppConfiguration(config, props))
+			.ConfigureLogging(ConfigureLogging)
+			.ConfigureServices(ConfigureServices);
+	}
+
+	private static void ConfigureAppConfiguration(IConfigurationBuilder config, CommandLineProps props)
+	{
+		config.Sources.Clear();
+		config.SetBasePath(AppContext.BaseDirectory);
+
+		// Add YAML configuration file
+		config.AddYamlFile(props.ConfigFile, optional: false, reloadOnChange: false);
+
+		// Add command-line overrides
+		var overrides = new Dictionary<string, string?>
+		{
+			["Debug"] = props.Debug.ToString()
+		};
+		config.AddInMemoryCollection(overrides);
+	}
+
+	private static void ConfigureLogging(HostBuilderContext ctx, ILoggingBuilder logging)
+	{
+		logging.ClearProviders();
+
+		var debug = ctx.Configuration.GetValue<bool>("Debug");
+		var minLevel = debug ? LogLevel.Debug : LogLevel.Information;
+
+		// Add console logging in debug mode
+		if (debug)
+		{
+			logging.AddConsole();
+		}
+
+		logging.SetMinimumLevel(minLevel);
+
+		// Add file logging with daily rotation
+		var logDir = Path.Combine(AppContext.BaseDirectory, "logs");
+		Directory.CreateDirectory(logDir);
+
+		var logFile = Path.Combine(
+			logDir,
+			$"ecmabasic-{DateTime.UtcNow:yyyy-MM-dd}.log");
+
+		logging.AddProvider(new FileLoggerProvider(logFile, minLevel));
+	}
+
+	private static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
+	{
+		// Bind configuration
+		services.Configure<RuntimeConfiguration>(ctx.Configuration);
+		services.AddSingleton<RuntimeConfiguration>(sp => sp.GetRequiredService<IOptions<RuntimeConfiguration>>().Value);
+
+		// Register BASIC configuration - use existing singleton instance
+		services.AddSingleton(MinimalBasicConfiguration.Instance);
+
+		// Register interpreter and environment
+		services.AddSingleton<Interpreter, RuntimeInterpreter>();
+		services.AddSingleton<IEnvironment>(sp =>
+		{
+			var interpreter = (RuntimeInterpreter)sp.GetRequiredService<Interpreter>();
+			var env = new ConsoleEnvironment(interpreter);
+			InjectIntrinsics(env);
+			return env;
+		});
 	}
 
 	private static void InjectIntrinsics(IEnvironment env)
@@ -92,11 +180,9 @@ public static class Program
 		});
 	}
 
-	private static int RunBatch(string path)
+	private static int RunBatch(IEnvironment env, RuntimeConfiguration config, string path)
 	{
-		IEnvironment env = new ConsoleEnvironment();
-		InjectIntrinsics(env);
-		env.PrintLine(RuntimeConfiguration.Instance.Preamble);
+		env.PrintLine(config.Preamble);
 		env.PrintLine();
 
 		if (!File.Exists(path))
@@ -115,11 +201,9 @@ public static class Program
 		}
 	}
 
-	private static int RunREPL()
+	private static int RunREPL(IEnvironment env, RuntimeConfiguration config)
 	{
-		IEnvironment env = new ConsoleEnvironment(new RuntimeInterpreter());
-		InjectIntrinsics(env);
-		env.PrintLine(RuntimeConfiguration.Instance.Preamble);
+		env.PrintLine(config.Preamble);
 		env.PrintLine();
 
 		var isRunning = true;
