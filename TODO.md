@@ -1,8 +1,16 @@
 # TODO
 
+## In Progress
+
+* Issue #32: ✅ **COMPLETE** - Spectre.Console research complete (deferred in favor of ANSI codes)
+  - Research documented in `.claude/research/spectre-console-evaluation.md`
+  - Follow-up Issue #44 created for ANSI color implementation
+
 ## Next
 
-* We need to run a gap analysis comparing the capabilities of ECMABasic55 with the requirements in `docs\ECMA-55_1st_edition_january_1978.pdf`.  Any missing features need to be specced out.
+* ✅ **COMPLETE** - Gap analysis comparing ECMABasic55 with ECMA-55 requirements
+  - See: `.claude/audits/ecma55-gap-analysis-2026-06-24.md`
+  - Missing features tracked as Issues #34-40 (v0.4 milestone)
 * `docs\ECMA-6, 7-Bit Coded Character Set.pdf` should be reviewed for any relevant requirements.  What is the purpose of the document?  Should it's implementation wait for a later version?  I'm considering a Godot-based presentation layer, but not until this project is more complete.
 
 ## Future
