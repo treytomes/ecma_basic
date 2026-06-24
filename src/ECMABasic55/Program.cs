@@ -139,7 +139,8 @@ public static class Program
 		services.AddSingleton<IEnvironment>(sp =>
 		{
 			var interpreter = (RuntimeInterpreter)sp.GetRequiredService<Interpreter>();
-			var env = new ConsoleEnvironment(interpreter);
+			var logger = sp.GetRequiredService<ILogger<ConsoleEnvironment>>();
+			var env = new ConsoleEnvironment(interpreter, logger: logger);
 			InjectIntrinsics(env);
 			return env;
 		});

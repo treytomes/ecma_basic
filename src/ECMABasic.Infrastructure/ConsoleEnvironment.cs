@@ -1,12 +1,16 @@
 using ECMABasic.Application;
 using ECMABasic.Domain;
+using Microsoft.Extensions.Logging;
 
 namespace ECMABasic.Infrastructure;
 
 public class ConsoleEnvironment : EnvironmentBase
 {
-	public ConsoleEnvironment(Interpreter? interpreter = null, IBasicConfiguration? config = null)
-		: base(interpreter, config)
+	public ConsoleEnvironment(
+		Interpreter? interpreter = null,
+		IBasicConfiguration? config = null,
+		ILogger<ConsoleEnvironment>? logger = null)
+		: base(interpreter, config, logger)
 	{
 	}
 
@@ -52,8 +56,22 @@ public class ConsoleEnvironment : EnvironmentBase
 
 	public override void ReportError(string message)
 	{
+		// Traditional BASIC error reporting - print to console
 		PrintLine(string.Empty);
 		PrintLine(message);
+
+		// NEW: Structured logging if logger is available
+		if (Logger != null)
+		{
+			if (CurrentLineNumber > 0)
+			{
+				Logger.LogError("BASIC runtime error in line {LineNumber}: {ErrorMessage}", CurrentLineNumber, message);
+			}
+			else
+			{
+				Logger.LogError("BASIC runtime error: {ErrorMessage}", message);
+			}
+		}
 	}
 
 	public override void CheckForStopRequest()

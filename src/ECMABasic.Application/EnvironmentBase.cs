@@ -2,6 +2,7 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Application.Configuration;
 using ECMABasic.Domain.Exceptions;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,10 +15,11 @@ public abstract class EnvironmentBase : IEnvironment
 	private readonly Stack<ICallStackContext> _callStack = new();
 	private readonly DataPointer _dataPointer = new();
 
-	public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null)
+	public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null, ILogger? logger = null)
 	{
 		Interpreter = interpreter ?? new Interpreter();
 		Configuration = config ?? MinimalBasicConfiguration.Instance;
+		Logger = logger;
 		Program = new Program();
 		Intrinsics = new IntrinsicRegistry();
 		Random = new BasicRandomNumberGenerator();
@@ -28,6 +30,8 @@ public abstract class EnvironmentBase : IEnvironment
 	public IIntrinsicRegistry Intrinsics { get; }
 
 	public IRandomNumberGenerator Random { get; }
+
+	public ILogger? Logger { get; }
 
 	public Interpreter Interpreter { get; }
 

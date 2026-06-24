@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace ECMABasic.Domain;
 
 /// <summary>
@@ -22,6 +24,12 @@ public interface IEnvironment : IErrorReporter
 	/// Each environment has its own RNG for test isolation and ECMA-55 conformance.
 	/// </summary>
 	public IRandomNumberGenerator Random { get; }
+
+	/// <summary>
+	/// Optional logger for structured error logging.
+	/// When present, runtime errors are logged in addition to being reported to console.
+	/// </summary>
+	public ILogger? Logger { get; }
 
 	/// <summary>
 	/// The line number currently being executed.
