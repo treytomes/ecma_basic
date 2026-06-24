@@ -277,12 +277,12 @@ Many parsers like `ReturnStatementParser` don't need changes because:
 git checkout fix/2-nullable-parsers
 
 # Check which parser files still have errors
-dotnet build src/ECMABasic.Core/ECMABasic.Core.csproj 2>&1 | grep -E "Parser\.cs.*error CS86"
+dotnet build src/ECMABasic.Application/ECMABasic.Application.csproj 2>&1 | grep -E "Parser\.cs.*error CS86"
 
 # Fix files (use Edit tool)
 
 # Test after each group of fixes
-dotnet build src/ECMABasic.Core/ECMABasic.Core.csproj --nologo --verbosity quiet
+dotnet build src/ECMABasic.Application/ECMABasic.Application.csproj --nologo --verbosity quiet
 
 # When all parsers done, run full test suite
 dotnet test src/ECMABasic.sln

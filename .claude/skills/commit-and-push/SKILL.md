@@ -58,7 +58,7 @@ Analyzes changed files and groups them **logically** by:
 - **Claude config**: `.claude/**`
 
 #### Group by Feature Area
-- **Core**: `ECMABasic.Core/**`
+- **Core**: `ECMABasic.Application/**`
 - **REPL**: `ECMABasic55/**`
 - **Tests**: `ECMABasic.Test/**`
 - **Infrastructure**: Build, CI/CD files
@@ -106,7 +106,7 @@ For each logical group, I'll:
    Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
    
    Files:
-   - src/ECMABasic.Core/FunctionFactory.cs
+   - src/ECMABasic.Application/FunctionFactory.cs
    - src/ECMABasic.Test/FunctionTests.cs
    
    [A]pprove [E]dit [S]kip [Q]uit?
@@ -140,8 +140,8 @@ After all commits are approved:
 
 ### Example 1: Nullable Fix
 **Changed files**:
-- `src/ECMABasic.Core/CharacterReader.cs`
-- `src/ECMABasic.Core/Interpreter.cs`
+- `src/ECMABasic.Application/CharacterReader.cs`
+- `src/ECMABasic.Application/Interpreter.cs`
 - `src/ECMABasic.Test/InterpreterTests.cs`
 
 **Grouping**:
@@ -162,7 +162,7 @@ Related: #1
 
 ### Example 2: Mixed Changes
 **Changed files**:
-- `src/ECMABasic.Core/Parser.cs` (new feature)
+- `src/ECMABasic.Application/Parser.cs` (new feature)
 - `src/ECMABasic55/Program.cs` (bug fix)
 - `README.md` (documentation)
 - `.claude/rules/modernization.md` (config)
@@ -215,8 +215,8 @@ Me: 🔍 Analyzing changes...
     Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
     
     Files (8):
-    - src/ECMABasic.Core/CharacterReader.cs
-    - src/ECMABasic.Core/Interpreter.cs
+    - src/ECMABasic.Application/CharacterReader.cs
+    - src/ECMABasic.Application/Interpreter.cs
     - [... 6 more]
     
     [A]pprove [E]dit message [S]kip [Q]uit? _
@@ -330,7 +330,7 @@ Working directory is clean.
 ### Conflicts
 ```
 ❌ Merge conflicts detected in:
-- src/ECMABasic.Core/Interpreter.cs
+- src/ECMABasic.Application/Interpreter.cs
 
 Resolve conflicts manually:
 1. git status

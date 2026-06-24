@@ -82,7 +82,7 @@ labels: enhancement, modernization
 - [ ] Modern C# patterns applied consistently
 
 ## Files Affected
-- [ ] src/ECMABasic.Core/CharacterReader.cs
+- [ ] src/ECMABasic.Application/CharacterReader.cs
 - [ ] ...
 
 ## Related Issues

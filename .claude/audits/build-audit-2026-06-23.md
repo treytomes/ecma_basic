@@ -29,7 +29,7 @@
 
 | Rank | File | Errors | Primary Issues |
 |------|------|--------|----------------|
-| 1 | **ECMABasic.Core.csproj** | 256 | Project-wide issues |
+| 1 | **ECMABasic.Application.csproj** | 256 | Project-wide issues |
 | 2 | **Interpreter.cs** | 21 | Nullable violations |
 | 3 | **IEnvironment.cs** | 15 | Accessibility modifiers |
 | 4 | **TokenType.cs** | 11 | XML documentation, nullable |
@@ -135,7 +135,7 @@ public static bool FromText(string text, IEnvironment env, IBasicConfiguration? 
 **Pattern 1: File-Scoped Namespaces** (93 files)
 ```csharp
 // ❌ Current (IDE0161)
-namespace ECMABasic.Core
+namespace ECMABasic.Application
 {
     public class CharacterReader
     {
@@ -144,7 +144,7 @@ namespace ECMABasic.Core
 }
 
 // ✅ Fix: File-scoped namespace
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class CharacterReader
 {

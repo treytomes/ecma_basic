@@ -18,7 +18,7 @@ description: Modern .NET and C# coding standards for this project
 - Use null-coalescing and null-conditional operators where appropriate
 
 ### Modern C# Patterns
-- **File-scoped namespaces**: Use `namespace ECMABasic.Core;` instead of block syntax
+- **File-scoped namespaces**: Use `namespace ECMABasic.Application;` instead of block syntax
 - **Target-typed new**: Use `new()` when type is obvious from context
 - **var keyword**: Always use `var` for local variable declarations
 - **Pattern matching**: Prefer pattern matching over traditional type checks

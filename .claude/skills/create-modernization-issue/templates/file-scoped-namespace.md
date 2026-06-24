@@ -4,7 +4,7 @@ Convert to file-scoped namespace declarations (C# 10 feature)
 ## Current State
 Uses block-scoped namespaces:
 ```csharp
-namespace ECMABasic.Core
+namespace ECMABasic.Application
 {
     public class ClassName
     {
@@ -16,7 +16,7 @@ namespace ECMABasic.Core
 ## Target State
 Uses file-scoped namespaces:
 ```csharp
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class ClassName
 {

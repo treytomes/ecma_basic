@@ -49,7 +49,7 @@ Per our development philosophy, we **cannot modify source code without specifica
 
 ### Issue 1: Fix Nullable Reference Type Violations
 **Type**: Bug  
-**Files Affected**: ~40 files in ECMABasic.Core  
+**Files Affected**: ~40 files in ECMABasic.Application  
 **Description**: Address all CS86xx nullable reference type warnings  
 **Acceptance Criteria**:
 - All nullable reference type errors resolved
@@ -72,8 +72,8 @@ Per our development philosophy, we **cannot modify source code without specifica
 **Type**: Enhancement  
 **Files Affected**: All 128 C# files  
 **Description**: Convert from block-scoped to file-scoped namespace declarations (C# 10 feature)  
-**Before**: `namespace ECMABasic.Core { ... }`  
-**After**: `namespace ECMABasic.Core;`  
+**Before**: `namespace ECMABasic.Application { ... }`  
+**After**: `namespace ECMABasic.Application;`  
 **Acceptance Criteria**:
 - All files use file-scoped namespaces
 - All tests pass

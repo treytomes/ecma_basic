@@ -81,7 +81,7 @@ ecma_basic/
 │
 ├── src/
 │   ├── Directory.Build.props         # ✅ NEW: Global MSBuild settings
-│   ├── ECMABasic.Core/
+│   ├── ECMABasic.Application/
 │   ├── ECMABasic55/
 │   └── ECMABasic.Test/
 │

@@ -45,7 +45,7 @@ If asked to modify code without a spec, STOP and request either a GitHub issue o
 See [`.claude/SECRETS_MANAGEMENT.md`](.claude/SECRETS_MANAGEMENT.md) for complete security guide.
 
 ### Clean Architecture
-- **Core Domain**: The `ECMABasic.Core` project contains domain logic with no external dependencies
+- **Core Domain**: The `ECMABasic.Application` project contains domain logic with no external dependencies
 - **Application Layer**: `ECMABasic55` provides the console REPL, depending only on Core
 - **Dependency Rule**: Dependencies point inward (toward Core), never outward
 - **Interface-Driven**: Use abstractions (`IEnvironment`, `IBasicConfiguration`) for extensibility
@@ -63,7 +63,7 @@ See [`.claude/SECRETS_MANAGEMENT.md`](.claude/SECRETS_MANAGEMENT.md) for complet
 
 The solution follows Clean Architecture principles with three projects:
 
-- **ECMABasic.Core**: Core domain layer containing the interpreter, parser, expression evaluator, and statement implementations. No external dependencies. Includes configuration system for BASIC dialect settings.
+- **ECMABasic.Application**: Core domain layer containing the interpreter, parser, expression evaluator, and statement implementations. No external dependencies. Includes configuration system for BASIC dialect settings.
 - **ECMABasic55**: Application layer - console executable (ecmabasic55.exe) providing the interactive REPL. Extends the core interpreter with immediate-mode commands (RUN, LIST, LOAD, SAVE, etc.). Depends only on Core.
 - **ECMABasic.Test**: Test layer using xUnit with sample programs in `Resources/` directory. Tests organized by ECMA-55 standard groups (Group1-7). Validates specifications and maintains 80%+ coverage.
 

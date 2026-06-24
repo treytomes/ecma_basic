@@ -75,7 +75,7 @@ string name = "test";
 
 ```csharp
 // ✅ Correct
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class CharacterReader
 {
@@ -83,7 +83,7 @@ public class CharacterReader
 }
 
 // ❌ Incorrect (will warn)
-namespace ECMABasic.Core
+namespace ECMABasic.Application
 {
     public class CharacterReader
     {
