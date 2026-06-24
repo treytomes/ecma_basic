@@ -187,6 +187,100 @@ BASIC dialect behavior is controlled via `IBasicConfiguration`:
 
 Configuration loaded from `appsettings.json` in ECMABasic55 project.
 
+### Dependency Injection
+
+The project uses dependency injection for services with state, per-environment dependencies, and testability-critical components.
+
+#### When to Use DI
+
+✅ **Use DI for**:
+- **Services with mutable state** (e.g., `IRandomNumberGenerator`)
+- **Per-environment services** (e.g., `IIntrinsicRegistry`)
+- **Testability-critical services** (e.g., `IBasicConfiguration`)
+- **Services with external dependencies** (e.g., `IConsoleAdapter`)
+
+❌ **Don't Use DI for**:
+- **Pure functions with no state** (e.g., StatementParser static helpers)
+- **Simple value objects** (e.g., Token, ProgramLine)
+- **Domain entities** (keep Domain layer DI-free per Clean Architecture)
+
+#### Current DI Services
+
+**Domain Interfaces** (no implementations, just contracts):
+- `IEnvironment` - Runtime execution context
+- `IIntrinsicRegistry` - Built-in function registry (per-environment)
+- `IRandomNumberGenerator` - RNG for RND function (per-environment)
+- `IBasicConfiguration` - Language dialect configuration
+
+**Application Implementations**:
+- `EnvironmentBase` - Base environment with shared logic
+- `IntrinsicRegistry` - Per-environment function registry (each environment has independent functions)
+- `BasicRandomNumberGenerator` - Fixed-seed (42) RNG for ECMA-55 repeatability
+- `MinimalBasicConfiguration` - ECMA-55 configuration from IConfiguration
+
+**Presentation (ECMABasic55)**:
+- `ConsoleEnvironment` - Console I/O implementation
+- All services registered via `IHost` container in `Program.cs`
+
+#### DI Registration Example
+
+```csharp
+// In ECMABasic55/Program.cs ConfigureServices():
+services.AddSingleton<IBasicConfiguration>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    return new MinimalBasicConfiguration(configuration);
+});
+
+services.AddSingleton<IEnvironment>(sp =>
+{
+    var interpreter = sp.GetRequiredService<Interpreter>();
+    var env = new ConsoleEnvironment(interpreter);
+    return env;
+});
+```
+
+#### Testing with DI
+
+Custom configurations and seeded RNG for deterministic tests:
+
+```csharp
+// Create test with custom config
+var configData = new Dictionary<string, string>
+{
+    ["maxLineLength"] = "40",
+    ["maxStringLength"] = "10"
+};
+var configuration = new ConfigurationBuilder()
+    .AddInMemoryCollection(configData)
+    .Build();
+var customConfig = new MinimalBasicConfiguration(configuration);
+var env = new TestEnvironment(config: customConfig);
+
+// Create test with seeded RNG for deterministic results
+var testEnv = new TestEnvironment();
+testEnv.Random.Reseed(12345); // Fixed seed = repeatable tests
+```
+
+#### Architecture Benefits
+
+- ✅ **Test Isolation**: Each environment has independent state
+- ✅ **ECMA-55 Conformance**: Per-environment RNG enables repeatable sequences
+- ✅ **Dialect Support**: Different configurations per environment (future ECMA-116)
+- ✅ **Clean Architecture**: Domain ← Application ← Infrastructure dependency flow
+
+#### What's NOT DI
+
+**StatementParser static helpers remain static** because:
+- They're pure functions (no state, no side effects)
+- Simple to call, high performance
+- No testability issues
+- Converting would add complexity with minimal benefit
+
+**See Also**:
+- Research: `.claude/research/dependency-injection-expansion.md` (Issue #33)
+- Related Issues: #30 (IntrinsicRegistry), #41 (RandomNumberGenerator), #42 (Configuration)
+
 ## BASIC Language Features
 
 ### Immediate Mode Commands
