@@ -1,11 +1,7 @@
+using ECMABasic.Application;
 using ECMABasic.Domain;
-using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Application;
-using ECMABasic.Application.Configuration;
-using ECMABasic.Application.Exceptions;
-using System;
 
-namespace ECMABasic55;
+namespace ECMABasic.Infrastructure;
 
 public class ConsoleEnvironment : EnvironmentBase
 {
@@ -67,7 +63,7 @@ public class ConsoleEnvironment : EnvironmentBase
 			var key = Console.ReadKey(true);
 			if (key.Key == ConsoleKey.Escape)
 			{
-				throw ECMABasic.Application.ExceptionFactory.ProgramStop(CurrentLineNumber);
+				throw Application.ExceptionFactory.ProgramStop(CurrentLineNumber);
 			}
 		}
 	}

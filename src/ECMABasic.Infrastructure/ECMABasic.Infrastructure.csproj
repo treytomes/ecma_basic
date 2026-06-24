@@ -12,4 +12,9 @@
        - XML documentation generation
   -->
 
+  <ItemGroup>
+    <ProjectReference Include="..\ECMABasic.Domain\ECMABasic.Domain.csproj" />
+    <ProjectReference Include="..\ECMABasic.Application\ECMABasic.Application.csproj" />
+  </ItemGroup>
+
 </Project>
