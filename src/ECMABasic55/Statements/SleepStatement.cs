@@ -1,4 +1,6 @@
-﻿using ECMABasic.Core;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
 using System;
 using System.Threading;
 

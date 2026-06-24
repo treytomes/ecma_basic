@@ -1,21 +1,15 @@
-﻿using ECMABasic.Core;
-
 namespace ECMABasic.Domain;
 
 /// <summary>
 /// The environment that a program is run in.
+/// Provides I/O operations and runtime context.
 /// </summary>
 public interface IEnvironment : IErrorReporter
 {
 	/// <summary>
-	/// The active interpreter.
+	/// The configuration settings for this BASIC implementation.
 	/// </summary>
-	public Interpreter Interpreter { get; }
-
-	/// <summary>
-	/// The full program, ready to execute.
-	/// </summary>
-	public Program Program { get; }
+	public IBasicConfiguration Configuration { get; }
 
 	/// <summary>
 	/// The line number currently being executed.
@@ -57,30 +51,30 @@ public interface IEnvironment : IErrorReporter
 	public void Print(string text);
 
 	/// <summary>
-	/// Get the value of a variable.
+	/// Get the value of a string variable.
 	/// </summary>
 	/// <param name="variableName">The variable to retrieve.</param>
 	/// <returns>The value of the variable.</returns>
 	public string GetStringVariableValue(string variableName);
 
 	/// <summary>
-	/// Set the value of a variable.
+	/// Set the value of a string variable.
 	/// </summary>
-	/// <param name="variableName">The name of the value.</param>
+	/// <param name="variableName">The name of the variable.</param>
 	/// <param name="value">The value to assign.</param>
 	public void SetStringVariableValue(string variableName, string value);
 
 	/// <summary>
-	/// Get the value of a variable.
+	/// Get the value of a numeric variable.
 	/// </summary>
 	/// <param name="variableName">The variable to retrieve.</param>
 	/// <returns>The value of the variable.</returns>
 	public double GetNumericVariableValue(string variableName);
 
 	/// <summary>
-	/// Set the value of a variable.
+	/// Set the value of a numeric variable.
 	/// </summary>
-	/// <param name="variableName">The name of the value.</param>
+	/// <param name="variableName">The name of the variable.</param>
 	/// <param name="value">The value to assign.</param>
 	public void SetNumericVariableValue(string variableName, double value);
 
@@ -125,4 +119,25 @@ public interface IEnvironment : IErrorReporter
 	/// Reset the data pointer to the first datum.
 	/// </summary>
 	public void ResetDataPointer();
+
+	/// <summary>
+	/// Get the next line number after the given line number.
+	/// </summary>
+	/// <param name="fromLineNumber">The line number to start from.</param>
+	/// <returns>The next line number, or -1 if no more lines.</returns>
+	public int GetNextLineNumber(int fromLineNumber);
+
+	/// <summary>
+	/// Move to the next line in the program and return the statement.
+	/// Updates CurrentLineNumber.
+	/// </summary>
+	/// <returns>The statement at the next line, or null if no more lines.</returns>
+	public IStatement? MoveToNextLine();
+
+	/// <summary>
+	/// Get the statement at the given line number.
+	/// </summary>
+	/// <param name="lineNumber">The line number to retrieve.</param>
+	/// <returns>The statement at that line, or null if line doesn't exist.</returns>
+	public IStatement? GetStatementAtLine(int lineNumber);
 }

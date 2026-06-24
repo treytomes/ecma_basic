@@ -1,3 +1,5 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;

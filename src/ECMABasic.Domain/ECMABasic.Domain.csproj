@@ -12,9 +12,6 @@
        - XML documentation generation
   -->
 
-  <!-- TEMPORARY: References Core until IEnvironment dependency is inverted in Phase 3 -->
-  <ItemGroup>
-    <ProjectReference Include="..\ECMABasic.Core\ECMABasic.Core.csproj" />
-  </ItemGroup>
+  <!-- Domain layer has zero dependencies by Clean Architecture principles -->
 
 </Project>

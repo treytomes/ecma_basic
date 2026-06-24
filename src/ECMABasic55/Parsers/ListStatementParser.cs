@@ -1,7 +1,8 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Expressions;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+using ECMABasic.Application;
+using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
 using ECMABasic55.Statements;
 using System;
 
@@ -66,7 +67,7 @@ public class ListStatementParser : StatementParser
 		}
 		else
 		{
-			throw ExceptionFactory.LineNumberExpected();
+			throw ECMABasic.Application.ExceptionFactory.LineNumberExpected();
 		}
 	}
 }

@@ -1,5 +1,7 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
 
 namespace ECMABasic55.Statements;
 
@@ -9,7 +11,7 @@ public class NewStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		env.Clear();

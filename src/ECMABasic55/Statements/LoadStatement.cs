@@ -1,5 +1,7 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
 using System;
 using System.IO;
 
@@ -18,7 +20,7 @@ public class LoadStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		var path = Convert.ToString(Path.Evaluate(env));

@@ -1,4 +1,4 @@
-﻿using ECMABasic.Domain.Configuration;
+﻿
 using ECMABasic.Domain.Exceptions;
 using System;
 using System.Text;
@@ -7,18 +7,16 @@ namespace ECMABasic.Domain.Expressions;
 
 public class TabExpression : IPrintItem
 {
-	private readonly IBasicConfiguration _config;
-
-	public TabExpression(IExpression value, IBasicConfiguration? config = null)
+	public TabExpression(IExpression value)
 	{
 		Value = value;
-		_config = config ?? MinimalBasicConfiguration.Instance;
 	}
 
 	public IExpression Value { get; }
 
 	public object Evaluate(IEnvironment env)
 	{
+		var config = env.Configuration;
 		var value = (int)Math.Round(Convert.ToDouble(Value.Evaluate(env)));
 		if (value < 1)
 		{
@@ -28,9 +26,9 @@ public class TabExpression : IPrintItem
 			env.ReportError(new RuntimeException("TAB OUT OF RANGE", env.CurrentLineNumber).Message);
 		}
 
-		if (value > _config.TerminalWidth)
+		if (value > config.TerminalWidth)
 		{
-			value -= _config.TerminalWidth * (int)((value - 1) / _config.TerminalWidth);
+			value -= config.TerminalWidth * (int)((value - 1) / config.TerminalWidth);
 		}
 
 		var sb = new StringBuilder();

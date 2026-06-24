@@ -1,0 +1,35 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+using System;
+
+namespace ECMABasic.Application.Statements;
+
+public class LetStatement : IStatement
+{
+	public LetStatement(VariableExpression targetExpr, IExpression valueExpr)
+	{
+		Target = targetExpr;
+		Value = valueExpr;
+	}
+
+	public VariableExpression Target { get; }
+	public IExpression Value { get; }
+
+	public void Execute(IEnvironment env, bool isImmediate)
+	{
+		var value = Value.Evaluate(env);
+		if (Target.IsString)
+		{
+			env.SetStringVariableValue(Target.Name, Convert.ToString(value) ?? string.Empty);
+		}
+		else
+		{
+			env.SetNumericVariableValue(Target.Name, Convert.ToDouble(value));
+		}
+	}
+
+	public string ToListing()
+	{
+		return string.Concat("LET ", Target.ToListing(), "=", Value.ToListing());
+	}
+}

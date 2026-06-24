@@ -1,0 +1,27 @@
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using System;
+
+namespace ECMABasic.Application.Exceptions;
+
+public class UnexpectedCharacterException : Exception
+{
+    public UnexpectedCharacterException(int line, int column, string expected, string found)
+        : base($"({line}:{column}) Expected '{expected}', found '{found}'.")
+    {
+        Line = line;
+        Column = column;
+        Expected = expected;
+        Found = found;
+    }
+
+    public UnexpectedCharacterException(int line, int column, string expected, char found)
+        : this(line, column, expected, found.ToString())
+    {
+    }
+
+    public int Line { get; }
+    public int Column { get; }
+    public string Expected { get; }
+    public string Found { get; }
+}

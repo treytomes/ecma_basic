@@ -1,4 +1,4 @@
-﻿namespace ECMABasic.Domain.Configuration;
+namespace ECMABasic.Domain;
 
 public interface IBasicConfiguration
 {

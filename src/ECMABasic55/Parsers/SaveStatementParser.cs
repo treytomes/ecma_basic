@@ -1,5 +1,7 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
 using ECMABasic55.Statements;
 
 namespace ECMABasic55.Parsers;
@@ -19,7 +21,7 @@ public class SaveStatementParser : StatementParser
 		var filenameExpr = ParseStringExpression(reader, null, true);
 		if (filenameExpr == null)
 		{
-			throw ExceptionFactory.Syntax();
+			throw ECMABasic.Application.ExceptionFactory.Syntax();
 		}
 
 		return new SaveStatement(filenameExpr);

@@ -1,6 +1,8 @@
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+using ECMABasic.Domain;
+using ECMABasic.Domain.Expressions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
+using ECMABasic.Application.Statements;
 
 namespace ECMABasic55.Statements;
 
@@ -15,15 +17,15 @@ public class ContinueStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
-		var currentLine = env.Program[env.CurrentLineNumber];
+		var currentLine = ((EnvironmentBase)env).Program[env.CurrentLineNumber];
 		if (currentLine != null && currentLine.Statement is StopStatement)
 		{
-			env.Program.MoveToNextLine(env);
+			((EnvironmentBase)env).Program.MoveToNextLine(env);
 		}
-		env.Program.Execute(env);
+		((EnvironmentBase)env).Program.Execute(env);
 	}
 
 	public string ToListing()
