@@ -1,9 +1,9 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 using System;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 internal class GosubStatement : IStatement
 {

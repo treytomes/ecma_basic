@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 /// <summary>
 /// A centralized random number provider.

@@ -4,7 +4,7 @@ using ECMABasic.Domain.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class FunctionDefinition
 {

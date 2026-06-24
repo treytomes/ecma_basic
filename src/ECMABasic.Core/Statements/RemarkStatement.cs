@@ -1,6 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿namespace ECMABasic.Core.Statements;
+﻿namespace ECMABasic.Application.Statements;
 
 public class RemarkStatement : IStatement
 {

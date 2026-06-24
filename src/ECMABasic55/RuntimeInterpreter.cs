@@ -1,8 +1,8 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
 using ECMABasic55.Parsers;
 using System;
 using System.Collections.Generic;
@@ -61,7 +61,7 @@ public class RuntimeInterpreter : Interpreter
 		}
 		catch (Exception)
 		{
-			throw ECMABasic.Core.ExceptionFactory.Syntax();
+			throw ECMABasic.Application.ExceptionFactory.Syntax();
 		}
 	}
 

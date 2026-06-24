@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 public class ReadStatement : IStatement
 {

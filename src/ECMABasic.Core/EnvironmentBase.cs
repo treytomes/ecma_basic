@@ -1,11 +1,11 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public abstract class EnvironmentBase : IEnvironment
 {

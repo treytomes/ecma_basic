@@ -1,12 +1,12 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Exceptions;
+using ECMABasic.Application.Statements;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 /// <summary>
 /// A program is an executable list of program lines.

@@ -1,14 +1,14 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Exceptions;
+using ECMABasic.Application.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECMABasic.Core.Parsers;
+namespace ECMABasic.Application.Parsers;
 
 public class OnGotoStatementParser : StatementParser
 {

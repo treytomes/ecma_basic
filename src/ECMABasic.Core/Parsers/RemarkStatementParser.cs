@@ -1,9 +1,9 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Statements;
 using System.Text;
 
-namespace ECMABasic.Core.Parsers;
+namespace ECMABasic.Application.Parsers;
 
 public class RemarkStatementParser : StatementParser
 {

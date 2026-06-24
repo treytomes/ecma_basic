@@ -1,11 +1,11 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 using System;
 using System.IO;
 using System.Text;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 /// <summary>
 /// Performance a simple processing of text into basic token classes.

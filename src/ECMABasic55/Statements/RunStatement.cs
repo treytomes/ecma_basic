@@ -1,7 +1,7 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
 using System;
 using System.Linq;
 
@@ -23,7 +23,7 @@ public class RunStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		if (LineNumber != null)
@@ -31,7 +31,7 @@ public class RunStatement : IStatement
 			var lineNumber = Convert.ToInt32(LineNumber.Evaluate(env));
 			if (!((EnvironmentBase)env).Program.Any(x => x.LineNumber == lineNumber))
 			{
-				throw ECMABasic.Core.ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
+				throw ECMABasic.Application.ExceptionFactory.UndefinedLineNumber(lineNumber, env.CurrentLineNumber);
 			}
 			env.CurrentLineNumber = lineNumber;
 		}

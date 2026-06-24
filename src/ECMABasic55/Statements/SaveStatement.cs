@@ -1,7 +1,7 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Exceptions;
 using System;
 using System.IO;
 
@@ -20,13 +20,13 @@ public class SaveStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		var path = Convert.ToString(Path.Evaluate(env));
 		if (string.IsNullOrEmpty(path))
 		{
-			throw ECMABasic.Core.ExceptionFactory.Syntax();
+			throw ECMABasic.Application.ExceptionFactory.Syntax();
 		}
 
 		var contents = ((EnvironmentBase)env).Program.ToListing();

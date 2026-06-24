@@ -1,9 +1,9 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 using System.Collections.Generic;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class StringExpressionParser : ExpressionParser
 {

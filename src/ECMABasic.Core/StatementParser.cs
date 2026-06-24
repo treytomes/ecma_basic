@@ -1,8 +1,8 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public abstract class StatementParser
 {

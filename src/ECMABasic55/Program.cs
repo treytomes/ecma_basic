@@ -1,6 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
+﻿using ECMABasic.Application;
 using ECMABasic55.Parsers;
 using System;
 using System.IO;

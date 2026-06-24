@@ -1,13 +1,13 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 /// <summary>
 /// Read a sequence of characters from a text source.

@@ -1,9 +1,9 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-using ECMABasic.Core.Statements;
+using ECMABasic.Application.Statements;
 using System.Collections.Generic;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class PrintStatementParser : StatementParser
 {

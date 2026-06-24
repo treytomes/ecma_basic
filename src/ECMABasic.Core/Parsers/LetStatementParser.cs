@@ -1,9 +1,9 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Exceptions;
+using ECMABasic.Application.Statements;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 public class LetStatementParser : StatementParser
 {

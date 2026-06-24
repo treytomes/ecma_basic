@@ -1,8 +1,8 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Statements;
 
-namespace ECMABasic.Core.Parsers;
+namespace ECMABasic.Application.Parsers;
 
 public class NextStatementParser : StatementParser
 {

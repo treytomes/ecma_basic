@@ -2,7 +2,7 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using System;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 public class IfThenStatement : GotoStatement
 {

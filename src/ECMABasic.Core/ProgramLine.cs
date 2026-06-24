@@ -2,7 +2,7 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using System;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 /// <summary>
 /// Represents a single line of a program.

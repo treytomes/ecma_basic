@@ -1,10 +1,10 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 public class DataStatement : IStatement
 {

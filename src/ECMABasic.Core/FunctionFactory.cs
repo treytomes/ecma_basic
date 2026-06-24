@@ -3,7 +3,7 @@ using ECMABasic.Domain.Expressions;
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 // TODO: This really needs to be part of the environment rather than a global singleton.
 

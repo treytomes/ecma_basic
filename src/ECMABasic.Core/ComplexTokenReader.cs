@@ -1,12 +1,12 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 // TODO: Do I *really* need to tokenizers?
 

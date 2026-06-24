@@ -1,6 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿namespace ECMABasic.Core;
+﻿namespace ECMABasic.Application;
 
 public class DataPointer
 {

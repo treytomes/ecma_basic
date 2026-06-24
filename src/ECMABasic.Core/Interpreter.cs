@@ -1,14 +1,14 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
-using ECMABasic.Core.Parsers;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
+using ECMABasic.Application.Parsers;
+using ECMABasic.Application.Statements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core;
+namespace ECMABasic.Application;
 
 // TODO: The end-goal is to have a single interpreter that you can plug feature sets into, like adding BASIC-1 on top of Minimal BASIC.
 

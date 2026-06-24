@@ -1,7 +1,7 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Statements;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Statements;
 using System;
 using System.Linq;
 using Xunit;

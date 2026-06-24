@@ -3,7 +3,7 @@ using ECMABasic.Domain.Expressions;
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace ECMABasic.Core.Configuration;
+namespace ECMABasic.Application.Configuration;
 
 /// <summary>
 /// Contains global configuration settings to control everything.

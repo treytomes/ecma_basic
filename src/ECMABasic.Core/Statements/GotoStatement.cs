@@ -2,7 +2,7 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using System;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 // TODO: # GOTO # needs to start an infinite loop.
 

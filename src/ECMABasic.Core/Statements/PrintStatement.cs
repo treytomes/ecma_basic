@@ -1,11 +1,11 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core.Configuration;
+﻿using ECMABasic.Application.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECMABasic.Core.Statements;
+namespace ECMABasic.Application.Statements;
 
 public class PrintStatement : IStatement
 {

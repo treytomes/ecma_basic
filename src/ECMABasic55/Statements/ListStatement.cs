@@ -1,8 +1,8 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Core;
-using ECMABasic.Core.Configuration;
-using ECMABasic.Core.Exceptions;
+﻿using ECMABasic.Application;
+using ECMABasic.Application.Configuration;
+using ECMABasic.Application.Exceptions;
 using System;
 using System.Linq;
 using System.Text;
@@ -27,7 +27,7 @@ public class ListStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ECMABasic.Core.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		if (((EnvironmentBase)env).Program.Length == 0)
@@ -38,7 +38,7 @@ public class ListStatement : IStatement
 		var fromLineNumber = (int)((From == null) ? ((EnvironmentBase)env).Program.First().LineNumber : Convert.ToInt32(From.Evaluate(env)));
 		if (fromLineNumber < 0)
 		{
-			throw ECMABasic.Core.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 		}
 
 		if ((From != null) && (To == null))
@@ -55,7 +55,7 @@ public class ListStatement : IStatement
 		var toLineNumber = (To == null) ? ((EnvironmentBase)env).Program.Last().LineNumber : Convert.ToInt32(To.Evaluate(env));
 		if ((toLineNumber < fromLineNumber) || (toLineNumber > _config.MaxLineNumber))
 		{
-			throw ECMABasic.Core.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
+			throw ECMABasic.Application.ExceptionFactory.LineNumberOutOfRange(fromLineNumber, env.CurrentLineNumber);
 		}
 
 		foreach (var line in ((EnvironmentBase)env).Program)
