@@ -1,6 +1,3 @@
-using ECMABasic.Domain;
-using ECMABasic.Domain.Expressions;
-﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +8,7 @@ namespace ECMABasic55;
 
 public class RuntimeConfiguration
 {
-	private const string DEFAULT_PREAMBLE = @"ECMA-55 MINIMAL BASIC RUNTIME ENVIRONMENT
+	private const string _defaultPreamble = @"ECMA-55 MINIMAL BASIC RUNTIME ENVIRONMENT
 USAGE: ECMABASIC55 {OPTIONAL FILE PATH}";
 	private RuntimeConfiguration()
 	{
@@ -22,7 +19,7 @@ USAGE: ECMABASIC55 {OPTIONAL FILE PATH}";
 			.Build();
 		var config = deserializer.Deserialize<Dictionary<string, object>>(yamlContent);
 
-		Preamble = GetValueOrDefault(config, "preamble", DEFAULT_PREAMBLE);
+		Preamble = GetValueOrDefault(config, "preamble", _defaultPreamble);
 	}
 
 	public static RuntimeConfiguration Instance { get; } = new RuntimeConfiguration();

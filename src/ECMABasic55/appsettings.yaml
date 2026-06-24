@@ -2,8 +2,8 @@
 
 # A block of text to dump to the screen when the interpreter is started.
 preamble: |
-  ECMABASIC55 V0.2
-  COPR. 2022 BY TREY TOMES
+  ECMABASIC55 V0.3
+  COPR. 2026 BY TREY TOMES
 
 # The maximum number of characters allowed on a program line,
 # including the line number and all whitespace.

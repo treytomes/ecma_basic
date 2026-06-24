@@ -9,11 +9,6 @@
     * We need to update `./ECMABasic55/Program.cs` to follow a similar pattern, including dependency injection, command-line parameters, and a rolling timestamp-based logger.
 * Review the duplicate `ExceptionFactory`.  Why is there a duplicate?
 
-## Pending
-
-* Convert `appsettings.json` to YAML format and update the config loaders.
-
-
 ## Future
 
 * A Godot presentation layer could include a virtual disk system that can read and write `.DSK` image files.
