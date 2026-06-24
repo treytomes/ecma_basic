@@ -4,7 +4,7 @@ REM Build script for ECMABasic
 echo Building ECMABasic...
 echo.
 
-cd /d "%~dp0src"
+cd /d "%~dp0"
 
 echo Restoring NuGet packages...
 dotnet restore ECMABasic.sln
