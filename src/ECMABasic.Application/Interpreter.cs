@@ -20,7 +20,21 @@ public class Interpreter
 	private readonly List<StatementParser> _lineStatements;
 
 	protected ComplexTokenReader _reader = null!;
+	protected IEnvironment _environment = null!;
 	private readonly IBasicConfiguration _config;
+
+	/// <summary>
+	/// Thread-local storage for the current parsing environment.
+	/// Allows expression parsers to access the intrinsic registry during parsing.
+	/// </summary>
+	[ThreadStatic]
+	private static IEnvironment? _currentParsingEnvironment;
+
+	/// <summary>
+	/// Gets the current parsing environment (thread-local).
+	/// Used by expression parsers to access intrinsic registry.
+	/// </summary>
+	public static IEnvironment? CurrentParsingEnvironment => _currentParsingEnvironment;
 
 	public Interpreter(IBasicConfiguration? config = null)
 	{
@@ -107,6 +121,8 @@ public class Interpreter
 
 	private bool InterpretProgram(IEnvironment env)
 	{
+		_environment = env;
+		_currentParsingEnvironment = env;
 		try
 		{
 			while (true)
@@ -129,6 +145,10 @@ public class Interpreter
 			env.ReportError(e.Message);
 			return false;
 		}
+		finally
+		{
+			_currentParsingEnvironment = null;
+		}
 	}
 
 	/// <summary>
@@ -140,7 +160,7 @@ public class Interpreter
 		return ProcessLine(env, parent) || ProcessForBlock(env, parent);
 	}
 
-	private bool ProcessLine(IEnvironment env, ProgramLine? parent)
+	protected bool ProcessLine(IEnvironment env, ProgramLine? parent)
 	{
 		var program = ((EnvironmentBase)env).Program;
 		var startIndex = _reader.TokenIndex;
@@ -163,7 +183,9 @@ public class Interpreter
 			return true;
 		}
 
-		var statement = ProcessStatement(lineNumber, false);
+		// Default: reject standalone NEXT (batch loading mode)
+		// RuntimeInterpreter overrides this for REPL incremental entry
+		var statement = ProcessStatement(lineNumber, false, allowStandaloneNext: false);
 		if (statement == null)
 		{
 			_reader.Seek(startIndex);
@@ -185,7 +207,7 @@ public class Interpreter
 	/// An exception will occur if a line number could not be read.
 	/// </summary>
 	/// <returns>The line number.</returns>
-	private int? ProcessLineNumber(bool throwsOnError = true)
+	protected int? ProcessLineNumber(bool throwsOnError = true)
 	{
 		var lineNumber = _reader.NextInteger(_config.MaxLineNumberDigits, throwsOnError);
 		return lineNumber;
@@ -219,14 +241,27 @@ public class Interpreter
 		return _reader.Next(TokenType.Space, throwOnError);
 	}
 
-	protected IStatement? ProcessStatement(int? lineNumber, bool throwOnError = true)
+	protected IStatement? ProcessStatement(int? lineNumber, bool throwOnError = true, bool allowStandaloneNext = false)
 	{
+		// In REPL mode (allowStandaloneNext=true), also try to parse FOR statements
+		// In batch mode, FOR statements are parsed by ProcessForBlock
+		if (allowStandaloneNext)
+		{
+			var forStmt = new ForStatementParser().Parse(_reader, lineNumber);
+			if (forStmt != null)
+			{
+				return forStmt;
+			}
+		}
+
 		foreach (var parser in _lineStatements)
 		{
 			var stmt = parser.Parse(_reader, lineNumber);
 			if (stmt != null)
 			{
-				if (stmt is NextStatement)
+				// In batch/file loading mode, reject standalone NEXT statements
+				// In REPL mode (allowStandaloneNext=true), allow incremental entry
+				if (stmt is NextStatement && !allowStandaloneNext)
 				{
 					throw ExceptionFactory.NextWithoutFor(lineNumber);
 				}

@@ -10,9 +10,13 @@ namespace ECMABasic.Application.Configuration;
 /// </summary>
 public class MinimalBasicConfiguration : IBasicConfiguration
 {
-	private MinimalBasicConfiguration()
+	/// <summary>
+	/// Creates a new MinimalBasicConfiguration.
+	/// </summary>
+	/// <param name="configuration">Optional IConfiguration to load settings from. If null, loads from appsettings.json.</param>
+	public MinimalBasicConfiguration(IConfiguration? configuration = null)
 	{
-		var config = new ConfigurationBuilder()
+		var config = configuration ?? new ConfigurationBuilder()
 			.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
 			.Build();
 
@@ -25,6 +29,10 @@ public class MinimalBasicConfiguration : IBasicConfiguration
 		ExradWidth = GetValueOrDefault(config, "exradWidth", MinimalBasicConfigDefaults.EXRAD_WIDTH);
 	}
 
+	/// <summary>
+	/// Singleton instance for backward compatibility.
+	/// Loads configuration from appsettings.json.
+	/// </summary>
 	public static IBasicConfiguration Instance { get; } = new MinimalBasicConfiguration();
 
 	public int MaxLineLength { get; }

@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Domain.Exceptions;
-using System.Collections.Generic;
+using ECMABasic.Domain.Exceptions;
 
 namespace ECMABasic.Application;
 
@@ -154,7 +155,14 @@ public class StringExpressionParser : ExpressionParser
 
 		_reader.Next(TokenType.CloseParenthesis);
 
-		foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
+		// Access intrinsic registry from current parsing environment
+		var environment = Interpreter.CurrentParsingEnvironment;
+		if (environment == null)
+		{
+			throw new InvalidOperationException("No parsing environment available");
+		}
+
+		foreach (var fndef in environment.Intrinsics.Get(nameToken.Text))
 		{
 			if (fndef.CanInstantiate(args))
 			{

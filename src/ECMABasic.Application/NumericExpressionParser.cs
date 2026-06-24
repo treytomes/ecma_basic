@@ -342,7 +342,14 @@ public class NumericExpressionParser : ExpressionParser
 
 		_reader.Next(TokenType.CloseParenthesis);
 
-		foreach (var fndef in FunctionFactory.Instance.Get(nameToken.Text))
+		// Access intrinsic registry from current parsing environment
+		var environment = Interpreter.CurrentParsingEnvironment;
+		if (environment == null)
+		{
+			throw new InvalidOperationException("No parsing environment available");
+		}
+
+		foreach (var fndef in environment.Intrinsics.Get(nameToken.Text))
 		{
 			if (fndef.CanInstantiate(args))
 			{

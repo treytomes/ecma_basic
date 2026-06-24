@@ -19,9 +19,15 @@ public abstract class EnvironmentBase : IEnvironment
 		Interpreter = interpreter ?? new Interpreter();
 		Configuration = config ?? MinimalBasicConfiguration.Instance;
 		Program = new Program();
+		Intrinsics = new IntrinsicRegistry();
+		Random = new BasicRandomNumberGenerator();
 	}
 
 	public IBasicConfiguration Configuration { get; }
+
+	public IIntrinsicRegistry Intrinsics { get; }
+
+	public IRandomNumberGenerator Random { get; }
 
 	public Interpreter Interpreter { get; }
 
