@@ -337,13 +337,13 @@ Result: Build succeeds with ZERO errors
 
 ```bash
 # File-scoped namespaces (after nullable fixes)
-dotnet format src/ECMABasic.sln --include --fix-style warn --severity error
+dotnet format ECMABasic.sln --include --fix-style warn --severity error
 
 # Verify changes
-dotnet build src/ECMABasic.sln --no-restore
+dotnet build ECMABasic.sln --no-restore
 
 # Run tests
-dotnet test src/ECMABasic.sln --configuration Release
+dotnet test ECMABasic.sln --configuration Release
 ```
 
 ### Manual Fixes

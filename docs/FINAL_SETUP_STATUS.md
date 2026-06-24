@@ -81,10 +81,15 @@ ecma_basic/
 │
 ├── src/
 │   ├── Directory.Build.props         # ✅ NEW: Global MSBuild settings
-│   ├── ECMABasic.Application/
-│   ├── ECMABasic55/
-│   └── ECMABasic.Test/
+│   ├── ECMABasic.Domain/             # ✅ Pure domain layer
+│   ├── ECMABasic.Application/        # ✅ Business logic
+│   ├── ECMABasic.Infrastructure/     # ✅ I/O implementations
+│   └── ECMABasic55/                  # ✅ ECMA-55 REPL
 │
+├── test/
+│   └── ECMABasic.Test/               # ✅ Unit tests
+│
+├── ECMABasic.sln                     # ✅ Solution at root
 ├── .editorconfig                     # ✅ Code style rules
 ├── .mcp.json                         # ✅ NEW: MCP server config
 ├── .worktreeinclude                  # ✅ NEW: Worktree files

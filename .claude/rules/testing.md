@@ -119,7 +119,7 @@ public void P050_Hello()
 ### During Development
 ```bash
 # Run tests in watch mode
-dotnet watch test --project src/ECMABasic.Test
+dotnet watch test --project test/ECMABasic.Test
 ```
 
 ### Pre-Commit

@@ -26,14 +26,14 @@ Automates the complete commit workflow: verification → grouping → commit →
 
 2. **Build verification**
    ```bash
-   dotnet build src/ECMABasic.sln --configuration Release
+   dotnet build ECMABasic.sln --configuration Release
    ```
    - Must succeed with zero warnings
    - Fails if any compilation errors
 
 3. **Test verification**
    ```bash
-   dotnet test src/ECMABasic.sln --configuration Release
+   dotnet test ECMABasic.sln --configuration Release
    ```
    - All tests must pass
    - No skipped or failing tests
@@ -107,7 +107,7 @@ For each logical group, I'll:
    
    Files:
    - src/ECMABasic.Application/FunctionFactory.cs
-   - src/ECMABasic.Test/FunctionTests.cs
+   - test/ECMABasic.Test/FunctionTests.cs
    
    [A]pprove [E]dit [S]kip [Q]uit?
    ```
@@ -142,7 +142,7 @@ After all commits are approved:
 **Changed files**:
 - `src/ECMABasic.Application/CharacterReader.cs`
 - `src/ECMABasic.Application/Interpreter.cs`
-- `src/ECMABasic.Test/InterpreterTests.cs`
+- `test/ECMABasic.Test/InterpreterTests.cs`
 
 **Grouping**:
 ```
@@ -240,9 +240,9 @@ Me: ✅ Committed: fix(core): resolve nullable reference warnings
     Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
     
     Files (3):
-    - src/ECMABasic.Test/CharacterReaderTests.cs
-    - src/ECMABasic.Test/InterpreterTests.cs
-    - src/ECMABasic.Test/Resources/null-test.BAS
+    - test/ECMABasic.Test/CharacterReaderTests.cs
+    - test/ECMABasic.Test/InterpreterTests.cs
+    - test/ECMABasic.Test/Resources/null-test.BAS
     
     [A]pprove [E]dit message [S]kip [Q]uit? _
 

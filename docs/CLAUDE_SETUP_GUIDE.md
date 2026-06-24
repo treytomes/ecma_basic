@@ -292,7 +292,7 @@ File exists but empty - no gitignored configs to copy yet.
     "afterEdit": [
       {
         "description": "Verify code builds after C# edits",
-        "command": "dotnet build src/ECMABasic.sln --nologo --verbosity quiet",
+        "command": "dotnet build ECMABasic.sln --nologo --verbosity quiet",
         "when": { "glob": "**/*.cs" }
       }
     ]
