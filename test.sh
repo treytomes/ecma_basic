@@ -6,8 +6,8 @@ set -e  # Exit on error
 echo "🧪 Testing ECMABasic..."
 echo
 
-# Navigate to source directory
-cd "$(dirname "$0")/src"
+# Navigate to repository root
+cd "$(dirname "$0")"
 
 # Run tests with coverage
 echo "🔬 Running tests with code coverage..."
@@ -29,7 +29,7 @@ fi
 # Generate HTML report
 reportgenerator \
   -reports:**/coverage.cobertura.xml \
-  -targetdir:../coverage-report \
+  -targetdir:coverage-report \
   -reporttypes:"Html;Cobertura"
 
 echo

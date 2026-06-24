@@ -4,7 +4,7 @@ REM Test script for ECMABasic with code coverage
 echo Testing ECMABasic...
 echo.
 
-cd /d "%~dp0src"
+cd /d "%~dp0"
 
 echo Running tests with code coverage...
 dotnet test ECMABasic.sln ^
@@ -27,7 +27,7 @@ if errorlevel 1 (
 REM Generate HTML report
 reportgenerator ^
   -reports:**/coverage.cobertura.xml ^
-  -targetdir:../coverage-report ^
+  -targetdir:coverage-report ^
   -reporttypes:"Html;Cobertura"
 
 echo.

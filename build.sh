@@ -6,8 +6,8 @@ set -e  # Exit on error
 echo "🔨 Building ECMABasic..."
 echo
 
-# Navigate to source directory
-cd "$(dirname "$0")/src"
+# Navigate to repository root
+cd "$(dirname "$0")"
 
 # Restore dependencies
 echo "📦 Restoring NuGet packages..."
