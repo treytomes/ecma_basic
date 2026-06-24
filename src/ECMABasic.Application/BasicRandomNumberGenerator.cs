@@ -25,4 +25,11 @@ public class BasicRandomNumberGenerator : IRandomNumberGenerator
 	{
 		_random = new Random(seed);
 	}
+
+	public void Randomize()
+	{
+		// ECMA55-RND-001: Generate unpredictable starting point
+		// Use time-based seed for unpredictability
+		_random = new Random();
+	}
 }

@@ -57,6 +57,7 @@ public class Interpreter
 			new DataStatementParser(),
 			new InputStatementParser(),
 			new NextStatementParser(),
+			new RandomizeStatementParser(),
 		};
 	}
 

@@ -18,8 +18,14 @@ public interface IRandomNumberGenerator
 	public int Next(int maxValue);
 
 	/// <summary>
-	/// Re-seeds the RNG (for RANDOMIZE statement).
+	/// Re-seeds the RNG with a deterministic seed (for testing).
 	/// </summary>
 	/// <param name="seed">Seed value for deterministic sequence.</param>
 	public void Reseed(int seed);
+
+	/// <summary>
+	/// Re-seeds the RNG with an unpredictable value (for RANDOMIZE statement).
+	/// ECMA55-RND-001: RANDOMIZE generates unpredictable starting point.
+	/// </summary>
+	public void Randomize();
 }
