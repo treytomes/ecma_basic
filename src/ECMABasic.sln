@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Domain", "ECMABas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Infrastructure", "ECMABasic.Infrastructure\ECMABasic.Infrastructure.csproj", "{E277135A-BB83-4475-8228-453CCF0CAD90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Core", "ECMABasic.Core\ECMABasic.Core.csproj", "{05FA8C61-A74A-4C73-9F5B-6806B83E5EE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECMABasic.Application", "ECMABasic.Application\ECMABasic.Application.csproj", "{05FA8C61-A74A-4C73-9F5B-6806B83E5EE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
