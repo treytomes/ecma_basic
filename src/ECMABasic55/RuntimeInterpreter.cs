@@ -37,7 +37,9 @@ public class RuntimeInterpreter : Interpreter
 		{
 			_reader = ComplexTokenReader.FromText(text);
 
-			if (ProcessBlock(env, null))
+			// Use ProcessLineForREPL instead of ProcessBlock to allow incremental entry
+			// ProcessBlock expects complete FOR-NEXT blocks, which breaks REPL UX
+			if (ProcessLineForREPL(env, null))
 			{
 				return null;
 			}
@@ -63,6 +65,51 @@ public class RuntimeInterpreter : Interpreter
 		{
 			throw ECMABasic.Domain.ExceptionFactory.Syntax();
 		}
+	}
+
+	/// <summary>
+	/// Process a program line in REPL mode, allowing standalone NEXT statements
+	/// for incremental FOR loop entry.
+	/// </summary>
+	private bool ProcessLineForREPL(IEnvironment env, ProgramLine? parent)
+	{
+		var program = ((EnvironmentBase)env).Program;
+		var startIndex = _reader.TokenIndex;
+		if (_reader.IsAtEnd)
+		{
+			return false;
+		}
+
+		var lineNumber = ProcessLineNumber(false);
+		if (!lineNumber.HasValue)
+		{
+			_reader.Seek(startIndex);
+			return false;
+		}
+
+		if (ProcessSpace(false) == null)
+		{
+			// An empty line triggers a deletion.
+			program.Insert(new ProgramLine(lineNumber.Value, null, null));
+			return true;
+		}
+
+		// Allow standalone NEXT and FOR for incremental REPL entry
+		var statement = ProcessStatement(lineNumber, false, allowStandaloneNext: true);
+		if (statement == null)
+		{
+			_reader.Seek(startIndex);
+			return false;
+		}
+
+		// Optional space.
+		ProcessSpace(false);
+
+		// Require an end-of-line.
+		ProcessEndOfLine();
+
+		program.Insert(new ProgramLine(lineNumber.Value, statement, parent));
+		return true;
 	}
 
 	private IStatement? ProcessImmediateStatement()

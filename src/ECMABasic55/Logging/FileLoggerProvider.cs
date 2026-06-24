@@ -15,7 +15,10 @@ public sealed class FileLoggerProvider : ILoggerProvider
 	{
 		_filePath = filePath;
 		_minLevel = minLevel;
-		_writer = new StreamWriter(filePath, append: true)
+
+		// Open with FileShare.ReadWrite to allow multiple REPL instances
+		var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+		_writer = new StreamWriter(fileStream)
 		{
 			AutoFlush = true
 		};

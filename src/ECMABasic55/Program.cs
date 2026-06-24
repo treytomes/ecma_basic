@@ -127,8 +127,12 @@ public static class Program
 		services.Configure<RuntimeConfiguration>(ctx.Configuration);
 		services.AddSingleton<RuntimeConfiguration>(sp => sp.GetRequiredService<IOptions<RuntimeConfiguration>>().Value);
 
-		// Register BASIC configuration - use existing singleton instance
-		services.AddSingleton(MinimalBasicConfiguration.Instance);
+		// Register BASIC configuration - inject from IConfiguration for testability
+		services.AddSingleton<IBasicConfiguration>(sp =>
+		{
+			var configuration = sp.GetRequiredService<IConfiguration>();
+			return new MinimalBasicConfiguration(configuration);
+		});
 
 		// Register interpreter and environment
 		services.AddSingleton<Interpreter, RuntimeInterpreter>();
@@ -147,9 +151,9 @@ public static class Program
 			new SleepStatementParser(),
 		]);
 
-		FunctionFactory.Instance.Define("ASC", [ExpressionType.String], args => (int)args[0].ToString()![0]);
+		env.Intrinsics.Register("ASC", [ExpressionType.String], (env, args) => (int)args[0].ToString()![0]);
 
-		FunctionFactory.Instance.Define("MID$", [ExpressionType.String, ExpressionType.Number, ExpressionType.Number], args =>
+		env.Intrinsics.Register("MID$", [ExpressionType.String, ExpressionType.Number, ExpressionType.Number], (env, args) =>
 		{
 			var source = Convert.ToString(args[0]) ?? string.Empty;
 			var startIndex = Convert.ToInt32(args[1]);
@@ -157,14 +161,14 @@ public static class Program
 			return source.Substring(startIndex - 1, length);
 		});
 
-		FunctionFactory.Instance.Define("MID$", [ExpressionType.String, ExpressionType.Number], args =>
+		env.Intrinsics.Register("MID$", [ExpressionType.String, ExpressionType.Number], (env, args) =>
 		{
 			var source = Convert.ToString(args[0]) ?? string.Empty;
 			var startIndex = Convert.ToInt32(args[1]);
 			return source[(startIndex - 1)..];
 		});
 
-		FunctionFactory.Instance.Define("POS", [ExpressionType.String, ExpressionType.String, ExpressionType.Number], args =>
+		env.Intrinsics.Register("POS", [ExpressionType.String, ExpressionType.String, ExpressionType.Number], (env, args) =>
 		{
 			var source = Convert.ToString(args[0]) ?? string.Empty;
 			var value = Convert.ToString(args[1]) ?? string.Empty;
@@ -172,7 +176,7 @@ public static class Program
 			return (double)source.IndexOf(value, index - 1) + 1;
 		});
 
-		FunctionFactory.Instance.Define("POS", [ExpressionType.String, ExpressionType.String], args =>
+		env.Intrinsics.Register("POS", [ExpressionType.String, ExpressionType.String], (env, args) =>
 		{
 			var source = Convert.ToString(args[0]) ?? string.Empty;
 			var value = Convert.ToString(args[1]) ?? string.Empty;
