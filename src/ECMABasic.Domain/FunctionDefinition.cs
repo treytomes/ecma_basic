@@ -1,17 +1,13 @@
-using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ECMABasic.Application;
+namespace ECMABasic.Domain;
 
 public class FunctionDefinition
 {
 	private readonly List<ExpressionType> _arguments;
-	private readonly Func<List<object>, object> _fn;
+	private readonly Func<IEnvironment, List<object>, object> _fn;
 
-	public FunctionDefinition(string name, IEnumerable<ExpressionType> args, Func<List<object>, object> fn)
+	public FunctionDefinition(string name, IEnumerable<ExpressionType> args, Func<IEnvironment, List<object>, object> fn)
 	{
 		Name = name;
 		_arguments = new List<ExpressionType>(args);

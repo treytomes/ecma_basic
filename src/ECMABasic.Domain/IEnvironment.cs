@@ -12,6 +12,18 @@ public interface IEnvironment : IErrorReporter
 	public IBasicConfiguration Configuration { get; }
 
 	/// <summary>
+	/// Registry of intrinsic functions (built-in functions defined by ECMA-55).
+	/// Each environment has its own registry for test isolation and dialect support.
+	/// </summary>
+	public IIntrinsicRegistry Intrinsics { get; }
+
+	/// <summary>
+	/// Random number generator for RND function.
+	/// Each environment has its own RNG for test isolation and ECMA-55 conformance.
+	/// </summary>
+	public IRandomNumberGenerator Random { get; }
+
+	/// <summary>
 	/// The line number currently being executed.
 	/// If the program is not running this value will be null.
 	/// </summary>

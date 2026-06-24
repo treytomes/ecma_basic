@@ -1,14 +1,10 @@
-using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ECMABasic.Application;
+namespace ECMABasic.Domain;
 
 public class FunctionExpression : IExpression
 {
-	public FunctionExpression(string name, Func<List<object>, object> fn, IEnumerable<IExpression> args)
+	public FunctionExpression(string name, Func<IEnvironment, List<object>, object> fn, IEnumerable<IExpression> args)
 	{
 		Name = name;
 
@@ -28,7 +24,7 @@ public class FunctionExpression : IExpression
 
 	public string Name { get; }
 
-	public Func<List<object>, object> Function { get; }
+	public Func<IEnvironment, List<object>, object> Function { get; }
 
 	public ExpressionType Type { get; }
 
@@ -38,7 +34,8 @@ public class FunctionExpression : IExpression
 
 	public object Evaluate(IEnvironment env)
 	{
-		return Function(Arguments.Select(x => x.Evaluate(env)).ToList());
+		// Pass environment to function delegate
+		return Function(env, Arguments.Select(x => x.Evaluate(env)).ToList());
 	}
 
 	public string ToListing()
