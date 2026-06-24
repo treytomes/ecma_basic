@@ -1,13 +1,10 @@
-using ECMABasic.Domain;
-using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Application;
-using System.Collections.Generic;
+using ECMABasic.Application;
 using System.Diagnostics;
 using System.Text;
 
-namespace ECMABasic.Test;
+namespace ECMABasic.Infrastructure;
 
-internal class TestEnvironment : EnvironmentBase
+public class TestEnvironment : EnvironmentBase
 {
 	private readonly StringBuilder _sb = new();
 	private readonly Queue<string> _inputLines = new();

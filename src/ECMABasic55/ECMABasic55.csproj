@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ECMABasic.Application\ECMABasic.Application.csproj" />
     <ProjectReference Include="..\ECMABasic.Domain\ECMABasic.Domain.csproj" />
+    <ProjectReference Include="..\ECMABasic.Infrastructure\ECMABasic.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
