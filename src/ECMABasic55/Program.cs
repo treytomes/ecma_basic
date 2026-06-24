@@ -28,13 +28,13 @@ public static class Program
 
     private static void InjectSpecials(IEnvironment env)
 	{
-        ((EnvironmentBase)env).Interpreter.InjectStatements(new[] {
+        ((EnvironmentBase)env).Interpreter.InjectStatements([
             new SleepStatementParser(),
-        });
+        ]);
 
-        FunctionFactory.Instance.Define("ASC", new[] { ExpressionType.String }, args => (int)args[0].ToString()![0]);
+        FunctionFactory.Instance.Define("ASC", [ExpressionType.String], args => (int)args[0].ToString()![0]);
 
-        FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number, ExpressionType.Number }, args =>
+        FunctionFactory.Instance.Define("MID$", [ExpressionType.String, ExpressionType.Number, ExpressionType.Number], args =>
         {
             var source = Convert.ToString(args[0]) ?? string.Empty;
             var startIndex = Convert.ToInt32(args[1]);
@@ -42,7 +42,7 @@ public static class Program
             return source.Substring(startIndex - 1, length);
         });
 
-        FunctionFactory.Instance.Define("MID$", new[] { ExpressionType.String, ExpressionType.Number }, args =>
+        FunctionFactory.Instance.Define("MID$", [ExpressionType.String, ExpressionType.Number], args =>
         {
             var source = Convert.ToString(args[0]) ?? string.Empty;
             var startIndex = Convert.ToInt32(args[1]);
@@ -50,7 +50,7 @@ public static class Program
             return source[(startIndex - 1)..];
         });
 
-        FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String, ExpressionType.Number }, args =>
+        FunctionFactory.Instance.Define("POS", [ExpressionType.String, ExpressionType.String, ExpressionType.Number], args =>
         {
             var source = Convert.ToString(args[0]) ?? string.Empty;
             var value = Convert.ToString(args[1]) ?? string.Empty;
@@ -58,7 +58,7 @@ public static class Program
             return (double)source.IndexOf(value, index - 1) + 1;
         });
 
-        FunctionFactory.Instance.Define("POS", new[] { ExpressionType.String, ExpressionType.String }, args =>
+        FunctionFactory.Instance.Define("POS", [ExpressionType.String, ExpressionType.String], args =>
         {
             var source = Convert.ToString(args[0]) ?? string.Empty;
             var value = Convert.ToString(args[1]) ?? string.Empty;
