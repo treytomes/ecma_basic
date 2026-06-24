@@ -370,23 +370,22 @@ public class IntrinsicFunctionsTests
 	[Fact]
 	public void RND_ReturnsValueInRange()
 	{
-		// Current implementation: RND(N) returns [0, N)
-		// Note: Issue #35 will change this to parameterless [0,1)
-		var result = RunProgram("10 PRINT RND(10)\n20 END\n");
+		// ECMA55-FUN-004: RND returns [0, 1)
+		var result = RunProgram("10 PRINT RND\n20 END\n");
 		var output = result.Trim();
-		var value = int.Parse(output.Split('\n').Last());
-		Assert.InRange(value, 0, 9);
+		var value = double.Parse(output.Split('\n').Last());
+		Assert.InRange(value, 0.0, 0.9999999);
 	}
 
 	[Fact]
 	public void RND_RepeatedCalls_ProduceSameSequence()
 	{
 		// ECMA55-FUN-008: Same program should produce same sequence
-		var result1 = RunProgram("10 PRINT RND(100)\n20 END\n");
+		var result1 = RunProgram("10 PRINT RND\n20 END\n");
 
 		// Create new environment (simulates new program run)
 		var env2 = CreateTestEnvironment();
-		var result2 = RunProgramInEnv(env2, "10 PRINT RND(100)\n20 END\n");
+		var result2 = RunProgramInEnv(env2, "10 PRINT RND\n20 END\n");
 
 		Assert.Equal(result1.Trim(), result2.Trim());
 	}

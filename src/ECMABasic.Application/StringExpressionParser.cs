@@ -129,31 +129,37 @@ public class StringExpressionParser : ExpressionParser
 		}
 		nameToken = new Token(TokenType.Word, new[] { nameToken, dollar });
 
-		_reader.Next(TokenType.OpenParenthesis);
+		// Check if there's an open parenthesis (optional for parameterless functions)
+		var openParen = _reader.Next(TokenType.OpenParenthesis, false);
 
 		var args = new List<IExpression>();
-		while (true)
+
+		// Only parse arguments if parentheses are present
+		if (openParen != null)
 		{
-			var argExpr = Parse();
-			if (argExpr == null)
+			while (true)
 			{
-				argExpr = new NumericExpressionParser(_reader, _lineNumber, false).Parse();
+				var argExpr = Parse();
 				if (argExpr == null)
+				{
+					argExpr = new NumericExpressionParser(_reader, _lineNumber, false).Parse();
+					if (argExpr == null)
+					{
+						break;
+					}
+				}
+
+				args.Add(argExpr);
+
+				var comma = _reader.Next(TokenType.Comma, false, ",");
+				if (comma == null)
 				{
 					break;
 				}
 			}
 
-			args.Add(argExpr);
-
-			var comma = _reader.Next(TokenType.Comma, false, ",");
-			if (comma == null)
-			{
-				break;
-			}
+			_reader.Next(TokenType.CloseParenthesis);
 		}
-
-		_reader.Next(TokenType.CloseParenthesis);
 
 		// Access intrinsic registry from current parsing environment
 		var environment = Interpreter.CurrentParsingEnvironment;

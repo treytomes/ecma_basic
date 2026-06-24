@@ -14,8 +14,9 @@ public class IntrinsicRegistry : IIntrinsicRegistry
 {
 	private readonly List<FunctionDefinition> _functions = new();
 
-	// TODO: Fix RND to be parameterless and return [0,1) per ECMA-55 (Issue #35)
-	// DONE: Built-in functions: ABS, ATN, COS, EXP, INT, LOG, RND, SGN, SIN, SQR, TAN (Issue #34)
+	// DONE: All 11 ECMA-55 intrinsic functions implemented (Issues #34, #35)
+	// - ABS, ATN, COS, EXP, INT, LOG, RND, SGN, SIN, SQR, TAN
+	// - RND is parameterless and returns [0, 1) per ECMA55-FUN-004
 
 	public IntrinsicRegistry()
 	{
@@ -67,8 +68,10 @@ public class IntrinsicRegistry : IIntrinsicRegistry
 			return Math.Log(x);
 		});
 
-		// RND: Random number [0, N) - NOTE: Will be changed to parameterless [0,1) in Issue #35
-		Register("RND", [ExpressionType.Number], (env, args) => env.Random.Next(Convert.ToInt32(args[0])));
+		// RND: Random number [0, 1) - ECMA55-FUN-004
+		// Parameterless function returning uniformly distributed value in [0, 1)
+		// ECMA55-FUN-008: Without RANDOMIZE, same program produces same RND sequence (fixed seed)
+		Register("RND", [], (env, args) => env.Random.NextDouble());
 
 		// SGN: Sign function (-1, 0, or 1)
 		Register("SGN", [ExpressionType.Number], (env, args) => Math.Sign(Convert.ToDouble(args[0])));
