@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Statements;
 
 namespace ECMABasic.Application.Parsers;
@@ -19,7 +20,7 @@ public class ForStatementParser : StatementParser
 		var loopVar = ParseVariableExpression(reader);
 		if (loopVar == null)
 		{
-			throw new Exceptions.SyntaxException("Expected variable in FOR statement", lineNumber);
+			throw new SyntaxException("Expected variable in FOR statement", lineNumber);
 		}
 
 		ProcessSpace(reader, false);
@@ -29,7 +30,7 @@ public class ForStatementParser : StatementParser
 		var from = ParseNumericExpression(reader, lineNumber, true);
 		if (from == null)
 		{
-			throw new Exceptions.SyntaxException("Expected FROM expression in FOR statement", lineNumber);
+			throw new SyntaxException("Expected FROM expression in FOR statement", lineNumber);
 		}
 
 		ProcessSpace(reader, true);
@@ -39,7 +40,7 @@ public class ForStatementParser : StatementParser
 		var to = ParseNumericExpression(reader, lineNumber, true);
 		if (to == null)
 		{
-			throw new Exceptions.SyntaxException("Expected TO expression in FOR statement", lineNumber);
+			throw new SyntaxException("Expected TO expression in FOR statement", lineNumber);
 		}
 
 		IExpression step;
@@ -51,7 +52,7 @@ public class ForStatementParser : StatementParser
 			var stepExpr = ParseNumericExpression(reader, lineNumber, true);
 			if (stepExpr == null)
 			{
-				throw new Exceptions.SyntaxException("Expected STEP expression in FOR statement", lineNumber);
+				throw new SyntaxException("Expected STEP expression in FOR statement", lineNumber);
 			}
 			step = stepExpr;
 		}

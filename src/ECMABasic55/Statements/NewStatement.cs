@@ -2,7 +2,7 @@ using ECMABasic.Infrastructure;
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Application;
-using ECMABasic.Application.Exceptions;
+using ECMABasic.Domain.Exceptions;
 
 namespace ECMABasic55.Statements;
 
@@ -12,7 +12,7 @@ public class NewStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Domain.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		env.Clear();

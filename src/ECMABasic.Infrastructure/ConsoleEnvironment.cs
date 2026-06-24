@@ -63,7 +63,7 @@ public class ConsoleEnvironment : EnvironmentBase
 			var key = Console.ReadKey(true);
 			if (key.Key == ConsoleKey.Escape)
 			{
-				throw Application.ExceptionFactory.ProgramStop(CurrentLineNumber);
+				throw Domain.ExceptionFactory.ProgramStop(CurrentLineNumber);
 			}
 		}
 	}

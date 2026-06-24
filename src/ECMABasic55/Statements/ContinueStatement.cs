@@ -2,7 +2,7 @@ using ECMABasic.Infrastructure;
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Application;
-using ECMABasic.Application.Exceptions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Statements;
 
 namespace ECMABasic55.Statements;
@@ -18,7 +18,7 @@ public class ContinueStatement : IStatement
 	{
 		if (!isImmediate)
 		{
-			throw ECMABasic.Application.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
+			throw ECMABasic.Domain.ExceptionFactory.NotAllowedInProgram(env.CurrentLineNumber);
 		}
 
 		var currentLine = ((EnvironmentBase)env).Program[env.CurrentLineNumber];

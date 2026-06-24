@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 ﻿using ECMABasic.Application.Statements;
 
 namespace ECMABasic.Application.Parsers;
@@ -29,7 +30,7 @@ public class GosubStatementParser : StatementParser
 		var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
 		if (lineNumberExpr == null)
 		{
-			throw new Exceptions.SyntaxException("Expected line number in GOSUB statement", lineNumber);
+			throw new SyntaxException("Expected line number in GOSUB statement", lineNumber);
 		}
 		return new GosubStatement(lineNumberExpr);
 	}

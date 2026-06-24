@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Statements;
 using System.Collections.Generic;
 
@@ -104,7 +105,7 @@ public class PrintStatementParser : StatementParser
 		var valueExpr = ParseNumericExpression(reader, lineNumber, true);
 		if (valueExpr == null)
 		{
-			throw new Exceptions.SyntaxException("Expected numeric expression in TAB function", lineNumber);
+			throw new SyntaxException("Expected numeric expression in TAB function", lineNumber);
 		}
 
 		reader.Next(TokenType.CloseParenthesis);

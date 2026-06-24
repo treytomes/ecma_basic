@@ -1,6 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Application.Exceptions;
+﻿using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Statements;
 
 namespace ECMABasic.Application;
@@ -35,7 +35,7 @@ public class LetStatementParser : StatementParser
 
 		if (valueExpr == null)
 		{
-			throw new Exceptions.SyntaxException("Expected expression in LET statement", lineNumber);
+			throw new SyntaxException("Expected expression in LET statement", lineNumber);
 		}
 
 		return new LetStatement(targetExpr, valueExpr);

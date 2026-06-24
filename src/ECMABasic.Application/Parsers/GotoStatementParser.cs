@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 ﻿using ECMABasic.Application.Statements;
 
 namespace ECMABasic.Application.Parsers;
@@ -27,7 +28,7 @@ public class GotoStatementParser : StatementParser
 		var lineNumberExpr = ParseNumericExpression(reader, lineNumber, true);
 		if (lineNumberExpr == null)
 		{
-			throw new Exceptions.SyntaxException("Expected line number in GOTO statement", lineNumber);
+			throw new SyntaxException("Expected line number in GOTO statement", lineNumber);
 		}
 		return new GotoStatement(lineNumberExpr);
 	}

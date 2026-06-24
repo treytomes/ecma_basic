@@ -1,6 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
-﻿using ECMABasic.Application.Exceptions;
+﻿using ECMABasic.Domain.Exceptions;
 using System;
 using System.IO;
 using System.Text;

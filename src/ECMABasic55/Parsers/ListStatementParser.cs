@@ -2,7 +2,7 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 using ECMABasic.Application;
 using ECMABasic.Application.Configuration;
-using ECMABasic.Application.Exceptions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic55.Statements;
 using System;
 
@@ -67,7 +67,7 @@ public class ListStatementParser : StatementParser
 		}
 		else
 		{
-			throw ECMABasic.Application.ExceptionFactory.LineNumberExpected();
+			throw ECMABasic.Domain.ExceptionFactory.LineNumberExpected();
 		}
 	}
 }

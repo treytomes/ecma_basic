@@ -128,7 +128,7 @@ public class Group6SampleTests : SampleTests
 		RunSample("P038");
 	}
 
-	[Fact(DisplayName = "P039: Accuracty of addition.")]
+	[Fact(DisplayName = "P039: Accuracy of addition.")]
 	[Trait("Feature Set", "BASIC-55")]
 	[Trait("Category", "Accuracy Tests - Informative")]
 	public void P039()

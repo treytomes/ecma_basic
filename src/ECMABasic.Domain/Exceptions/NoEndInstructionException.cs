@@ -2,7 +2,7 @@
 
 namespace ECMABasic.Domain.Exceptions;
 
-internal class NoEndInstructionException : SyntaxException
+public class NoEndInstructionException : SyntaxException
 {
 	public NoEndInstructionException()
 		: base("NO END INSTRUCTION")

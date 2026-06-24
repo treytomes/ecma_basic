@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 ﻿using ECMABasic.Application.Statements;
 
 namespace ECMABasic.Application.Parsers;
@@ -19,7 +20,7 @@ public class NextStatementParser : StatementParser
 		var loopVar = ParseVariableExpression(reader);
 		if (loopVar == null)
 		{
-			throw new Exceptions.SyntaxException("Expected variable in NEXT statement", lineNumber);
+			throw new SyntaxException("Expected variable in NEXT statement", lineNumber);
 		}
 
 		return new NextStatement(loopVar);

@@ -1,7 +1,7 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using ECMABasic.Application.Configuration;
-using ECMABasic.Application.Exceptions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Parsers;
 using ECMABasic.Application.Statements;
 using System;

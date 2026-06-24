@@ -1,5 +1,6 @@
 using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
+using ECMABasic.Domain.Exceptions;
 using ECMABasic.Application.Statements;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ public class InputStatementParser : StatementParser
 		var firstVar = ParseVariableExpression(reader);
 		if (firstVar == null)
 		{
-			throw new Exceptions.SyntaxException("Expected variable in INPUT statement", lineNumber);
+			throw new SyntaxException("Expected variable in INPUT statement", lineNumber);
 		}
 
 		var vars = new List<VariableExpression> { firstVar };
