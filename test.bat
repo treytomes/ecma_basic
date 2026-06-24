@@ -6,6 +6,11 @@ echo.
 
 cd /d "%~dp0"
 
+REM Clean old test results and coverage data
+echo Cleaning old test results...
+if exist test\ECMABasic.Test\TestResults rmdir /s /q test\ECMABasic.Test\TestResults
+if exist coverage-report rmdir /s /q coverage-report
+
 echo Running tests with code coverage...
 dotnet test ECMABasic.sln ^
   --configuration Release ^

@@ -9,6 +9,11 @@ echo
 # Navigate to repository root
 cd "$(dirname "$0")"
 
+# Clean old test results and coverage data
+echo "🧹 Cleaning old test results..."
+rm -rf test/ECMABasic.Test/TestResults
+rm -rf coverage-report
+
 # Run tests with coverage
 echo "🔬 Running tests with code coverage..."
 dotnet test ECMABasic.sln \
