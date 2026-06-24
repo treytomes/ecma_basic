@@ -2,6 +2,10 @@ using ECMABasic.Domain;
 using ECMABasic.Domain.Expressions;
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace ECMABasic55;
 
@@ -11,9 +15,12 @@ public class RuntimeConfiguration
 USAGE: ECMABASIC55 {OPTIONAL FILE PATH}";
 	private RuntimeConfiguration()
 	{
-		var config = new ConfigurationBuilder()
-			.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+		var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.yaml");
+		var yamlContent = File.ReadAllText(configPath);
+		var deserializer = new DeserializerBuilder()
+			.WithNamingConvention(CamelCaseNamingConvention.Instance)
 			.Build();
+		var config = deserializer.Deserialize<Dictionary<string, object>>(yamlContent);
 
 		Preamble = GetValueOrDefault(config, "preamble", DEFAULT_PREAMBLE);
 	}
@@ -22,17 +29,13 @@ USAGE: ECMABASIC55 {OPTIONAL FILE PATH}";
 
 	public string Preamble { get; }
 
-	private T GetValueOrDefault<T>(IConfiguration config, string key, T defaultValue)
+	private T GetValueOrDefault<T>(Dictionary<string, object> config, string key, T defaultValue)
 	{
-		var section = config.GetSection(key);
-		var value = section.Value;
-		if (value == null)
+		if (!config.TryGetValue(key, out var value) || value == null)
 		{
 			return defaultValue;
 		}
-		else
-		{
-			return (T)Convert.ChangeType(value, typeof(T));
-		}
+
+		return (T)Convert.ChangeType(value, typeof(T));
 	}
 }
