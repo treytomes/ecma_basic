@@ -20,6 +20,12 @@ public interface IEnvironment : IErrorReporter
 	public IIntrinsicRegistry Intrinsics { get; }
 
 	/// <summary>
+	/// Registry of user-defined functions (DEF FN statements).
+	/// ECMA-55 Section 10: User-defined numeric functions.
+	/// </summary>
+	public IFunctionRegistry Functions { get; }
+
+	/// <summary>
 	/// Random number generator for RND function.
 	/// Each environment has its own RNG for test isolation and ECMA-55 conformance.
 	/// </summary>

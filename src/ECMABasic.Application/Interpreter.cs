@@ -43,6 +43,7 @@ public class Interpreter
 		_lineStatements = new List<StatementParser>()
 		{
 			new EndStatementParser(),
+			new DefStatementParser(),
 			new LetStatementParser(),
 			new PrintStatementParser(),
 			new StopStatementParser(),

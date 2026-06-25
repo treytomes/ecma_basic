@@ -270,7 +270,13 @@ public class NumericExpressionParser : ExpressionParser
 		}
 		else
 		{
-			var expr = ParseLiteral() ?? ParseVariable() ?? ParseFunction(throwOnError);
+			// Try function before variable to catch FNA, FNB, etc.
+			var expr = ParseLiteral() ?? ParseFunction(false) ?? ParseVariable();
+			if (expr == null && throwOnError)
+			{
+				// If we're in error mode and nothing parsed, try function with error reporting
+				expr = ParseFunction(throwOnError);
+			}
 			if (expr == null)
 			{
 				if (throwOnError)
@@ -310,19 +316,105 @@ public class NumericExpressionParser : ExpressionParser
 
 	public IExpression? ParseFunction(bool throwOnError)
 	{
+		var startIndex = _reader.TokenIndex;
 		var nameToken = _reader.Next(TokenType.Word, false);
 		if (nameToken == null)
 		{
 			return null;
 		}
 
-		// Check if there's an open parenthesis (optional for parameterless functions)
-		var openParen = _reader.Next(TokenType.OpenParenthesis, false);
+		// Check for user-defined function (FN + letter)
+		// Could be "FN A" (two tokens) or "FNA" (one token)
+		if (nameToken.Text.Length == 3 &&
+		    nameToken.Text.Substring(0, 2).ToUpper() == "FN" &&
+		    char.IsLetter(nameToken.Text[2]))
+		{
+			// Single token: "FNA"
+			var functionName = nameToken.Text.ToUpper();
+
+			// Check if there's an argument: FNA(5)
+			var openParen = _reader.Next(TokenType.OpenParenthesis, false);
+			IExpression? argument = null;
+
+			if (openParen != null)
+			{
+				argument = Parse();
+				_reader.Next(TokenType.CloseParenthesis);
+			}
+
+			// Return a user function call expression
+			return new UserFunctionCallExpression(functionName, argument, _lineNumber);
+		}
+		else if (nameToken.Text.ToUpper() == "FN")
+		{
+			// Two tokens: "FN" "A"
+			var letterToken = _reader.Next(TokenType.Word, false);
+			if (letterToken != null && letterToken.Text.Length == 1 && char.IsLetter(letterToken.Text[0]))
+			{
+				var functionName = "FN" + letterToken.Text.ToUpper();
+
+				// Check if there's an argument: FNA(5)
+				var openParen = _reader.Next(TokenType.OpenParenthesis, false);
+				IExpression? argument = null;
+
+				if (openParen != null)
+				{
+					argument = Parse();
+					_reader.Next(TokenType.CloseParenthesis);
+				}
+
+				// Return a user function call expression
+				return new UserFunctionCallExpression(functionName, argument, _lineNumber);
+			}
+			else
+			{
+				// Not a function call, backtrack
+				_reader.Seek(startIndex);
+				return null;
+			}
+		}
+
+		// Not a user function (didn't start with FN)
+		// Check if there's an open parenthesis - if not, it's probably a variable, not a function
+		var openParen2 = _reader.Next(TokenType.OpenParenthesis, false);
+		if (openParen2 == null)
+		{
+			// No parenthesis - might be parameterless intrinsic (like RND)
+			// Or might be a variable - let intrinsic registry decide
+			// But first check if it's a known intrinsic
+			var env = Interpreter.CurrentParsingEnvironment;
+			if (env == null)
+			{
+				throw new InvalidOperationException("No parsing environment available");
+			}
+
+			// Check if this is a known parameterless intrinsic
+			var hasIntrinsic = false;
+			foreach (var fndef in env.Intrinsics.Get(nameToken.Text))
+			{
+				if (fndef.CanInstantiate(new List<IExpression>()))
+				{
+					hasIntrinsic = true;
+					break;
+				}
+			}
+
+			if (!hasIntrinsic)
+			{
+				// Not an intrinsic function - backtrack and let it be parsed as variable
+				_reader.Seek(startIndex);
+				return null;
+			}
+
+			// It's a parameterless intrinsic function - continue
+		}
+
+		// Parse intrinsic function arguments
 
 		var args = new List<IExpression>();
 
 		// Only parse arguments if parentheses are present
-		if (openParen != null)
+		if (openParen2 != null)
 		{
 			while (true)
 			{

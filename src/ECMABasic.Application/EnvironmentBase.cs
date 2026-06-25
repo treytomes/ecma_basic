@@ -22,12 +22,15 @@ public abstract class EnvironmentBase : IEnvironment
 		Logger = logger;
 		Program = new Program();
 		Intrinsics = new IntrinsicRegistry();
+		Functions = new FunctionRegistry();
 		Random = new BasicRandomNumberGenerator();
 	}
 
 	public IBasicConfiguration Configuration { get; }
 
 	public IIntrinsicRegistry Intrinsics { get; }
+
+	public IFunctionRegistry Functions { get; }
 
 	public IRandomNumberGenerator Random { get; }
 
