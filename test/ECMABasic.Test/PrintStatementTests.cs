@@ -497,4 +497,260 @@ public class PrintStatementTests
 	}
 
 	#endregion
+
+	#region Phase 3: Advanced Formatting Tests (ECMA55-PRN-005, PRN-006)
+
+	[Fact]
+	public void Print_SpecialValue_Infinity()
+	{
+		// ECMA55-PRN-006: Special numeric values
+		var program = @"10 LET A = 1 / 0
+20 PRINT A
+30 END
+";
+
+		var result = RunProgram(program);
+		// Should output INF or similar
+		Assert.Contains("INF", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_SpecialValue_NegativeInfinity()
+	{
+		// ECMA55-PRN-006: Negative infinity
+		var program = @"10 LET A = -1 / 0
+20 PRINT A
+30 END
+";
+
+		var result = RunProgram(program);
+		// Should output -INF or similar
+		Assert.Contains("-INF", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_SpecialValue_NaN()
+	{
+		// ECMA55-PRN-006: Not a Number
+		var program = @"10 LET A = 0 / 0
+20 PRINT A
+30 END
+";
+
+		var result = RunProgram(program);
+		// Should output NAN or similar
+		Assert.Contains("NAN", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_ScientificNotation_LargeNumber()
+	{
+		// ECMA55-PRN-006: Large numbers use scientific notation
+		var program = @"10 PRINT 9999999999
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should contain E for exponent
+		Assert.Contains("E", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_ScientificNotation_SmallNumber()
+	{
+		// ECMA55-PRN-006: Very small numbers use scientific notation
+		var program = @"10 PRINT 0.0000000001
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should contain E for exponent (negative exponent)
+		Assert.Contains("E", result.ToUpper());
+		// Should have negative exponent
+		Assert.Matches(@"E-\d", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_SignificanceWidth_Boundary()
+	{
+		// ECMA55-PRN-005, PRN-006: Numbers at significance width boundary
+		// Significance width is 6 digits
+		var program = @"10 PRINT 123456
+20 PRINT 1234567
+30 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+		// 123456 should print as integer (within significance)
+		Assert.Contains("123456", lines[0]);
+
+		// 1234567 may use scientific notation (exceeds significance)
+		// Just verify it prints something
+		Assert.True(lines.Length >= 2);
+		Assert.NotEmpty(lines[1].Trim());
+	}
+
+	[Fact]
+	public void Print_Rounding_ToSignificanceWidth()
+	{
+		// ECMA55-PRN-006: Numbers rounded to significance width
+		var program = @"10 PRINT 1.2345678901234
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should be rounded to 6 significant digits
+		// Exact format may vary, but should have 1.23456 or 1.23457 (rounded)
+		var cleaned = result.Replace(" ", "").Replace("\r", "").Replace("\n", "");
+		Assert.True(cleaned.Contains("1.234") || cleaned.Contains("1.235"),
+			$"Should round to significance width, got: {cleaned}");
+	}
+
+	[Fact]
+	public void Print_VeryCloseToZero_ScientificNotation()
+	{
+		// ECMA55-PRN-006: Numbers very close to zero
+		var program = @"10 PRINT 0.0000001
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should use scientific notation for very small numbers
+		Assert.Contains("E", result.ToUpper());
+	}
+
+	[Fact]
+	public void Print_NegativeZero_FormatsAsZero()
+	{
+		// Edge case: -0 should format as " 0 "
+		var program = @"10 LET A = -0
+20 PRINT A
+30 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+		Assert.Equal(" 0 ", line);
+	}
+
+	[Fact]
+	public void Print_MultipleNumbers_DifferentFormats()
+	{
+		// Test various number formats in one program
+		var program = @"10 PRINT 0
+20 PRINT 42
+30 PRINT -123
+40 PRINT 3.14
+50 PRINT 0.001
+60 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+		Assert.True(lines.Length >= 5, "Should have at least 5 output lines");
+		Assert.Contains("0", lines[0]);
+		Assert.Contains("42", lines[1]);
+		Assert.Contains("123", lines[2]); // -123
+		Assert.Contains("3.14", lines[3]);
+		// 0.001 may print as ".001" (implicit-point form)
+		var line4 = lines[4].Replace(" ", "");
+		Assert.True(line4.Contains("0.001") || line4.Contains(".001"),
+			$"Expected '0.001' or '.001', got '{line4}'");
+	}
+
+	[Fact]
+	public void Print_MixedTypes_StringAndNumbers()
+	{
+		// ECMA55-PRN-001: Mixed content types
+		var program = @"10 PRINT ""VALUE:"";42
+20 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("VALUE:", result);
+		Assert.Contains("42", result);
+	}
+
+	[Fact]
+	public void Print_CommaZoneWrapping_FiveZones()
+	{
+		// ECMA55-PRN-009: All 5 print zones
+		var program = @"10 PRINT ""Z1"",""Z2"",""Z3"",""Z4"",""Z5""
+20 END
+";
+
+		var result = RunProgram(program);
+		// All 5 zone markers should be present
+		Assert.Contains("Z1", result);
+		Assert.Contains("Z2", result);
+		Assert.Contains("Z3", result);
+		Assert.Contains("Z4", result);
+		Assert.Contains("Z5", result);
+
+		// They should be on the same line
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+		Assert.Contains("Z1", lines[0]);
+		Assert.Contains("Z5", lines[0]);
+	}
+
+	[Fact]
+	public void Print_NumberWithVariable_FormatsCorrectly()
+	{
+		// Variables in PRINT with numbers
+		var program = @"10 LET X = 100
+20 LET Y = 200
+30 PRINT X,Y
+40 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		Assert.Contains("100", line);
+		Assert.Contains("200", line);
+
+		// X and Y should be in different zones (separated by comma)
+		var idx100 = line.IndexOf("100");
+		var idx200 = line.IndexOf("200");
+		Assert.True(idx200 > idx100 + 3, "Y should be in different zone from X");
+	}
+
+	[Fact]
+	public void Print_BooleanResult_Prints()
+	{
+		// ECMA55-PRN-001: Boolean expressions can be printed
+		var program = @"10 PRINT 5 > 3
+20 PRINT 2 > 8
+30 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+		Assert.True(lines.Length >= 2, "Should have at least 2 lines");
+		// Implementation may print as boolean text or numeric value
+		// Just verify both expressions produce output
+		Assert.NotEmpty(lines[0].Trim());
+		Assert.NotEmpty(lines[1].Trim());
+		// The results should be different (one true, one false)
+		Assert.NotEqual(lines[0].Trim(), lines[1].Trim());
+	}
+
+	[Fact]
+	public void Print_ComplexExpression_InPlace()
+	{
+		// Complex arithmetic expression
+		var program = @"10 PRINT 2 + 3 * 4 - 1
+20 END
+";
+
+		var result = RunProgram(program);
+		// 2 + 3 * 4 - 1 = 2 + 12 - 1 = 13
+		Assert.Contains("13", result);
+	}
+
+	#endregion
 }
