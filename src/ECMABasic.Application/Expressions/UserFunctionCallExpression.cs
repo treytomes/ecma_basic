@@ -35,6 +35,14 @@ public class UserFunctionCallExpression : IExpression
 			throw new RuntimeException($"Undefined function {_functionName}", env.CurrentLineNumber);
 		}
 
+		var envBase = (EnvironmentBase)env;
+
+		// ECMA55-DEF-007: Function may call other functions but not itself (no recursion)
+		if (envBase.IsFunctionInCallStack(_functionName))
+		{
+			throw new RuntimeException($"Recursive call to function {_functionName} is not allowed", env.CurrentLineNumber);
+		}
+
 		// Evaluate argument if provided
 		object? argumentValue = null;
 		if (_argument != null)
@@ -42,37 +50,45 @@ public class UserFunctionCallExpression : IExpression
 			argumentValue = _argument.Evaluate(env);
 		}
 
-		// For zero-parameter functions, just evaluate the body
-		if (function.Parameter == null)
-		{
-			if (argumentValue != null)
-			{
-				throw new RuntimeException($"Function {_functionName} takes no parameters", env.CurrentLineNumber);
-			}
-
-			// ECMA55-DEF-004: Non-parameter variables refer to global scope
-			return function.Body.Evaluate(env);
-		}
-
-		// For one-parameter functions, use scope stack
-		// ECMA55-DEF-002: Function parameter shadows global variables
-		if (argumentValue == null)
-		{
-			throw new RuntimeException($"Function {_functionName} requires one parameter", env.CurrentLineNumber);
-		}
-
-		var paramValue = Convert.ToDouble(argumentValue);
-		var envBase = (EnvironmentBase)env;
-
-		envBase.PushScope(function.Parameter, paramValue);
+		// Push function onto call stack for recursion detection
+		envBase.PushFunctionCall(_functionName);
 		try
 		{
-			// ECMA55-DEF-004: Non-parameter variables still refer to global scope
-			return function.Body.Evaluate(env);
+			// For zero-parameter functions, just evaluate the body
+			if (function.Parameter == null)
+			{
+				if (argumentValue != null)
+				{
+					throw new RuntimeException($"Function {_functionName} takes no parameters", env.CurrentLineNumber);
+				}
+
+				// ECMA55-DEF-004: Non-parameter variables refer to global scope
+				return function.Body.Evaluate(env);
+			}
+
+			// For one-parameter functions, use scope stack
+			// ECMA55-DEF-002: Function parameter shadows global variables
+			if (argumentValue == null)
+			{
+				throw new RuntimeException($"Function {_functionName} requires one parameter", env.CurrentLineNumber);
+			}
+
+			var paramValue = Convert.ToDouble(argumentValue);
+
+			envBase.PushScope(function.Parameter, paramValue);
+			try
+			{
+				// ECMA55-DEF-004: Non-parameter variables still refer to global scope
+				return function.Body.Evaluate(env);
+			}
+			finally
+			{
+				envBase.PopScope();
+			}
 		}
 		finally
 		{
-			envBase.PopScope();
+			envBase.PopFunctionCall();
 		}
 	}
 

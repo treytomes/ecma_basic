@@ -178,6 +178,33 @@ public class DefFnTests
 		Assert.Contains("REQUIRES ONE PARAMETER", result.ToUpper());
 	}
 
+	[Fact]
+	public void DefFn_RecursiveCall_ReportsError()
+	{
+		// ECMA55-DEF-007: Function may call other functions but not itself
+		var program = @"10 DEF FNA(X) = FNA(X - 1) + 1
+20 PRINT FNA(5)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("RECURSIVE", result.ToUpper());
+	}
+
+	[Fact]
+	public void DefFn_FunctionCallingOtherFunction_Works()
+	{
+		// ECMA55-DEF-007: Function MAY call OTHER functions (just not itself)
+		var program = @"10 DEF FNA(X) = X * 2
+20 DEF FNB(Y) = FNA(Y) + 5
+30 PRINT FNB(3)
+40 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("11", result); // FNB(3) = FNA(3) + 5 = 6 + 5 = 11
+	}
+
 	#endregion
 
 	#region Phase 2: One-Parameter Functions (ECMA55-DEF-001, DEF-002)

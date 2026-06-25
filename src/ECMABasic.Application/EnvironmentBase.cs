@@ -15,6 +15,7 @@ public abstract class EnvironmentBase : IEnvironment
 	private readonly Stack<ICallStackContext> _callStack = new();
 	private readonly DataPointer _dataPointer = new();
 	private readonly Stack<Dictionary<string, double>> _scopeStack = new();
+	private readonly Stack<string> _functionCallStack = new();
 
 	public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null, ILogger? logger = null)
 	{
@@ -241,6 +242,38 @@ public abstract class EnvironmentBase : IEnvironment
 		if (_scopeStack.Count > 0)
 		{
 			_scopeStack.Pop();
+		}
+	}
+
+	/// <summary>
+	/// Check if a function is currently being evaluated (recursion detection).
+	/// ECMA55-DEF-007: Function may call other functions but not itself.
+	/// </summary>
+	/// <param name="functionName">Function name to check</param>
+	/// <returns>True if function is in the call stack (recursive call)</returns>
+	public bool IsFunctionInCallStack(string functionName)
+	{
+		return _functionCallStack.Contains(functionName);
+	}
+
+	/// <summary>
+	/// Push a function onto the call stack when it begins evaluation.
+	/// ECMA55-DEF-007: Track function calls to detect recursion.
+	/// </summary>
+	/// <param name="functionName">Function name being called</param>
+	public void PushFunctionCall(string functionName)
+	{
+		_functionCallStack.Push(functionName);
+	}
+
+	/// <summary>
+	/// Pop a function from the call stack when evaluation completes.
+	/// </summary>
+	public void PopFunctionCall()
+	{
+		if (_functionCallStack.Count > 0)
+		{
+			_functionCallStack.Pop();
 		}
 	}
 }
