@@ -54,6 +54,15 @@ public abstract class EnvironmentBase : IEnvironment
 
 	public abstract void ReportError(string message);
 
+	/// <summary>
+	/// Prompt for INPUT statement. Default is no prompt (batch mode).
+	/// Override in ConsoleEnvironment to print "? ".
+	/// </summary>
+	public virtual void PromptForInput()
+	{
+		// Default: no prompt (batch mode per ECMA55-DOC-014)
+	}
+
 	public string GetStringVariableValue(string variableName)
 	{
 		// TODO: Validate variable name?

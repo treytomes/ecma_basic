@@ -18,7 +18,7 @@ public class InputStatement : IStatement
 
 	public void Execute(IEnvironment env, bool isImmediate)
 	{
-		env.Print("? ");
+		env.PromptForInput();
 		var reply = env.ReadLine();
 
 		var reader = ComplexTokenReader.FromText(reply);

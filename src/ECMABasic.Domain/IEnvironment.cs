@@ -71,6 +71,13 @@ public interface IEnvironment : IErrorReporter
 	public void Print(string text);
 
 	/// <summary>
+	/// Prompt user for INPUT statement.
+	/// Interactive mode: prints "? "
+	/// Batch mode: silent (ECMA55-DOC-014)
+	/// </summary>
+	public void PromptForInput();
+
+	/// <summary>
 	/// Get the value of a string variable.
 	/// </summary>
 	/// <param name="variableName">The variable to retrieve.</param>

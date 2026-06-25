@@ -1,45 +1,43 @@
+using System;
 using ECMABasic.Application;
 using ECMABasic.Domain;
 using Microsoft.Extensions.Logging;
 
 namespace ECMABasic.Infrastructure;
 
-public class ConsoleEnvironment : EnvironmentBase
+/// <summary>
+/// Batch (non-interactive) environment for ECMA-55 BASIC.
+/// ECMA55-GEN-003: Support non-interactive execution.
+/// Used when stdin/stdout are redirected or running from file.
+/// </summary>
+public class BatchEnvironment : EnvironmentBase
 {
-	public ConsoleEnvironment(
+	private int _terminalRow = 0;
+	private int _terminalColumn = 0;
+
+	public BatchEnvironment(
 		Interpreter? interpreter = null,
 		IBasicConfiguration? config = null,
-		ILogger<ConsoleEnvironment>? logger = null)
+		ILogger? logger = null)
 		: base(interpreter, config, logger)
 	{
 	}
 
 	public override int TerminalRow
 	{
-		get
-		{
-			return Console.CursorTop;
-		}
-		set
-		{
-			Console.CursorTop = value;
-		}
+		get => _terminalRow;
+		set => _terminalRow = value;
 	}
 
 	public override int TerminalColumn
 	{
-		get
-		{
-			return Console.CursorLeft;
-		}
-		set
-		{
-			Console.CursorLeft = value;
-		}
+		get => _terminalColumn;
+		set => _terminalColumn = value;
 	}
 
 	public override string ReadLine()
 	{
+		// Read from stdin (redirected in batch mode)
 		return Console.ReadLine() ?? string.Empty;
 	}
 
@@ -47,20 +45,26 @@ public class ConsoleEnvironment : EnvironmentBase
 	{
 		Print(text);
 		Console.WriteLine();
+		_terminalRow++;
+		_terminalColumn = 0;
 	}
 
 	public override void Print(string text)
 	{
 		Console.Write(text);
+		_terminalColumn += text.Length;
 	}
 
 	public override void ReportError(string message)
 	{
-		// Traditional BASIC error reporting - print to console
-		PrintLine(string.Empty);
+		// Traditional BASIC error reporting
+		if (_terminalColumn != 0)
+		{
+			PrintLine(string.Empty);
+		}
 		PrintLine(message);
 
-		// NEW: Structured logging if logger is available
+		// Structured logging if available
 		if (Logger != null)
 		{
 			if (CurrentLineNumber > 0)
@@ -76,24 +80,9 @@ public class ConsoleEnvironment : EnvironmentBase
 
 	public override void CheckForStopRequest()
 	{
-		// Can't check keyboard when stdin is redirected
-		if (Console.IsInputRedirected)
-		{
-			return;
-		}
-
-		if (Console.KeyAvailable)
-		{
-			var key = Console.ReadKey(true);
-			if (key.Key == ConsoleKey.Escape)
-			{
-				throw Domain.ExceptionFactory.ProgramStop(CurrentLineNumber);
-			}
-		}
+		// No-op: Cannot check keyboard in batch mode
+		// Console.KeyAvailable throws when stdin is redirected
 	}
 
-	public override void PromptForInput()
-	{
-		Print("? ");
-	}
+	// Inherited PromptForInput() is no-op (correct for batch mode per ECMA55-DOC-014)
 }

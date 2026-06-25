@@ -62,7 +62,7 @@ public static class Program
 			var runtimeConfig = host.Services.GetRequiredService<RuntimeConfiguration>();
 
 			var exitCode = props.FilePath != null
-				? RunBatch(env, runtimeConfig, props.FilePath)
+				? RunBatch(env, props.FilePath)
 				: RunREPL(env, runtimeConfig);
 
 			Environment.Exit(exitCode);
@@ -76,7 +76,7 @@ public static class Program
 		return Host.CreateDefaultBuilder()
 			.ConfigureAppConfiguration((ctx, config) => ConfigureAppConfiguration(config, props))
 			.ConfigureLogging(ConfigureLogging)
-			.ConfigureServices(ConfigureServices);
+			.ConfigureServices((ctx, services) => ConfigureServices(ctx, services, props));
 	}
 
 	private static void ConfigureAppConfiguration(IConfigurationBuilder config, CommandLineProps props)
@@ -121,7 +121,7 @@ public static class Program
 		logging.AddProvider(new FileLoggerProvider(logFile, minLevel));
 	}
 
-	private static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
+	private static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services, CommandLineProps props)
 	{
 		// Bind configuration
 		services.Configure<RuntimeConfiguration>(ctx.Configuration);
@@ -139,8 +139,16 @@ public static class Program
 		services.AddSingleton<IEnvironment>(sp =>
 		{
 			var interpreter = (RuntimeInterpreter)sp.GetRequiredService<Interpreter>();
-			var logger = sp.GetRequiredService<ILogger<ConsoleEnvironment>>();
-			var env = new ConsoleEnvironment(interpreter, logger: logger);
+			var config = sp.GetRequiredService<IBasicConfiguration>();
+
+			// Determine environment type based on execution mode
+			// Batch mode: file provided OR stdin/stdout redirected
+			var isBatchMode = props.FilePath != null || Console.IsInputRedirected || Console.IsOutputRedirected;
+
+			var env = isBatchMode
+				? new BatchEnvironment(interpreter, config, sp.GetRequiredService<ILogger<BatchEnvironment>>()) as IEnvironment
+				: new ConsoleEnvironment(interpreter, config, sp.GetRequiredService<ILogger<ConsoleEnvironment>>());
+
 			InjectIntrinsics(env);
 			return env;
 		});
@@ -185,10 +193,9 @@ public static class Program
 		});
 	}
 
-	private static int RunBatch(IEnvironment env, RuntimeConfiguration config, string path)
+	private static int RunBatch(IEnvironment env, string path)
 	{
-		env.PrintLine(config.Preamble);
-		env.PrintLine();
+		// Don't print preamble in batch mode (ECMA55-DOC-014)
 
 		if (!File.Exists(path))
 		{
