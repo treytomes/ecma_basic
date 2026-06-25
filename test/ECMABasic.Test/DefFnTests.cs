@@ -103,10 +103,10 @@ public class DefFnTests
 
 	#endregion
 
-	#region Phase 1: Validation - Use Before Definition (ECMA55-DEF-005)
+	#region Phase 3: Validation - Use Before Definition (ECMA55-DEF-005)
 
 	[Fact]
-	public void DefFn_UseBeforeDefinition_ThrowsError()
+	public void DefFn_UseBeforeDefinition_ReportsError()
 	{
 		// ECMA55-DEF-005: Definition must appear before first reference
 		var program = @"10 PRINT FNA
@@ -114,16 +114,16 @@ public class DefFnTests
 30 END
 ";
 
-		var exception = Assert.ThrowsAny<Exception>(() => RunProgram(program));
-		Assert.Contains("UNDEFINED", exception.Message.ToUpper());
+		var result = RunProgram(program);
+		Assert.Contains("UNDEFINED FUNCTION FNA", result.ToUpper());
 	}
 
 	#endregion
 
-	#region Phase 1: Validation - Duplicate Definition (ECMA55-DEF-008)
+	#region Phase 3: Validation - Duplicate Definition (ECMA55-DEF-008)
 
 	[Fact]
-	public void DefFn_DuplicateDefinition_ThrowsError()
+	public void DefFn_DuplicateDefinition_ReportsError()
 	{
 		// ECMA55-DEF-008: Function defined at most once per program
 		var program = @"10 DEF FNA = 1
@@ -131,13 +131,13 @@ public class DefFnTests
 30 END
 ";
 
-		var exception = Assert.ThrowsAny<Exception>(() => RunProgram(program));
-		Assert.Contains("ALREADY DEFINED", exception.Message.ToUpper());
+		var result = RunProgram(program);
+		Assert.Contains("ALREADY DEFINED", result.ToUpper());
 	}
 
 	#endregion
 
-	#region Phase 1: Name Validation
+	#region Phase 3: Name Validation
 
 	[Fact]
 	public void DefFn_NameMustBeSingleLetter()
@@ -148,8 +148,34 @@ public class DefFnTests
 ";
 
 		// Should fail during parsing
-		var exception = Assert.ThrowsAny<Exception>(() => RunProgram(program));
-		Assert.NotNull(exception);
+		var result = RunProgram(program);
+		Assert.Contains("SINGLE LETTER", result.ToUpper());
+	}
+
+	[Fact]
+	public void DefFn_ZeroParameterCannotBeCalledWithArgument()
+	{
+		// Zero-parameter function should reject arguments
+		var program = @"10 DEF FNA = 42
+20 PRINT FNA(5)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("TAKES NO PARAMETERS", result.ToUpper());
+	}
+
+	[Fact]
+	public void DefFn_OneParameterRequiresArgument()
+	{
+		// One-parameter function requires an argument
+		var program = @"10 DEF FNB(X) = X * 2
+20 PRINT FNB
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("REQUIRES ONE PARAMETER", result.ToUpper());
 	}
 
 	#endregion
