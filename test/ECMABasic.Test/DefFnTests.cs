@@ -153,4 +153,81 @@ public class DefFnTests
 	}
 
 	#endregion
+
+	#region Phase 2: One-Parameter Functions (ECMA55-DEF-001, DEF-002)
+
+	[Fact]
+	public void DefFn_OneParameter_BasicEvaluation()
+	{
+		// DEF FNB(X) = X * X
+		var program = @"10 DEF FNB(X) = X * X
+20 PRINT FNB(5)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("25", result);
+	}
+
+	[Fact]
+	public void DefFn_OneParameter_ParameterShadowsGlobal()
+	{
+		// ECMA55-DEF-002: Parameter shadows global variable with same name
+		var program = @"10 LET X = 100
+20 DEF FNB(X) = X * 2
+30 PRINT FNB(5)
+40 PRINT X
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("10", lines[0]);  // FNB(5) = 5 * 2 = 10
+		Assert.Contains("100", lines[1]); // Global X unchanged
+	}
+
+	[Fact]
+	public void DefFn_OneParameter_AccessesGlobalVariables()
+	{
+		// ECMA55-DEF-004: Non-parameter variables refer to global scope
+		var program = @"10 LET Y = 10
+20 DEF FNC(X) = X + Y
+30 PRINT FNC(5)
+40 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("15", result); // 5 + 10 = 15
+	}
+
+	[Fact]
+	public void DefFn_OneParameter_ComplexExpression()
+	{
+		var program = @"10 DEF FND(X) = X * X + 2 * X + 1
+20 PRINT FND(3)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("16", result); // 3*3 + 2*3 + 1 = 9 + 6 + 1 = 16
+	}
+
+	[Fact]
+	public void DefFn_OneParameter_MultipleCallsWithDifferentArguments()
+	{
+		var program = @"10 DEF FNE(X) = X * 3
+20 PRINT FNE(2)
+30 PRINT FNE(4)
+40 PRINT FNE(10)
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("6", lines[0]);   // 2 * 3 = 6
+		Assert.Contains("12", lines[1]);  // 4 * 3 = 12
+		Assert.Contains("30", lines[2]);  // 10 * 3 = 30
+	}
+
+	#endregion
 }

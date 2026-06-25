@@ -14,6 +14,7 @@ public abstract class EnvironmentBase : IEnvironment
 	private readonly Dictionary<string, double> _numericVariables = new();
 	private readonly Stack<ICallStackContext> _callStack = new();
 	private readonly DataPointer _dataPointer = new();
+	private readonly Stack<Dictionary<string, double>> _scopeStack = new();
 
 	public EnvironmentBase(Interpreter? interpreter = null, IBasicConfiguration? config = null, ILogger? logger = null)
 	{
@@ -95,6 +96,19 @@ public abstract class EnvironmentBase : IEnvironment
 	public double GetNumericVariableValue(string variableName)
 	{
 		// TODO: Validate variable name?
+
+		// Check scope stack first (for function parameters)
+		// ECMA55-DEF-002: Function parameter shadows global variables
+		if (_scopeStack.Count > 0)
+		{
+			var currentScope = _scopeStack.Peek();
+			if (currentScope.ContainsKey(variableName))
+			{
+				return currentScope[variableName];
+			}
+		}
+
+		// Fall back to global variables
 		if (!_numericVariables.ContainsKey(variableName))
 		{
 			var value = 0;
@@ -201,5 +215,32 @@ public abstract class EnvironmentBase : IEnvironment
 	{
 		var programLine = Program[lineNumber];
 		return programLine?.Statement;
+	}
+
+	/// <summary>
+	/// Push a new scope onto the scope stack for function parameter evaluation.
+	/// ECMA55-DEF-002: Function parameters shadow global variables with same name.
+	/// </summary>
+	/// <param name="paramName">Parameter variable name</param>
+	/// <param name="value">Parameter value</param>
+	public void PushScope(string paramName, double value)
+	{
+		var scope = new Dictionary<string, double>
+		{
+			[paramName] = value
+		};
+		_scopeStack.Push(scope);
+	}
+
+	/// <summary>
+	/// Pop the current scope from the scope stack.
+	/// Called after function evaluation completes.
+	/// </summary>
+	public void PopScope()
+	{
+		if (_scopeStack.Count > 0)
+		{
+			_scopeStack.Pop();
+		}
 	}
 }

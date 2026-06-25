@@ -54,10 +54,26 @@ public class UserFunctionCallExpression : IExpression
 			return function.Body.Evaluate(env);
 		}
 
-		// For one-parameter functions, we need parameter scoping
-		// This will be implemented in Phase 2 (scope stack)
-		// For now, just throw an error
-		throw new NotImplementedException("Parameter scoping not yet implemented (Phase 2)");
+		// For one-parameter functions, use scope stack
+		// ECMA55-DEF-002: Function parameter shadows global variables
+		if (argumentValue == null)
+		{
+			throw new RuntimeException($"Function {_functionName} requires one parameter", env.CurrentLineNumber);
+		}
+
+		var paramValue = Convert.ToDouble(argumentValue);
+		var envBase = (EnvironmentBase)env;
+
+		envBase.PushScope(function.Parameter, paramValue);
+		try
+		{
+			// ECMA55-DEF-004: Non-parameter variables still refer to global scope
+			return function.Body.Evaluate(env);
+		}
+		finally
+		{
+			envBase.PopScope();
+		}
 	}
 
 	public string ToListing()
