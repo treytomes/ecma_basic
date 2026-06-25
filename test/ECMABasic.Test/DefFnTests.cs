@@ -283,4 +283,256 @@ public class DefFnTests
 	}
 
 	#endregion
+
+	#region Edge Cases and Integration Tests
+
+	[Fact]
+	public void DefFn_NegativeNumbers()
+	{
+		var program = @"10 DEF FNA(X) = X * -1
+20 PRINT FNA(5)
+30 PRINT FNA(-3)
+40 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("-5", lines[0]);
+		Assert.Contains("3", lines[1]);
+	}
+
+	[Fact]
+	public void DefFn_DivisionAndFractions()
+	{
+		var program = @"10 DEF FNA(X) = X / 2
+20 PRINT FNA(10)
+30 PRINT FNA(7)
+40 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("5", lines[0]);
+		Assert.Contains("3.5", lines[1]);
+	}
+
+	[Fact]
+	public void DefFn_InIfStatement()
+	{
+		var program = @"10 DEF FNA(X) = X * 2
+20 IF FNA(3) > 5 THEN 50
+30 PRINT ""SMALL""
+40 GOTO 60
+50 PRINT ""LARGE""
+60 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("LARGE", result);
+		Assert.DoesNotContain("SMALL", result);
+	}
+
+	[Fact]
+	public void DefFn_InForLoop()
+	{
+		var program = @"10 DEF FNA(X) = X * X
+20 FOR I = 1 TO 3
+30 PRINT FNA(I)
+40 NEXT I
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("1", lines[0]);  // 1*1
+		Assert.Contains("4", lines[1]);  // 2*2
+		Assert.Contains("9", lines[2]);  // 3*3
+	}
+
+	[Fact]
+	public void DefFn_WithIntrinsicFunction()
+	{
+		var program = @"10 DEF FNA(X) = SQR(X) + 1
+20 PRINT FNA(16)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("5", result); // SQR(16) + 1 = 4 + 1 = 5
+	}
+
+	[Fact]
+	public void DefFn_ZeroParameterInForLoop()
+	{
+		var program = @"10 DEF FNA = 2
+20 FOR I = 1 TO FNA
+30 PRINT I
+40 NEXT I
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("1", lines[0]);
+		Assert.Contains("2", lines[1]);
+		Assert.Equal(2, lines.Length);
+	}
+
+	[Fact]
+	public void DefFn_NestedFunctionCalls_ThreeDeep()
+	{
+		var program = @"10 DEF FNA(X) = X + 1
+20 DEF FNB(Y) = FNA(Y) * 2
+30 DEF FNC(Z) = FNB(Z) + 10
+40 PRINT FNC(5)
+50 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("22", result); // FNC(5) = FNB(5)+10 = (FNA(5)*2)+10 = (6*2)+10 = 22
+	}
+
+	[Fact]
+	public void DefFn_ParameterShadowsMultipleGlobals()
+	{
+		// Parameter shadows global, but non-parameter globals still accessible
+		var program = @"10 LET A = 10
+20 LET B = 5
+30 DEF FNA(A) = A + B
+40 PRINT FNA(3)
+50 PRINT A
+60 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("8", lines[0]);   // FNA(3) = 3 + B = 3 + 5 = 8
+		Assert.Contains("10", lines[1]);  // Global A unchanged
+	}
+
+	[Fact]
+	public void DefFn_MultipleFunctionsWithSameParameterName()
+	{
+		// Each function has independent parameter scope
+		var program = @"10 DEF FNA(X) = X * 2
+20 DEF FNB(X) = X + 10
+30 PRINT FNA(5)
+40 PRINT FNB(5)
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("10", lines[0]);  // FNA(5) = 5 * 2 = 10
+		Assert.Contains("15", lines[1]);  // FNB(5) = 5 + 10 = 15
+	}
+
+	[Fact]
+	public void DefFn_MultipleCallsInOneExpression()
+	{
+		var program = @"10 DEF FNA(X) = X * 2
+20 PRINT FNA(3) + FNA(4) + FNA(5)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("24", result); // 6 + 8 + 10 = 24
+	}
+
+	[Fact]
+	public void DefFn_AllSingleLetterNames()
+	{
+		// Test that all letters A-Z work as function names
+		var program = @"10 DEF FNA = 1
+20 DEF FNZ = 26
+30 PRINT FNA
+40 PRINT FNZ
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("1", lines[0]);
+		Assert.Contains("26", lines[1]);
+	}
+
+	[Fact]
+	public void DefFn_ExpressionWithOperatorPrecedence()
+	{
+		var program = @"10 DEF FNA(X) = X * 2 + 3
+20 DEF FNB(Y) = (Y + 3) * 2
+30 PRINT FNA(5)
+40 PRINT FNB(5)
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("13", lines[0]);  // 5 * 2 + 3 = 10 + 3 = 13
+		Assert.Contains("16", lines[1]);  // (5 + 3) * 2 = 8 * 2 = 16
+	}
+
+	[Fact]
+	public void DefFn_WithInvolution()
+	{
+		var program = @"10 DEF FNA(X) = X ^ 3
+20 PRINT FNA(2)
+30 PRINT FNA(3)
+40 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("8", lines[0]);   // 2^3 = 8
+		Assert.Contains("27", lines[1]);  // 3^3 = 27
+	}
+
+	[Fact]
+	public void DefFn_GlobalVariableChangesAffectFunction()
+	{
+		// ECMA55-DEF-004: Non-parameter variables refer to global scope
+		var program = @"10 LET Y = 10
+20 DEF FNA = Y * 2
+30 PRINT FNA
+40 LET Y = 5
+50 PRINT FNA
+60 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Trim().Split('\n');
+		Assert.Contains("20", lines[0]);  // Y=10, FNA = 20
+		Assert.Contains("10", lines[1]);  // Y=5, FNA = 10
+	}
+
+	[Fact]
+	public void DefFn_FunctionReferencedBeforeDefButNotCalled()
+	{
+		// Defining FNA after FNB is OK if FNB doesn't call FNA until after FNA is defined
+		var program = @"10 DEF FNB(X) = X + 5
+20 DEF FNA(Y) = FNB(Y) * 2
+30 PRINT FNA(3)
+40 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("16", result); // FNA(3) = FNB(3) * 2 = 8 * 2 = 16
+	}
+
+	[Fact]
+	public void DefFn_WithBooleanComparison()
+	{
+		// Functions can be used in boolean comparisons
+		var program = @"10 DEF FNA(X) = X * 2
+20 IF FNA(5) = 10 THEN 40
+30 PRINT ""NO""
+40 PRINT ""YES""
+50 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("YES", result);
+	}
+
+	#endregion
 }
