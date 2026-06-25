@@ -319,4 +319,182 @@ public class PrintStatementTests
 	}
 
 	#endregion
+
+	#region Phase 2: TAB Function Tests (ECMA55-PRN-010)
+
+	[Fact]
+	public void Print_TAB_MovesToColumn()
+	{
+		// ECMA55-PRN-010: TAB(n) moves to column n
+		var program = @"10 PRINT ""A"";TAB(10);""B""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// A should be at position 0
+		Assert.StartsWith("A", line);
+
+		// B should be after position 0, with spaces in between
+		Assert.Contains("B", line);
+		var indexB = line.IndexOf('B');
+		Assert.True(indexB > 1, $"B should be after A with spacing, got index {indexB}");
+	}
+
+	[Fact]
+	public void Print_TAB_WithComma()
+	{
+		// ECMA55-PRN-010: TAB works with comma separators
+		var program = @"10 PRINT ""A"",TAB(20),""B""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// A in zone 1, then TAB, then B
+		Assert.Contains("A", line);
+		Assert.Contains("B", line);
+
+		// B should be after A with spacing
+		var indexA = line.IndexOf('A');
+		var indexB = line.IndexOf('B');
+		Assert.True(indexB > indexA + 1, "B should be after A with spacing");
+	}
+
+	[Fact]
+	public void Print_TAB_BeyondCurrentPosition()
+	{
+		// ECMA55-PRN-010: TAB beyond current position moves forward
+		var program = @"10 PRINT ""HELLO"";TAB(20);""WORLD""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// HELLO at 0-4, then TAB to 20, WORLD after that
+		Assert.StartsWith("HELLO", line);
+		Assert.Contains("WORLD", line);
+
+		// There should be spaces between HELLO and WORLD
+		var indexHello = line.IndexOf("HELLO");
+		var indexWorld = line.IndexOf("WORLD");
+		Assert.True(indexWorld > indexHello + 5, "WORLD should be after HELLO with spacing");
+	}
+
+	[Fact]
+	public void Print_TAB_BeforeCurrentPosition_Wraps()
+	{
+		// ECMA55-PRN-010: TAB to position before current generates newline
+		var program = @"10 PRINT ""HELLO WORLD"";TAB(5);""X""
+20 END
+";
+
+		var result = RunProgram(program);
+
+		// HELLO WORLD is 11 chars, TAB(5) is before current position
+		// Should wrap to next line and put X at column 5
+		Assert.Contains("HELLO WORLD", result);
+		Assert.Contains("X", result);
+
+		// Check for newline between them
+		var indexWorld = result.IndexOf("WORLD");
+		var indexX = result.IndexOf("X");
+		var between = result.Substring(indexWorld + 5, indexX - indexWorld - 5);
+		Assert.True(between.Contains("\r\n"), "Should have newline when TAB wraps");
+	}
+
+	[Fact]
+	public void Print_TAB_LargeValue_HandlesCorrectly()
+	{
+		// ECMA55-PRN-010: TAB(n) where n > margin may wrap by margin
+		// Test that large TAB values don't crash
+		var program = @"10 PRINT TAB(90);""X""
+20 END
+";
+
+		var result = RunProgram(program);
+
+		// Just verify X appears and doesn't crash
+		Assert.Contains("X", result);
+	}
+
+	[Fact]
+	public void Print_TAB_WithExpression()
+	{
+		// ECMA55-PRN-010: TAB accepts expressions
+		var program = @"10 LET N = 15
+20 PRINT TAB(N * 2);""X""
+30 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// TAB(15 * 2) = TAB(30)
+		Assert.Contains("X", line);
+		var indexX = line.IndexOf('X');
+		Assert.True(indexX >= 28 && indexX <= 32, $"X should be near position 30, got {indexX}");
+	}
+
+	[Fact]
+	public void Print_TAB_Zero()
+	{
+		// Edge case: TAB(0) should go to column 0
+		var program = @"10 PRINT ""START"";TAB(0);""X""
+20 END
+";
+
+		var result = RunProgram(program);
+
+		// Should have START, then newline, then X at column 0
+		Assert.Contains("START", result);
+		Assert.Contains("X", result);
+	}
+
+	[Fact]
+	public void Print_TAB_One()
+	{
+		// Edge case: TAB(1) should go to column 1
+		var program = @"10 PRINT TAB(1);""X""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// X should be at position 1 (one space before it)
+		Assert.Contains("X", line);
+		var indexX = line.IndexOf('X');
+		Assert.True(indexX >= 0 && indexX <= 2, $"X should be near position 1, got {indexX}");
+	}
+
+	[Fact]
+	public void Print_MultipleTABs_InSameLine()
+	{
+		// Multiple TAB calls in one PRINT
+		var program = @"10 PRINT TAB(5);""A"";TAB(15);""B"";TAB(25);""C""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// A at ~5, B at ~15, C at ~25
+		Assert.Contains("A", line);
+		Assert.Contains("B", line);
+		Assert.Contains("C", line);
+
+		var indexA = line.IndexOf('A');
+		var indexB = line.IndexOf('B');
+		var indexC = line.IndexOf('C');
+
+		Assert.True(indexA >= 4 && indexA <= 6, $"A should be near position 5, got {indexA}");
+		Assert.True(indexB >= 14 && indexB <= 16, $"B should be near position 15, got {indexB}");
+		Assert.True(indexC >= 24 && indexC <= 26, $"C should be near position 25, got {indexC}");
+	}
+
+	#endregion
 }
