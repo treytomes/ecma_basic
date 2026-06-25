@@ -26,6 +26,66 @@ description: Modern .NET and C# coding standards for this project
 - **Collection expressions**: Use `[item1, item2]` syntax (C# 12+)
 - **String interpolation**: Use `$"{value}"` over `string.Format` or concatenation
 
+### Thread-Local State Management
+
+When you need per-thread state in static contexts (e.g., parsing environment):
+
+```csharp
+// Thread-local static field
+[ThreadStatic]
+private static IEnvironment? _currentParsingEnvironment;
+
+// Public read-only property
+public static IEnvironment? CurrentParsingEnvironment => _currentParsingEnvironment;
+
+// Protected setter for derived classes
+protected static void SetCurrentParsingEnvironment(IEnvironment? env)
+{
+    _currentParsingEnvironment = env;
+}
+```
+
+**Use Cases**:
+- Parser contexts that need global access without passing through every method
+- Per-thread execution state in multi-threaded environments
+- Avoiding parameter pollution in deep call stacks
+
+**Pattern Example** (from Interpreter.cs):
+```csharp
+public class Interpreter
+{
+    [ThreadStatic]
+    private static IEnvironment? _currentParsingEnvironment;
+    
+    public static IEnvironment? CurrentParsingEnvironment => _currentParsingEnvironment;
+    
+    protected static void SetCurrentParsingEnvironment(IEnvironment? env)
+    {
+        _currentParsingEnvironment = env;
+    }
+    
+    private bool InterpretProgram(IEnvironment env)
+    {
+        SetCurrentParsingEnvironment(env);
+        try
+        {
+            // Parsing code can now access CurrentParsingEnvironment
+            // without passing env through every method
+        }
+        finally
+        {
+            SetCurrentParsingEnvironment(null); // Always clean up
+        }
+    }
+}
+```
+
+**Important**:
+- Always use `finally` block to clear thread-local state
+- Document why thread-local is needed (avoid overuse)
+- Consider alternatives (dependency injection, explicit parameters) first
+- Thread-local state doesn't cross thread boundaries
+
 ### Code Organization
 - One class per file
 - File name matches primary type name
