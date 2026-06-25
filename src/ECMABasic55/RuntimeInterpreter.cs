@@ -33,6 +33,10 @@ public class RuntimeInterpreter : Interpreter
 
 	public IStatement? ProcessImmediate(IEnvironment env, string text)
 	{
+		// Set the parsing environment so expression parsers can access intrinsic registry
+		_environment = env;
+		SetCurrentParsingEnvironment(env);
+
 		try
 		{
 			_reader = ComplexTokenReader.FromText(text);
@@ -64,6 +68,11 @@ public class RuntimeInterpreter : Interpreter
 		catch (Exception)
 		{
 			throw ECMABasic.Domain.ExceptionFactory.Syntax();
+		}
+		finally
+		{
+			// Clear the parsing environment
+			SetCurrentParsingEnvironment(null);
 		}
 	}
 

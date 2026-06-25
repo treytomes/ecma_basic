@@ -2,37 +2,43 @@ using System;
 using System.Linq;
 using ECMABasic.Application;
 using ECMABasic.Infrastructure;
+using ECMABasic55;
 using Xunit;
 
 namespace ECMABasic.Test;
 
 /// <summary>
-/// Integration tests that simulate REPL line-by-line entry.
-/// Tests incremental program building by parsing individual lines.
+/// Integration tests that simulate REPL line-by-line entry using RuntimeInterpreter.
+/// This replicates the ACTUAL code path used by the interactive REPL console.
 /// </summary>
 public class ReplIntegrationTests
 {
 	private readonly TestEnvironment _env;
-	private readonly Interpreter _interpreter;
+	private readonly RuntimeInterpreter _interpreter;
 
 	public ReplIntegrationTests()
 	{
-		_interpreter = new Interpreter();
+		_interpreter = new RuntimeInterpreter();
 		_env = new TestEnvironment(_interpreter);
 	}
 
 	/// <summary>
-	/// Helper to simulate typing a line in the REPL.
-	/// Parses the line and adds it to the program if it has a line number.
+	/// Helper to simulate typing a line in the REPL using RuntimeInterpreter.ProcessImmediate.
+	/// This is the EXACT code path used by the console REPL.
 	/// </summary>
 	private void TypeLine(string line)
 	{
-		// Add newline like the REPL does
+		// Add newline like the REPL does (see Program.cs line 226)
 		var lineWithNewline = line + Environment.NewLine;
 
-		// Parse the line using Interpreter.FromText (static method)
-		// This simulates what the REPL does when you type a numbered line
-		Interpreter.FromText(lineWithNewline, _env);
+		// Call ProcessImmediate - this is what the REPL actually calls
+		var statement = _interpreter.ProcessImmediate(_env, lineWithNewline);
+
+		// If a statement was returned, execute it (for immediate commands like RUN, LIST, etc.)
+		if (statement != null)
+		{
+			statement.Execute(_env, true);
+		}
 	}
 
 	/// <summary>

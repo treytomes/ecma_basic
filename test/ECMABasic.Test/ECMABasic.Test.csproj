@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\src\ECMABasic.Application\ECMABasic.Application.csproj" />
     <ProjectReference Include="..\..\src\ECMABasic.Domain\ECMABasic.Domain.csproj" />
     <ProjectReference Include="..\..\src\ECMABasic.Infrastructure\ECMABasic.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\ECMABasic55\ECMABasic55.csproj" />
   </ItemGroup>
 
   <ItemGroup>

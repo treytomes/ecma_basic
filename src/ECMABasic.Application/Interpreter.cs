@@ -36,6 +36,15 @@ public class Interpreter
 	/// </summary>
 	public static IEnvironment? CurrentParsingEnvironment => _currentParsingEnvironment;
 
+	/// <summary>
+	/// Sets the current parsing environment (thread-local).
+	/// Protected so derived classes (like RuntimeInterpreter) can set it.
+	/// </summary>
+	protected static void SetCurrentParsingEnvironment(IEnvironment? env)
+	{
+		_currentParsingEnvironment = env;
+	}
+
 	public Interpreter(IBasicConfiguration? config = null)
 	{
 		_config = config ?? MinimalBasicConfiguration.Instance;
