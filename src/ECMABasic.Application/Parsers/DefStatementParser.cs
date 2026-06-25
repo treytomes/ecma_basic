@@ -33,6 +33,7 @@ public class DefStatementParser : StatementParser
 		if (nameToken.Text.ToUpper() == "FN")
 		{
 			// "DEF FN A" form - FN and letter are separate
+			reader.Next(TokenType.Space, false); // Optional space after FN
 			var letterToken = reader.Next(TokenType.Word, false);
 			if (letterToken == null || letterToken.Text.Length != 1 || !char.IsLetter(letterToken.Text[0]))
 			{

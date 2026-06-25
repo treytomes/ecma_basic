@@ -534,5 +534,20 @@ public class DefFnTests
 		Assert.Contains("YES", result);
 	}
 
+	[Fact]
+	public void DefFn_SpaceAfterFN_ParsesCorrectly()
+	{
+		// Regression test: Space between FN and letter should be allowed
+		// Bug: Parser wasn't consuming optional space after "FN" token
+		var program = @"10 LET P = 3.14159
+20 DEF FN D(X) = P * X / 180
+30 PRINT FND(90)
+40 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("1.57079", result); // 90 * PI / 180 ≈ 1.57079
+	}
+
 	#endregion
 }
