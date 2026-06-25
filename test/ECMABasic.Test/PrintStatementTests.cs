@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using ECMABasic.Application;
 using ECMABasic.Infrastructure;
 using Xunit;
@@ -750,6 +751,228 @@ public class PrintStatementTests
 		var result = RunProgram(program);
 		// 2 + 3 * 4 - 1 = 2 + 12 - 1 = 13
 		Assert.Contains("13", result);
+	}
+
+	#endregion
+
+	#region Phase 4: Edge Cases and Margin Tests (ECMA55-PRN-013, PRN-014)
+
+	[Fact]
+	public void Print_EmptyString_BlankLine()
+	{
+		// Edge case: Empty string
+		var program = @"10 PRINT """"
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should produce a newline (blank line)
+		Assert.Equal("\r\n", result);
+	}
+
+	[Fact]
+	public void Print_JustSemicolon_NoOutput()
+	{
+		// Edge case: PRINT with just semicolon
+		var program = @"10 PRINT ;
+20 PRINT ""X""
+30 END
+";
+
+		var result = RunProgram(program);
+		// Should have X on the same line as the suppressed newline
+		Assert.StartsWith("X", result.TrimStart());
+	}
+
+	[Fact]
+	public void Print_JustComma_AdvancesZone()
+	{
+		// Edge case: PRINT with just comma
+		var program = @"10 PRINT ,
+20 PRINT ""X""
+30 END
+";
+
+		var result = RunProgram(program);
+		// X should appear in zone 2 (after advancing from zone 1)
+		Assert.Contains("X", result);
+	}
+
+	[Fact]
+	public void Print_MultipleConsecutiveSemicolons()
+	{
+		// Edge case: Multiple semicolons
+		var program = @"10 PRINT ""A"";  ; ;""B""
+20 END
+";
+
+		var result = RunProgram(program);
+		// Should print AB (semicolons with spaces between)
+		Assert.Contains("A", result);
+		Assert.Contains("B", result);
+	}
+
+	[Fact]
+	public void Print_MultipleConsecutiveCommas()
+	{
+		// Edge case: Multiple commas skip multiple zones
+		var program = @"10 PRINT ""A"",,,""B""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// A in zone 1, skip 2 and 3, B in zone 4
+		Assert.Contains("A", line);
+		Assert.Contains("B", line);
+
+		// B should be significantly after A
+		var idxA = line.IndexOf('A');
+		var idxB = line.IndexOf('B');
+		Assert.True(idxB > idxA + 10, "B should be multiple zones after A");
+	}
+
+	[Fact]
+	public void Print_LongString_NoWrapping()
+	{
+		// Long string that doesn't exceed margin
+		var program = @"10 PRINT ""THIS IS A MODERATELY LONG STRING BUT UNDER 80 CHARACTERS""
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		// Should be on one line
+		Assert.Contains("THIS IS A MODERATELY LONG STRING BUT UNDER 80 CHARACTERS", line);
+		Assert.DoesNotContain("\r\n", line);
+	}
+
+	[Fact]
+	public void Print_LongOutputString_HandlesCorrectly()
+	{
+		// ECMA55-PRN-013, PRN-014: Output that may wrap
+		// Build long output from multiple items
+		var program = @"10 PRINT ""AAAAAAAAAA"";""BBBBBBBBBB"";""CCCCCCCCCC"";""DDDDDDDDDD""
+20 END
+";
+
+		var result = RunProgram(program);
+
+		// Should contain the output characters
+		Assert.Contains("AAAAAAAAAA", result);
+		Assert.Contains("BBBBBBBBBB", result);
+		Assert.Contains("CCCCCCCCCC", result);
+		Assert.Contains("DDDDDDDDDD", result);
+	}
+
+	[Fact]
+	public void Print_NumberAndStringMixedWithSeparators()
+	{
+		// Complex mix of types and separators
+		var program = @"10 PRINT ""NAME:"";""ALICE"",""AGE:"";30
+20 END
+";
+
+		var result = RunProgram(program);
+		var line = result.Trim('\r', '\n');
+
+		Assert.Contains("NAME:", line);
+		Assert.Contains("ALICE", line);
+		Assert.Contains("AGE:", line);
+		Assert.Contains("30", line);
+	}
+
+	[Fact]
+	public void Print_FunctionInExpression_Evaluates()
+	{
+		// Function call within complex expression
+		var program = @"10 PRINT ""SQRT(16) + 10 = "";SQR(16) + 10
+20 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("SQRT(16) + 10 =", result);
+		Assert.Contains("14", result); // 4 + 10 = 14
+	}
+
+	[Fact]
+	public void Print_MultipleStatementsOnDifferentLines()
+	{
+		// Multiple PRINT statements create multiple lines
+		var program = @"10 PRINT ""LINE1""
+20 PRINT ""LINE2""
+30 PRINT ""LINE3""
+40 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+		Assert.True(lines.Length >= 3, "Should have at least 3 lines");
+		Assert.Contains("LINE1", lines[0]);
+		Assert.Contains("LINE2", lines[1]);
+		Assert.Contains("LINE3", lines[2]);
+	}
+
+	[Fact]
+	public void Print_NestedExpressions_WithParentheses()
+	{
+		// Complex nested arithmetic
+		var program = @"10 PRINT ((2 + 3) * 4) - (5 / 5)
+20 END
+";
+
+		var result = RunProgram(program);
+		// ((2 + 3) * 4) - (5 / 5) = (5 * 4) - 1 = 20 - 1 = 19
+		Assert.Contains("19", result);
+	}
+
+	[Fact]
+	public void Print_AfterVariableAssignment()
+	{
+		// PRINT immediately after LET
+		var program = @"10 LET X = 42
+20 PRINT X
+30 LET Y$ = ""TEST""
+40 PRINT Y$
+50 END
+";
+
+		var result = RunProgram(program);
+		var lines = result.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+		Assert.Contains("42", lines[0]);
+		Assert.Contains("TEST", lines[1]);
+	}
+
+	[Fact]
+	public void Print_ZeroParameterFunction_DEF_FN()
+	{
+		// Integration with DEF FN (zero parameter)
+		var program = @"10 DEF FNA = 3.14159
+20 PRINT ""PI ="";FNA
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("PI =", result);
+		Assert.Contains("3.14159", result);
+	}
+
+	[Fact]
+	public void Print_OneParameterFunction_DEF_FN()
+	{
+		// Integration with DEF FN (one parameter)
+		var program = @"10 DEF FNB(X) = X * X
+20 PRINT ""5 SQUARED ="";FNB(5)
+30 END
+";
+
+		var result = RunProgram(program);
+		Assert.Contains("5 SQUARED =", result);
+		Assert.Contains("25", result);
 	}
 
 	#endregion
