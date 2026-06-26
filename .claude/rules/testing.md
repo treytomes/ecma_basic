@@ -203,6 +203,39 @@ REPL integration tests require a reference to the ECMABasic55 project:
 
 **Reference**: See `test/ECMABasic.Test/ReplIntegrationTests.cs` for complete examples.
 
+### Parser Testing Limitations
+
+**Direct parser unit testing is not practical** due to dependency on `Interpreter.CurrentParsingEnvironment` (thread-local static). Parsers need access to the intrinsic function registry during parsing.
+
+**Issue #53**: Parsers like `NumericExpressionParser` and `DefStatementParser` cannot be tested in complete isolation without the interpreter context.
+
+#### Recommended Approach
+
+Test parsers via integration tests using the full interpreter stack:
+
+```csharp
+// DON'T: Direct parser instantiation (will fail)
+var parser = new DefStatementParser();
+var statement = parser.Parse(reader, lineNumber); // No parsing environment!
+
+// DO: Parse through interpreter
+var interpreter = new Interpreter();
+var env = new TestEnvironment(interpreter);
+interpreter.InterpretProgramFromText(env, "10 DEF FNA=42\n20 END\n");
+env.Program.Execute(env);
+Assert.True(env.Functions.IsDefined("FNA"));
+```
+
+**Why Integration Tests Are Better**:
+- Automatically sets up parsing environment
+- Tests realistic code paths (how parsers are actually used)
+- Validates end-to-end functionality
+- Catches integration issues that unit tests miss
+
+**Examples**:
+- `DefStatementParserTest.cs` - Uses interpreter for DEF statement parsing
+- `ReplIntegrationTests.cs` - Uses RuntimeInterpreter for REPL-specific paths
+
 ## xUnit Best Practices
 
 ### Attributes

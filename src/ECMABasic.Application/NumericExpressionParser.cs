@@ -6,6 +6,27 @@ using System.Collections.Generic;
 
 namespace ECMABasic.Application;
 
+/// <summary>
+/// Parser for numeric expressions in BASIC programs.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <strong>Parser Testing Limitation</strong>: This parser depends on
+/// <see cref="Interpreter.CurrentParsingEnvironment"/> (thread-local static)
+/// to access the intrinsic function registry during parsing. This makes direct
+/// unit testing of the parser difficult.
+/// </para>
+/// <para>
+/// <strong>Recommended Testing Approach</strong>: Use integration tests that parse
+/// complete programs via <see cref="Interpreter.InterpretProgramFromText"/> or
+/// RuntimeInterpreter.ProcessImmediate. These methods automatically set up the
+/// parsing environment.
+/// </para>
+/// <para>
+/// For examples, see DefStatementParserTest and ReplIntegrationTests, which use
+/// the full interpreter stack to test parsing in context.
+/// </para>
+/// </remarks>
 public class NumericExpressionParser : ExpressionParser
 {
 	public NumericExpressionParser(ComplexTokenReader reader, int? lineNumber, bool throwOnError)
