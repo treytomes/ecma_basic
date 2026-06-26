@@ -4,6 +4,25 @@ using Microsoft.Extensions.Logging;
 
 namespace ECMABasic.Infrastructure;
 
+/// <summary>
+/// Interactive console environment for BASIC program execution.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <strong>IMPORTANT</strong>: This environment requires an interactive console with
+/// stdin/stdout NOT redirected. The DI container in Program.cs ensures this by only
+/// creating ConsoleEnvironment when Console.IsInputRedirected and Console.IsOutputRedirected
+/// are both false.
+/// </para>
+/// <para>
+/// If you manually create a ConsoleEnvironment instance bypassing DI, you MUST verify
+/// the console is not redirected first, or operations like CheckForStopRequest() may
+/// throw InvalidOperationException.
+/// </para>
+/// <para>
+/// For non-interactive/batch mode, use BatchEnvironment instead.
+/// </para>
+/// </remarks>
 public class ConsoleEnvironment : EnvironmentBase
 {
 	public ConsoleEnvironment(
