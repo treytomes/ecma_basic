@@ -71,13 +71,12 @@ public abstract class EnvironmentBase : IEnvironment
 	public string GetStringVariableValue(string variableName)
 	{
 		// TODO: Validate variable name?
-		if (!_stringVariables.ContainsKey(variableName))
+		if (!_stringVariables.TryGetValue(variableName, out var value))
 		{
-			var value = string.Empty;
+			value = string.Empty;
 			SetStringVariableValue(variableName, value);
-			return value;
 		}
-		return _stringVariables[variableName];
+		return value;
 	}
 	
 	public void SetStringVariableValue(string variableName, string value)
@@ -103,20 +102,19 @@ public abstract class EnvironmentBase : IEnvironment
 		if (_scopeStack.Count > 0)
 		{
 			var currentScope = _scopeStack.Peek();
-			if (currentScope.ContainsKey(variableName))
+			if (currentScope.TryGetValue(variableName, out var scopedValue))
 			{
-				return currentScope[variableName];
+				return scopedValue;
 			}
 		}
 
 		// Fall back to global variables
-		if (!_numericVariables.ContainsKey(variableName))
+		if (!_numericVariables.TryGetValue(variableName, out var value))
 		{
-			var value = 0;
+			value = 0;
 			SetNumericVariableValue(variableName, value);
-			return value;
 		}
-		return _numericVariables[variableName];
+		return value;
 	}
 
 	public void SetNumericVariableValue(string variableName, double value)
