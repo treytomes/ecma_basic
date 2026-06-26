@@ -41,17 +41,17 @@ public class UserFunctionCallExpression : IExpression
 			throw new RuntimeException($"Recursive call to function {_functionName} is not allowed", env.CurrentLineNumber);
 		}
 
-		// Evaluate argument if provided
-		object? argumentValue = null;
-		if (_argument != null)
-		{
-			argumentValue = _argument.Evaluate(env);
-		}
-
-		// Push function onto call stack for recursion detection
+		// Push function onto call stack immediately after checking
+		// This ensures the function is tracked even if argument evaluation fails
 		env.PushFunctionCall(_functionName);
 		try
 		{
+			// Evaluate argument if provided
+			object? argumentValue = null;
+			if (_argument != null)
+			{
+				argumentValue = _argument.Evaluate(env);
+			}
 			// For zero-parameter functions, just evaluate the body
 			if (function.Parameter == null)
 			{
