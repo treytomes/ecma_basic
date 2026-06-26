@@ -143,6 +143,9 @@ public static class Program
 
 			// Determine environment type based on execution mode
 			// Batch mode: file provided OR stdin/stdout redirected
+			// NOTE: Redirection state is checked once at startup and not re-evaluated.
+			// If redirection changes mid-execution (very rare), environment type may be stale.
+			// Mitigation: ConsoleEnvironment has guards to prevent InvalidOperationException.
 			var isBatchMode = props.FilePath != null || Console.IsInputRedirected || Console.IsOutputRedirected;
 
 			var env = isBatchMode
