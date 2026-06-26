@@ -550,4 +550,49 @@ public class DefFnTests
 	}
 
 	#endregion
+
+	#region Error Cases
+
+	[Fact]
+	public void DefFn_EmptyArgument_ReportsError()
+	{
+		// Test for issue #49: Empty argument should give clear error
+		var program = @"10 DEF FNA(X) = X * 2
+20 PRINT FNA()
+30 END
+";
+
+		var env = new TestEnvironment();
+		var success = Interpreter.FromText(program, env);
+
+		// Should fail to parse
+		Assert.False(success, "Program with empty argument should fail to parse");
+
+		// Error message should be clear about the issue
+		var errorText = env.Text.ToUpper();
+		Assert.Contains("INVALID OR MISSING ARGUMENT", errorText);
+		Assert.Contains("FNA", errorText);
+	}
+
+	[Fact]
+	public void DefFn_InvalidArgument_ReportsError()
+	{
+		// Test for issue #49: Invalid expression in argument
+		var program = @"10 DEF FNA(X) = X * 2
+20 PRINT FNA(,)
+30 END
+";
+
+		var env = new TestEnvironment();
+		var success = Interpreter.FromText(program, env);
+
+		// Should fail to parse
+		Assert.False(success, "Program with invalid argument should fail to parse");
+
+		// Should get clear error about invalid argument, not misleading "expected ')'"
+		var errorText = env.Text.ToUpper();
+		Assert.Contains("INVALID", errorText);
+	}
+
+	#endregion
 }

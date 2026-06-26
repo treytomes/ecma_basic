@@ -339,6 +339,10 @@ public class NumericExpressionParser : ExpressionParser
 			if (openParen != null)
 			{
 				argument = Parse();
+				if (argument == null)
+				{
+					throw new SyntaxException($"Invalid or missing argument in function call {functionName}()", _lineNumber);
+				}
 				_reader.Next(TokenType.CloseParenthesis);
 			}
 
@@ -360,6 +364,10 @@ public class NumericExpressionParser : ExpressionParser
 				if (openParen != null)
 				{
 					argument = Parse();
+					if (argument == null)
+					{
+						throw new SyntaxException($"Invalid or missing argument in function call {functionName}()", _lineNumber);
+					}
 					_reader.Next(TokenType.CloseParenthesis);
 				}
 
