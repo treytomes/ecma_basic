@@ -155,5 +155,53 @@ public class RandomizeStatementTests
 
 	#endregion
 
+	#region Test Infrastructure: Reseed + RANDOMIZE Interaction
+
+	[Fact]
+	public void Reseed_ThenRANDOMIZE_PreservesDeterminism()
+	{
+		// Issue #54: RANDOMIZE should not break tests that use Reseed() for determinism
+		// When Reseed() has been called, RANDOMIZE becomes a no-op
+		var env1 = new TestEnvironment();
+		var env2 = new TestEnvironment();
+
+		// Reseed both environments with same seed
+		env1.Random.Reseed(12345);
+		env2.Random.Reseed(12345);
+
+		// Execute program with RANDOMIZE in both
+		var program = "10 RANDOMIZE\n20 PRINT RND\n30 PRINT RND\n40 END\n";
+		Interpreter.FromText(program, env1);
+		env1.Program.Execute(env1);
+
+		Interpreter.FromText(program, env2);
+		env2.Program.Execute(env2);
+
+		// Both should produce identical output (deterministic)
+		Assert.Equal(env1.Text.Trim(), env2.Text.Trim());
+	}
+
+	[Fact]
+	public void Reseed_WithoutRANDOMIZE_AlsoPreservesDeterminism()
+	{
+		// Verify that Reseed() works correctly without RANDOMIZE too
+		var env1 = new TestEnvironment();
+		var env2 = new TestEnvironment();
+
+		env1.Random.Reseed(99999);
+		env2.Random.Reseed(99999);
+
+		var program = "10 PRINT RND\n20 PRINT RND\n30 END\n";
+		Interpreter.FromText(program, env1);
+		env1.Program.Execute(env1);
+
+		Interpreter.FromText(program, env2);
+		env2.Program.Execute(env2);
+
+		Assert.Equal(env1.Text.Trim(), env2.Text.Trim());
+	}
+
+	#endregion
+
 	// Note: Error handling tests omitted - focus on positive functionality
 }
