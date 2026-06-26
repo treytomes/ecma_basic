@@ -35,10 +35,8 @@ public class UserFunctionCallExpression : IExpression
 			throw new RuntimeException($"Undefined function {_functionName}", env.CurrentLineNumber);
 		}
 
-		var envBase = (EnvironmentBase)env;
-
 		// ECMA55-DEF-007: Function may call other functions but not itself (no recursion)
-		if (envBase.IsFunctionInCallStack(_functionName))
+		if (env.IsFunctionInCallStack(_functionName))
 		{
 			throw new RuntimeException($"Recursive call to function {_functionName} is not allowed", env.CurrentLineNumber);
 		}
@@ -51,7 +49,7 @@ public class UserFunctionCallExpression : IExpression
 		}
 
 		// Push function onto call stack for recursion detection
-		envBase.PushFunctionCall(_functionName);
+		env.PushFunctionCall(_functionName);
 		try
 		{
 			// For zero-parameter functions, just evaluate the body
@@ -75,7 +73,7 @@ public class UserFunctionCallExpression : IExpression
 
 			var paramValue = Convert.ToDouble(argumentValue);
 
-			envBase.PushScope(function.Parameter, paramValue);
+			env.PushScope(function.Parameter, paramValue);
 			try
 			{
 				// ECMA55-DEF-004: Non-parameter variables still refer to global scope
@@ -83,12 +81,12 @@ public class UserFunctionCallExpression : IExpression
 			}
 			finally
 			{
-				envBase.PopScope();
+				env.PopScope();
 			}
 		}
 		finally
 		{
-			envBase.PopFunctionCall();
+			env.PopFunctionCall();
 		}
 	}
 

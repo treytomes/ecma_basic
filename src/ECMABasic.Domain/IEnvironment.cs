@@ -173,4 +173,38 @@ public interface IEnvironment : IErrorReporter
 	/// <param name="lineNumber">The line number to retrieve.</param>
 	/// <returns>The statement at that line, or null if line doesn't exist.</returns>
 	public IStatement? GetStatementAtLine(int lineNumber);
+
+	/// <summary>
+	/// Push a new scope onto the scope stack for function parameter evaluation.
+	/// ECMA55-DEF-002: Function parameters shadow global variables with same name.
+	/// </summary>
+	/// <param name="paramName">Parameter variable name</param>
+	/// <param name="value">Parameter value</param>
+	public void PushScope(string paramName, double value);
+
+	/// <summary>
+	/// Pop the current scope from the scope stack.
+	/// Called after function evaluation completes.
+	/// </summary>
+	public void PopScope();
+
+	/// <summary>
+	/// Check if a function is currently being evaluated (recursion detection).
+	/// ECMA55-DEF-007: Function may call other functions but not itself.
+	/// </summary>
+	/// <param name="functionName">Function name to check</param>
+	/// <returns>True if function is in the call stack (recursive call)</returns>
+	public bool IsFunctionInCallStack(string functionName);
+
+	/// <summary>
+	/// Push a function onto the call stack when it begins evaluation.
+	/// ECMA55-DEF-007: Track function calls to detect recursion.
+	/// </summary>
+	/// <param name="functionName">Function name being called</param>
+	public void PushFunctionCall(string functionName);
+
+	/// <summary>
+	/// Pop a function from the call stack when evaluation completes.
+	/// </summary>
+	public void PopFunctionCall();
 }
